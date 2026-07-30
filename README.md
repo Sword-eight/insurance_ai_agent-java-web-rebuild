@@ -1,6 +1,9 @@
 # 🛡️ Insurance AI Agent
 
-基于 LangGraph + RAG + LoRA 的企业级保险智能助手。
+基于 LangGraph + RAG 的保险智能助手，并包含独立的 LoRA 离线训练与评估实验。
+
+当前在线 Agent 使用 DeepSeek API；仓库中的 Qwen2.5-0.5B-Instruct LoRA Adapter
+尚未接入在线聊天主链路。
 
 ## 功能
 
@@ -21,7 +24,7 @@ streamlit run app.py              # 打开 http://localhost:8501
 ## 架构
 
 ```
-                  app.py (68行组装入口)
+                  app.py (轻量组装入口)
                  /                  \
         ui/ (表示层)          application/ (应用层)
     sidebar / chat /         bootstrap / session
@@ -56,7 +59,7 @@ streamlit run app.py              # 打开 http://localhost:8501
 ## 项目结构
 
 ```
-├── app.py                          # 组装入口 (68行)
+├── app.py                          # 由近500行单体应用拆出的轻量组装入口
 ├── config.py                       # 全局配置中心
 │
 ├── application/                    # 应用层 (纯Python, 不依赖UI)
@@ -165,6 +168,9 @@ app.py → application/handlers → AgentGraphBuilder.invoke()
 | 微调 | PEFT / LoRA / Qwen2.5 |
 
 ## LoRA 微调
+
+当前实际 Adapter 的基础模型为 `Qwen2.5-0.5B-Instruct`。该能力只用于离线数据、
+训练和评估实验，尚未替换在线 Agent 的 DeepSeek 调用。
 
 ```bash
 # 1. 生成 QA 数据

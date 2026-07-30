@@ -1,5 +1,5 @@
 {
-  "model_name_or_path": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
   "dataset": "insurance_train",
   "eval_dataset": "insurance_test",
   "dataset_dir": "D:\\python file\\pythonProject\\llm-cookbook-main\\insurance_ai_agent\\finetune\\data",

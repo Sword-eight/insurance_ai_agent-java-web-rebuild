@@ -64,7 +64,10 @@ class AgentGraphBuilder:
       - max_context_rounds:  最大对话上下文轮数
 
     使用方式：
-        tools = [InsuranceRAGTool(retriever=...), PremiumCalculatorTool(service=...)]
+        tools = [
+            InsuranceRAGTool(service=retrieval_service),
+            PremiumCalculatorTool(premium_service=premium_service),
+        ]
         graph_builder = AgentGraphBuilder(tools=tools)
         result = graph_builder.invoke(user_message="等待期多久？", session_id="...")
     """

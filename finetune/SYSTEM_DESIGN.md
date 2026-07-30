@@ -1,7 +1,8 @@
 # Insurance AI Agent — LoRA 微调模块系统设计
 
 > **文档版本**: v1.0
-> **设计目标**: 在不修改现有 RAG/Agent/Graph/Memory/Tool/Prompt 模块的前提下，新增 LoRA 微调管线
+> **设计目标**: 在不修改现有 RAG/Agent/Graph/Memory/Tool/Prompt 模块的前提下，新增 LoRA 离线微调管线
+> **当前事实**: 实际 Adapter 基于 Qwen2.5-0.5B-Instruct；在线 Agent 仍使用 DeepSeek API，未接入该 Adapter。
 
 ---
 
@@ -94,7 +95,7 @@
     ┌───────────────┴───┐   ┌──────┴────────────┐
     │  LLaMA-Factory    │   │  evaluate.py       │
     │  LoRA 微调         │   │  模型评估           │
-    │  ↓ Qwen2.5-1.5B  │   │  ↓ 关键词准确率     │
+    │  ↓ Qwen2.5-0.5B  │   │  ↓ 关键词准确率     │
     │  ↓ LoRA Adapter   │   │  ↓ 分类统计         │
     │  ↓ 训练报告        │   │  ↓ evaluation.md   │
     └───────────────────┘   └───────────────────┘
@@ -185,7 +186,7 @@ FINETUNE_CONFIG = {
     "qa_per_pdf_max":    50,        # 每份 PDF 最多生成 50 条
     "total_qa_target":   500,       # 全局目标 500 条
     "train_ratio":       0.8,       # 80% 训练
-    "base_model":        "Qwen/Qwen2.5-1.5B-Instruct",
+    "base_model":        "Qwen/Qwen2.5-0.5B-Instruct",
     "lora_rank":         16,
     "lora_alpha":        32,
     "epochs":            3,
@@ -197,7 +198,7 @@ FINETUNE_CONFIG = {
 
 ---
 
-## 5. 如何进行 LoRA + RAG 协同推理
+## 5. LoRA + RAG 协同推理（后续演进，当前未实现）
 
 协同工作流（需加载 LoRA Adapter 后）：
 
@@ -219,7 +220,9 @@ LoRA 模型生成保险专业回答
 返回用户
 ```
 
-简单替换：将 `graph/nodes.py` 中 `ChatOpenAI` 的 `base_url` 指向本地 vLLM/LoRA 服务即可。
+当前代码没有本地 LoRA 在线适配器，也没有在 `AgentGraphBuilder` 中加载 Adapter。
+未来若演进为本地模型服务，需要另行设计模型服务、超时、错误契约和生命周期；
+不能仅修改一个 `base_url` 就视为完成接入。
 
 ---
 

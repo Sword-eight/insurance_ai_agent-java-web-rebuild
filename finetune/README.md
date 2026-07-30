@@ -12,7 +12,9 @@
 | 领域术语理解 | ⚠️ 通用模型 | ✅ 领域适应 |
 | 离线场景 | ❌ 需要 LLM API | ✅ 本地部署 |
 
-**LoRA + RAG 互补**：LoRA 让模型深度理解保险术语和回答风格，RAG 保证知识的时效性。
+**设计上 LoRA 与 RAG 可以互补**：LoRA 用于领域表达和回答风格，RAG 用于更新知识。
+当前仓库只完成了 LoRA 的离线训练与评估实验，在线 Agent 仍使用 DeepSeek API，
+尚未加载本地 Adapter。
 
 ---
 
@@ -29,7 +31,7 @@ LoRA + RAG:
                    (保险领域知识内化)
 ```
 
-LoRA 微调后，DeepSeek 模型会更准确地：
+LoRA 微调目标是让本地 Qwen 模型更稳定地：
 - 使用保险术语（等待期/豁免/现金价值）
 - 保持统一回答风格
 - 减少幻觉（因为见过大量保险 QA）
@@ -153,7 +155,7 @@ python -m finetune.scripts.train_lora
 
 | 参数 | 值 | 说明 |
 |------|-----|------|
-| 基础模型 | Qwen2.5-1.5B-Instruct | 1.5B 参数，中文友好 |
+| 基础模型 | Qwen2.5-0.5B-Instruct | 与当前 Adapter 和实际训练脚本一致 |
 | LoRA Rank | 16 | 低秩矩阵秩 |
 | LoRA Alpha | 32 | 缩放因子 |
 | Epochs | 3 | 训练轮数 |
@@ -194,23 +196,24 @@ python -m finetune.scripts.evaluate --test-file finetune/data/insurance_test.jso
 
 ---
 
-## 如何替换 Adapter
+## Adapter 与在线链路的关系
 
-训练完成后，新的 LoRA Adapter 可以替换当前 DeepSeek API 调用：
+当前 Adapter **没有接入**在线 DeepSeek Agent 主链路。以下内容只是后续演进示意，
+不能作为当前项目已经支持在线 LoRA 推理的声明：
 
 ```python
 # 方式 1: 在 graph/nodes.py 中加载本地 LoRA 模型
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct")
+model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
 model = PeftModel.from_pretrained(model, "outputs/insurance_lora")
-tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct")
+tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
 ```
 
 ```python
 # 方式 2: 通过 vLLM 部署 LoRA 服务（推荐生产环境）
-# vllm serve Qwen/Qwen2.5-1.5B-Instruct \
+# vllm serve Qwen/Qwen2.5-0.5B-Instruct \
 #     --enable-lora \
 #     --lora-modules insurance=outputs/insurance_lora
 ```

@@ -83,7 +83,7 @@ def tokenize_function(examples, tokenizer, max_length):
 
 
 def train(
-    model_name: str = "Qwen/Qwen2.5-1.5B-Instruct",
+    model_name: str = "Qwen/Qwen2.5-0.5B-Instruct",
     lora_rank: int = 16,
     lora_alpha: int = 32,
     epochs: int = 3,

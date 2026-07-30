@@ -1,38 +1,30 @@
-# ============================================================
-# Insurance AI Agent - 依赖清单
-# ============================================================
+# Insurance AI Agent - 默认运行依赖
+# Streamlit + LangGraph + LangChain RAG（LlamaIndex 和训练依赖见独立清单）
 
 # --- LangGraph 核心 ---
-langgraph>=1.0.0
-langgraph-checkpoint>=4.0.0
-langgraph-checkpoint-sqlite>=3.0.0
+langgraph>=1.0.0,<2.0.0
+langgraph-checkpoint>=4.0.0,<5.0.0
 
 # --- LangChain 生态 ---
-langchain>=0.3.0
-langchain-core>=0.3.0
-langchain-openai>=0.3.0
-langchain-community>=0.3.0
-langchain-huggingface>=0.1.0
+langchain-core>=1.0.0,<2.0.0
+langchain-openai>=1.0.0,<2.0.0
+langchain-community>=0.4.0,<0.5.0
+langchain-text-splitters>=1.0.0,<2.0.0
 
-# --- LLM & Embedding ---
-openai>=1.0.0        # DeepSeek 兼容 OpenAI SDK
-sentence-transformers>=3.0.0
-huggingface-hub>=0.25.0
+# --- Embedding ---
+sentence-transformers>=3.0.0,<6.0.0
 
 # --- 向量数据库 ---
-faiss-cpu>=1.8.0
+faiss-cpu>=1.8.0,<2.0.0
 
 # --- PDF 处理 ---
-PyMuPDF>=1.24.0
+PyMuPDF>=1.24.0,<2.0.0
 
 # --- Web 界面 ---
-streamlit>=1.35.0
+streamlit>=1.35.0,<2.0.0
 
 # --- 环境变量 ---
-python-dotenv>=1.0.0
+python-dotenv>=1.0.0,<2.0.0
 
-# --- 类型检查 ---
-pydantic>=2.0.0
-
-# --- 工具库 ---
-tiktoken>=0.7.0
+# --- 数据模型 ---
+pydantic>=2.0.0,<3.0.0

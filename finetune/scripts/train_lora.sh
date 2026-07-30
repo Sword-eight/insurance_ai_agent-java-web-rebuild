@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # Insurance AI Agent - LoRA 训练脚本
-# 使用 LLaMA-Factory 微调 Qwen2.5-1.5B-Instruct
+# 使用 LLaMA-Factory 微调 Qwen2.5-0.5B-Instruct
 #
 # 前置条件:
 #   1. 已安装 LLaMA-Factory:
@@ -26,7 +26,7 @@ cd $LLAMA_FACTORY_DIR
 
 # LoRA 微调
 llamafactory-cli train \
-    --model_name_or_path Qwen/Qwen2.5-1.5B-Instruct \
+    --model_name_or_path Qwen/Qwen2.5-0.5B-Instruct \
     --dataset insurance_train \
     --eval_dataset insurance_test \
     --template qwen \
@@ -62,7 +62,7 @@ echo "   Adapter 路径: ./output/insurance_lora"
 
 # 导出 LoRA adapter（可选，用于推理）
 # llamafactory-cli export \
-#     --model_name_or_path Qwen/Qwen2.5-1.5B-Instruct \
+#     --model_name_or_path Qwen/Qwen2.5-0.5B-Instruct \
 #     --adapter_name_or_path ./output/insurance_lora \
 #     --template qwen \
 #     --finetuning_type lora \

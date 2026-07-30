@@ -59,10 +59,16 @@ class PremiumCalculatorTool(BaseTool):
     )
     args_schema: Type[BaseModel] = PremiumCalculatorInput
 
-    def __init__(self, **kwargs: Any) -> None:
-        """初始化工具，创建 PremiumService 实例。"""
+    _service: PremiumService
+
+    def __init__(
+        self,
+        premium_service: PremiumService,
+        **kwargs: Any,
+    ) -> None:
+        """初始化工具并保存外部注入的 PremiumService。"""
         super().__init__(**kwargs)
-        self._service = PremiumService()
+        self._service = premium_service
 
     def _run(
         self,

@@ -1,0 +1,8 @@
+# LoRA 数据生成、训练、推理与评估
+-r requirements.txt
+
+openai>=1.0.0,<3.0.0
+torch>=2.4.0,<3.0.0
+transformers>=4.45.0,<5.0.0
+peft>=0.13.0,<1.0.0
+datasets>=3.0.0,<5.0.0

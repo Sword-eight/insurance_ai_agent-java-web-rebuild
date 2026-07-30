@@ -89,7 +89,7 @@ FINETUNE_CONFIG: dict = {
     "total_qa_target": 500,
     "train_ratio": 0.8,
     # LLaMA-Factory 训练参数
-    "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
     "lora_rank": 16,
     "lora_alpha": 32,
     "lora_dropout": 0.1,
