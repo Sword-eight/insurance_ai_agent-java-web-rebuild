@@ -1,7 +1,7 @@
 # Insurance AI Platform 迁移计划（Phase 0 草案）
 
 > 项目目标名：Insurance AI Platform / 保险智能问答平台  
-> 文档状态：DRAFT，等待 Review，不代表架构已经冻结  
+> 文档状态：Phase 0 Review 已完成；作为迁移基线，不代表架构已经冻结
 > 审查日期：2026-07-30  
 > 审查分支：`phase-0-source-audit`  
 > 基线提交：`ce591cb56188b7fd6a0b27c8f3263f0872c82f1c`
@@ -256,7 +256,7 @@ streamlit run app.py
 | `python -m finetune.dataset.build_dataset` | PDF/TXT → DeepSeek 生成 QA | 当前改版移除了 README 所述 `--resume` |
 | `python -m finetune.dataset.verify_dataset` | 清洗、去重、80/20 拆分 | 会覆盖 train/test JSON |
 | `python finetune/scripts/run_train.py` | 本机 0.5B LoRA 训练 | 本机绝对模型路径 |
-| `python finetune/scripts/train.py` | 通用 HuggingFace/PEFT 训练入口 | 默认 1.5B |
+| `python finetune/scripts/train.py` | 通用 HuggingFace/PEFT 训练入口 | 默认 0.5B |
 | `python -m finetune.scripts.train_lora` | 生成 LLaMA-Factory 配置 | 不执行训练 |
 | `python finetune/scripts/eval_real.py` | 0.5B Adapter 真实推理评估 | 本机绝对模型路径 |
 | `python -m finetune.scripts.evaluate` | Mock 评估流水线 | 默认把参考答案当预测答案 |
@@ -550,10 +550,10 @@ RAG/Agent 算法。
 | 已是 Java Backend → Python AI Service 双服务 | 当前只有 Streamlit 单进程 Python 应用 | 目标架构尚未开始 |
 | Python AI Service 已可 HTTP 调用 | 无 FastAPI Router/Schema/启动入口 | Phase 4 必须做薄包装 |
 | “全部依赖在 bootstrap 注入” | `PremiumCalculatorTool` 忽略传入 `premium_service` 并自行 `PremiumService()` | 生命周期和 DI 声明不真实 |
-| “LoRA Qwen2.5-0.5B” | 实际 Adapter/`run_train.py` 是 0.5B；`config.py`、README、LLaMA-Factory 配置仍是 1.5B | 配置和产物漂移 |
+| “LoRA Qwen2.5-0.5B” | 实际 Adapter 与训练配置已统一为 0.5B；旧 1.5B 标记属于已修正的历史漂移 | Phase 0.5 已统一事实 |
 | LoRA 是在线能力 | 在线 Graph 只调用 DeepSeek；RAG+LoRA 仅存在于未跟踪实验脚本 | 不能对外宣称在线 LoRA |
-| “548 行单体已重构” | Git 中重构前 `app.py` 可核实为 497 个物理行；当前为 70 行 | 拆分事实成立，548 这一数字无历史证据 |
-| README `app.py (68行)` | 当前为 70 行 | 文档轻微过期 |
+| “548 行单体已重构” | Git 历史只能核实重构前 `app.py` 为 497 个物理行，因此统一表述为“近 500 行单体应用” | 拆分事实成立，548 这一数字无可验证证据 |
+| README 曾写死 `app.py` 当前行数 | 入口会随维护变化，已改为“近 500 行单体应用拆出的轻量组装入口” | 避免把易变行数当作架构事实 |
 | README 提供 `cp .env.example .env` | 仓库没有 `.env.example` | 新环境不可按文档启动 |
 | 双引擎依赖可由 `requirements.txt` 安装 | 未声明 `llama-index` 和 FAISS adapter | 环境不可复现 |
 | LoRA 依赖已声明 | 未声明 `torch`、`peft`、`datasets`；`transformers` 仅作为间接依赖出现 | 微调环境不可复现 |
@@ -685,7 +685,7 @@ Web Client
 | 高 | HTTP timeout/retry/circuit breaker 缺失 | Phase 6/11 |
 | 中 | Agent 无显式循环上限 | Phase 4/11 |
 | 中 | Tool 失败被记成功、来源追踪条件失效 | Phase 4/11 |
-| 中 | LoRA 0.5B/1.5B 配置漂移和绝对路径 | 独立 AI 维护任务；不得夹带到 Java Phase |
+| 中 | LoRA 本机绝对路径和在线链路缺失 | 独立 AI 维护任务；不得夹带到 Java Phase |
 | 中 | LlamaIndex 统计为 0、文档列表漏 TXT | Phase 10 |
 | 中 | `StateManager.clear_session()` 名实不符 | Phase 4/8 |
 | 低 | 兼容 re-export 文件和过期 README 行数 | 最终文档清理阶段 |
