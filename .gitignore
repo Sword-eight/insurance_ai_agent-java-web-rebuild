@@ -10,6 +10,7 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+target/
 
 # ── 虚拟环境 ──
 venv/

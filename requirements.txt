@@ -22,6 +22,9 @@ PyMuPDF>=1.24.0,<2.0.0
 
 # --- Web 界面 ---
 streamlit>=1.35.0,<2.0.0
+fastapi>=0.115.0,<1.0.0
+uvicorn>=0.30.0,<1.0.0
+python-multipart>=0.0.9,<1.0.0
 
 # --- 环境变量 ---
 python-dotenv>=1.0.0,<2.0.0
