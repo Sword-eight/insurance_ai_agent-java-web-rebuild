@@ -9,3 +9,6 @@ insurance:
   ai-service:
     base-url: ${PYTHON_AI_BASE_URL:http://127.0.0.1:8000}
 
+springdoc:
+  paths-to-match: /api/v1/**
+
