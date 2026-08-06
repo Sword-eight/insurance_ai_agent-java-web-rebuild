@@ -5,6 +5,24 @@
 当前在线 Agent 使用 DeepSeek API；仓库中的 Qwen2.5-0.5B-Instruct LoRA Adapter
 尚未接入在线聊天主链路。
 
+## 平台迁移状态
+
+仓库正在按 Phase 把现有 Python Agent 迁移为双服务平台。正式目标链路是：
+
+```text
+Vue 3 Web Client → Java Spring Boot Backend → Python FastAPI AI Service
+```
+
+当前已存在 Streamlit Python 入口、FastAPI 包装和 Java 基础工程，但 Vue Web Client、MySQL、
+Redis、JWT 及完整业务链尚未全部实现。Vue 客户端计划在 Phase 9.5/10.5 分两次最小落地，
+目前没有 `web-client/` 目录。
+
+Streamlit 不删除，继续作为 Python Agent、Graph、Tool 和 RAG 的本地调试/旧版验证入口；
+它不经过 Java，因此不代表 JWT、ChatService、MySQL、Redis 或文档状态机的端到端能力。
+
+规划入口：[架构](docs/ARCHITECTURE.md) · [迁移路线](docs/MIGRATION_PLAN.md) ·
+[Vue 客户端规划](docs/WEB_CLIENT_PLAN.md) · [学习路线](learning/README.md)
+
 ## 功能
 
 - **保险条款问答** — RAG 检索 + LLM 回答（LangChain / LlamaIndex 双引擎热切换）
@@ -164,7 +182,8 @@ app.py → application/handlers → AgentGraphBuilder.invoke()
 | RAG 双引擎 | LangChain (PyMuPDF+FAISS) / LlamaIndex (VectorStoreIndex+FAISS) |
 | 向量库 | FAISS (本地) |
 | Embedding | BAAI/bge-base-zh-v1.5 (SentenceTransformer, 768维) |
-| UI | Streamlit |
+| 当前 Python 调试 UI | Streamlit |
+| 规划中的正式 Web Client | Vue 3 + TypeScript + Vite + Vue Router + Axios（尚未创建） |
 | 微调 | PEFT / LoRA / Qwen2.5 |
 
 ## LoRA 微调

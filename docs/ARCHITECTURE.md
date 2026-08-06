@@ -1,10 +1,10 @@
 # Insurance AI Platform 架构
 
 > 项目名称：Insurance AI Platform / 保险智能问答平台
-> 文档版本：v1.0
-> 状态：已冻结；自 2026-07-31 起成为架构唯一事实来源
+> 文档版本：v1.1
+> 状态：主体架构已冻结；2026-08-06 经批准增补 Vue Web Client 规划，不改变服务边界与数据所有权
 > 设计基线：`2b700ab5913d0266fa4469af9b1c25ea1a095f1d`
-> 范围：目标架构与服务边界；不代表 Java Backend 或 Python HTTP Service 已实现
+> 范围：目标架构、服务边界与客户端定位；各阶段的未来能力不代表当前已经实现
 
 本文件冻结的是目标系统的服务职责、依赖方向、部署关系、数据所有权和生命周期原则。
 精确 API 字段、错误码、MySQL 表、Redis Key/TTL 和容错参数在 Phase 2 文档中冻结，但不得
@@ -39,12 +39,14 @@ Web Client → Java Backend → Python AI Service
 
 ### 1.3 当前事实与目标态
 
-当前基线只有一个 Streamlit 驱动的 Python 应用：
+Phase 1 冻结时，基线只有一个 Streamlit 驱动的 Python 应用。此后 Phase 3～5 已逐步形成
+FastAPI 包装和 Java Backend 基础设施，但尚未形成完整业务平台：
 
 - `app.py` 是当前在线入口；
 - `application/bootstrap.py` 手动创建 Python 对象图；
 - `graph/`、`tools/`、`services/`、`rag/` 已形成真实 AI 调用链；
-- 当前没有 FastAPI、Java、MySQL 或 Redis 实现；
+- 仓库已存在 FastAPI 与 Java 工程；MySQL、Redis、JWT、完整聊天业务链和文档业务链仍属于后续 Phase；
+- Vue Web Client 尚未创建；`web-client/` 目前不存在；
 - LoRA Adapter 基于 Qwen2.5-0.5B-Instruct，但未接入在线 DeepSeek Agent。
 
 因此，本文件描述的是后续逐阶段落地的目标架构，不能用来宣称尚未实现的功能已经存在。
@@ -55,7 +57,7 @@ Web Client → Java Backend → Python AI Service
 
 ```text
 ┌─────────────────────────────┐
-│         Web Client          │
+│  Vue 3 Web Client（规划中）  │
 │  登录 / 会话 / 聊天 / 知识库 │
 └──────────────┬──────────────┘
                │ HTTPS / JSON
@@ -78,7 +80,7 @@ Web Client → Java Backend → Python AI Service
 ┌──────────────────────────────────────────────────────────────┐
 │                   Python AI Service                          │
 │                                                              │
-│  FastAPI Router（只处理 HTTP，未来新增）                      │
+│  FastAPI Router（只处理 HTTP）                                │
 │            │                                                 │
 │  Application Wrapper / Facade                                │
 │            │                                                 │
@@ -107,7 +109,7 @@ Web Client 不得直接调用 Python。Python AI Service 不得反向调用 Java
 
 ```mermaid
 flowchart TD
-    Web["Web Client"] -->|"HTTPS / JSON"| JavaController["Spring Boot<br/>Security + Controller"]
+    Web["Vue 3 Web Client<br/>规划中，尚未创建"] -->|"HTTPS / JSON"| JavaController["Spring Boot<br/>Security + Controller"]
     JavaController --> JavaService["Service<br/>业务编排"]
     JavaService --> Mapper["Mapper"]
     Mapper --> MySQL[("MySQL<br/>业务事实")]
@@ -137,6 +139,38 @@ flowchart TD
 - 第一版允许单机部署两个进程，但服务边界不能依赖同进程调用。
 - 不假定共享数据库；文件传递方式和部署路径在 Phase 2/10 明确。
 - Streamlit 可以保留为 Python 本地调试 UI，但不是目标平台正式入口。
+
+### 2.4 正式客户端与调试客户端
+
+目标平台的正式用户链路固定为：
+
+```text
+Vue 3 Web Client → Java Spring Boot Backend → Python FastAPI AI Service
+```
+
+Vue Web Client 只负责页面、表单、基础校验、JWT 携带、调用 Java 公共 API，以及展示
+loading、业务状态和稳定错误。它不得直连 Python，不操作 MySQL、Redis 或 FAISS，不保存
+长期聊天事实，也不判断或恢复 `SUCCEEDED / FAILED / UNKNOWN`。`UNKNOWN` 由 Java 业务层
+确定；客户端只按公共 DTO 展示，且不得自动重发同一个 AI 请求。
+
+Streamlit 继续保留，定位为 Python Agent 本地调试、旧版功能验证以及 Graph/Tool/RAG
+诊断入口。它的链路是 `Streamlit → Python`，不经过 Java JWT、ChatService、MySQL、Redis、
+AgentClient 或 Java 文档状态机，因而不能代表正式平台端到端能力。
+
+Web Client 技术栈冻结为 Vue 3、TypeScript、Vite、Vue Router 与 Axios。Element Plus 和
+Pinia 均不是必需依赖，只能在真实减少实现复杂度时按阶段评审引入。详细范围、目录建议、
+错误展示和阶段验收见 [WEB_CLIENT_PLAN.md](./WEB_CLIENT_PLAN.md)。
+
+### 2.5 v1.1 变更评估
+
+- 原因：仅靠 Swagger/测试不能展示最终用户经过 Java 业务层访问 AI 的完整交互链。
+- 范围：只增补正式客户端定位、Phase 9.5/10.5 和学习规划；不改 Java/Python 边界、Phase 2
+  契约、数据所有权或同步聊天模型。
+- 收益：能演示认证、会话、消息、聊天和文档状态，同时保持前端学习成本可控。
+- 成本：正常节奏增加 3～5 天，且 Phase 11/12 多出浏览器端联调入口。
+- 替代方案：继续只用 Swagger/Postman 无法形成正式用户链；Phase 6 提前做无鉴权客户端会在
+  JWT 和会话契约稳定后返工，因此不采用。
+- 兼容性：Streamlit 保留，现有 Java/Python 代码与冻结 API 不失效；Vue 工程只在未来阶段创建。
 
 ## 3. Java Backend 设计
 
@@ -663,6 +697,8 @@ FastAPI 生命周期。服务化时通过 lifespan 解决，不在 Phase 1 修�
 - Python 访问 Java MySQL/Redis；
 - 在线 LoRA 推理或用 LoRA 替换 DeepSeek；
 - 为统一目录而大规模移动/重命名 Python 文件。
+- Nuxt、SSR、微前端、GraphQL、WebSocket、前端微服务、大型设计系统和复杂前端状态框架；
+- 高级动画、完整 ChatGPT 视觉复刻、移动端适配、流式聊天和复杂 Markdown 渲染。
 
 这些内容如果未来产生真实需求，必须独立提出演进理由和成本，不能夹带进当前迁移阶段。
 
@@ -676,14 +712,14 @@ FastAPI 生命周期。服务化时通过 lifespan 解决，不在 Phase 1 修�
 | 是否过度设计 | PASS | 只有双服务、分层、MySQL/Redis/HTTP；明确排除 MQ、注册中心、完整 DDD |
 | 是否破坏 Python 已有能力 | PASS | `graph/`、`tools/`、`services/`、`rag/` 保留，新增薄包装 |
 | 是否方便面试解释 | PASS | 职责、依赖方向、数据所有权和同步链路清晰，可追到当前真实模块 |
-| 是否方便后续实现 | PASS | Phase 2 可继续冻结契约与存储，Phase 3–11 可逐步落地，不要求一次生成全部工程 |
+| 是否方便后续实现 | PASS | 各 Phase 可按依赖逐步落地；9.5/10.5 只增加最小客户端，不要求一次生成完整前端工程 |
 
 ### 10.2 四维审计
 
 #### 功能：PASS（针对 Phase 1 文档交付）
 
 - 覆盖项目目标、双服务图、Java/Python 设计、边界、API、数据和生命周期。
-- 明确区分当前已实现能力与未来目标，未伪造 Java/FastAPI 功能。
+- 明确区分当前已实现能力与未来目标，未把 Vue、MySQL、Redis、JWT 或完整业务链写成已实现。
 
 #### 架构：PASS
 
@@ -702,8 +738,9 @@ FastAPI 生命周期。服务化时通过 lifespan 解决，不在 Phase 1 修�
 
 #### 生命周期：WARNING
 
-- 目标生命周期已经定义，但当前源码仍是 Streamlit rerun + 手动 bootstrap，尚无 FastAPI lifespan。
-- 当前 `InMemorySaver` 仅允许开发/测试使用，目标生产上下文由 Java 的有限历史输入提供；
+- Phase 1 冻结时源码仍是 Streamlit rerun + 手动 bootstrap；Phase 4 已加入 FastAPI lifespan，
+  但真实 DeepSeek/Embedding/FAISS 资源生命周期仍须在集成环境继续验证。
+- `InMemorySaver` 仅允许开发/测试使用，目标生产上下文由 Java 的有限历史输入提供；
   LlamaIndex 仍使用全局 `Settings`。
 - 索引重建与检索并发、上传安全和资源关闭需要后续 Phase 实现和验证。
 
@@ -711,15 +748,16 @@ FastAPI 生命周期。服务化时通过 lifespan 解决，不在 Phase 1 修�
 
 以下是已知、允许进入后续 Phase 的差距，不是 Phase 1 文档错误：
 
-1. Java Backend 和 FastAPI Router 尚不存在，符合当前阶段边界。
-2. API 精确路径、错误码、有限历史上限、幂等存储、DB 表和 Redis Key/TTL 尚待 Phase 2 冻结。
-3. 当前 Python 来源追踪、Tool 失败识别、Agent 循环上限和 StateManager 清理语义仍有技术债。
-4. 当前上传安全、FAISS pickle 信任边界和索引并发尚未实现生产保护。
-5. LoRA 仍未接入在线主链路。
+1. Java Backend 与 FastAPI Router 已形成阶段性基础，但完整 Java→Python 业务链仍待后续 Phase。
+2. API、数据库和 Redis 契约已在 Phase 2 冻结；MySQL、Redis、JWT 与对应业务实现仍待落地。
+3. Vue Web Client 尚未创建，须在 Phase 9.5/10.5 按依赖分两次最小实现。
+4. 当前 Python 来源追踪、Tool 失败识别、Agent 循环上限和 StateManager 清理语义仍有技术债。
+5. 当前上传安全、FAISS pickle 信任边界和索引并发尚未实现生产保护。
+6. LoRA 仍未接入在线主链路。
 
 ### 10.4 ERROR
 
-按 v1.0 最终审计后，未发现阻止冻结的 ERROR。
+按 v1.1 文档调整审计后，未发现阻止继续冻结的 ERROR；新增客户端不改变既有双服务边界。
 
 结论：**PASS with WARNING**。本文件已通过用户 Review 并正式冻结；此后所有代码和后续
 设计必须符合本文件。WARNING 进入对应后续 Phase，不改变已冻结的服务边界。

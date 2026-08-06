@@ -1,6 +1,7 @@
 # Phase 1 Learning Kit：双服务架构设计
 
-> 状态：Phase 1 已完成；配合已冻结的 `docs/ARCHITECTURE.md v1.0` 使用。
+> 状态：Phase 1 已完成；配合已冻结主体边界并增补客户端规划的 `docs/ARCHITECTURE.md v1.1` 使用。
+> 路线增补：Vue 正式客户端安排在 Phase 9.5/10.5；见 [学习总索引](../README.md)。
 
 ## 本阶段目标
 
@@ -14,7 +15,7 @@ Web Client → Java Spring Boot Backend → Python FastAPI AI Service
 
 ## 先区分“当前”与“目标”
 
-### 当前真实实现
+### Phase 1 冻结时的真实实现
 
 - 正式在线入口是 `app.py` 启动的 Streamlit。
 - `application/bootstrap.py` 手动装配 Python 对象。

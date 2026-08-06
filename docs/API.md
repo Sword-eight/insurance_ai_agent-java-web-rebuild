@@ -5,10 +5,14 @@
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[DATABASE.md](./DATABASE.md) / [REDIS.md](./REDIS.md) / [DECISIONS.md](./DECISIONS.md)
 > 范围：冻结 v1 的 HTTP 路径、字段、错误码、上下文、幂等和容错默认值；不表示接口已经实现
+> 客户端说明：Phase 9.5/10.5 规划的 Vue 只消费 Java 公共 API；本次规划调整不修改 v1 契约
 
 ## 1. 当前事实和约束
 
-当前在线入口仍是 Streamlit `app.py`。Java Backend、FastAPI Router、DTO、VO 和 HTTP Client 尚未实现。本文件是后续实现必须遵守的目标契约，不能用来宣称接口已经可调用。
+Phase 2 冻结本契约时，在线入口仍是 Streamlit `app.py`，Java Backend、FastAPI Router、DTO、
+VO 和 HTTP Client 尚未实现。此后仓库已形成 FastAPI 与 Java 阶段性基础，但完整业务接口、
+JWT、MySQL/Redis 链路和 Vue Web Client 仍须按后续 Phase 落地。本文件不能单独用来宣称某个
+接口当前已经可调用。
 
 固定调用方向：
 
@@ -23,6 +27,10 @@ Web Client → Java public API → Service → AgentClient/KnowledgeClient
 - 业务 ID 和 requestId 在 HTTP 中使用标准 UUID 字符串；数据库内部主键不进入 API。
 - `userId` 来自 Java 认证上下文，不接受请求体伪造。
 - 第一版聊天是同步 POST，不实现 `task_id`、轮询、SSE 或 MQ。
+- Vue 只解析 Java 公共 Envelope 与公共 DTO，不解析 Python `InternalEnvelope`；统一 Envelope
+  不表示所有 `data` 共用同一个 DTO。
+- Java 返回 `UNKNOWN` 时，Vue 只能明确展示“结果暂时无法确认”，不得自动重发、改写为
+  `FAILED` 或自行恢复状态；用户明确发起的新请求使用新的幂等键。
 
 ## 2. Header 契约
 

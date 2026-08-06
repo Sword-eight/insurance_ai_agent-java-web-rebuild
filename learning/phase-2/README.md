@@ -1,5 +1,8 @@
 # Phase 2 Learning Kit：把架构变成稳定契约
 
+> 本文“当前实现”指 Phase 2 冻结时点的历史事实；后续状态与新增 Phase 9.5/10.5 见
+> [学习总索引](../README.md)。Phase 2 v1.0 契约本次未改动。
+
 ## 本阶段目标
 
 Phase 1 回答“Java 与 Python 各自负责什么”；Phase 2 回答“它们以后怎样准确交流和保存状态”。本阶段冻结 API、错误码、MySQL 逻辑模型、Redis Key/TTL、幂等和容错默认值，不实现 Java、FastAPI、MySQL 或 Redis 代码。
@@ -63,4 +66,3 @@ Phase 2 目标契约：
 - 为 Redis Key 同时说明 Value、TTL、事实来源和故障降级；
 - 对照源码指出哪些字段当前真实存在，哪些只是未来 Facade 契约；
 - 明确当前没有 Java/FastAPI 实现，测试通过不等于双服务已运行。
-

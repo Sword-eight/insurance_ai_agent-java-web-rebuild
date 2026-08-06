@@ -1,10 +1,14 @@
 # Insurance AI Platform 迁移计划（Phase 0 草案）
 
 > 项目目标名：Insurance AI Platform / 保险智能问答平台  
-> 文档状态：Phase 0 Review 已完成；作为迁移基线，不代表架构已经冻结
+> 文档状态：Phase 0 审计基线已完成；第 12 节路线于 2026-08-06 增补 Vue 客户端阶段
 > 审查日期：2026-07-30  
 > 审查分支：`phase-0-source-audit`  
 > 基线提交：`ce591cb56188b7fd6a0b27c8f3263f0872c82f1c`
+
+第 1～11、13～14 节保留 Phase 0 审计时点的历史事实与结论；后续实现状态以源码、
+[ARCHITECTURE.md](./ARCHITECTURE.md) 和 Learning Kit 为准。第 12 节是持续维护的正式路线，
+不能用历史段落中的“当前”判断后来 Phase 是否已经实现。
 
 ## 1. Phase 0 范围
 
@@ -607,10 +611,20 @@ Web Client
 
 ## 12. 分阶段迁移路线
 
-### Phase 0：源码审查与迁移计划（当前）
+> 路线调整（2026-08-06）：当前仓库没有正式的 Phase 0.75；分支隔离已作为 Git 工作流执行，
+> 不追补或虚构阶段。现有 14 个正式交付阶段中新增 Phase 9.5 与 Phase 10.5，调整后共
+> **16 个正式交付阶段**。Vue 尚未创建；详细规划见
+> [WEB_CLIENT_PLAN.md](./WEB_CLIENT_PLAN.md)。
+
+### Phase 0：源码审查与迁移计划
 
 - 输出真实基线、调用链、差异、模块分类和迁移路线。
 - 不改业务代码。
+
+### Phase 0.5：Python 测试与可复现基线
+
+- 把导入期断言改造成可离线、可重复执行的 pytest 基线，并隔离模型、外部 API 和真实索引副作用。
+- 固定开发依赖、Mock/DI 边界和最小复现命令，为后续迁移提供可信回归证据。
 
 ### Phase 1：冻结架构
 
@@ -659,20 +673,51 @@ Web Client
 
 - 注册、登录、密码散列、JWT filter、资源归属校验。
 
+### Phase 9.5：Vue Minimal Chat Client
+
+- 前置条件：Phase 6～9 的聊天、会话、消息、Redis、登录与 JWT 公共接口已稳定。
+- 使用 Vue 3、TypeScript、Vite、Vue Router 和 Axios 实现登录、注册、会话列表、历史消息、
+  新建/切换会话和同步聊天的极简可交互页面。
+- 处理 loading、稳定错误、重复点击和 401 清理登录态；`UNKNOWN` 只展示，不自动重发。
+- 所有请求只访问 Java `/api/v1`；不直连 Python，不引入知识库页面，不追求专业 UI/UX。
+
 ### Phase 10：PDF 与知识库管理
 
 - Java 管文档元数据和上传入口，Python 管文件解析与索引。
 - 处理文件安全、重建并发和失败状态。
 
+### Phase 10.5：Document Client Extension
+
+- 前置条件：Phase 10 文档上传、列表、文档状态和索引状态公共接口稳定。
+- 在 Phase 9.5 客户端上最小扩展文档选择、PDF 上传、进度或 loading、文档列表、索引状态和
+  失败提示；不重新设计整个客户端。
+- 所有请求只访问 Java 文档 API，不直连 Python Knowledge API。
+
 ### Phase 11：可观测性与容错
 
+- 前置条件：Phase 9.5、Phase 10 与 Phase 10.5 已完成，Vue、Java、Python 的可观察链路完整。
 - Java/Python TraceId 贯通、结构化日志、超时、重试、熔断和健康检查。
 - 验证不会因重试产生重复消息或重复索引操作。
+- 验证客户端能稳定展示 401、429、502、503 与 `UNKNOWN`，但不在客户端复制后端状态机。
 
 ### Phase 12：测试与最终审计
 
+- 前置条件：Phase 0～11（含 9.5、10.5）全部完成且不存在未解决 ERROR。
 - Java 单元/集成测试、Python pytest、内部契约测试、端到端异常测试。
+- 完成 Vue→Java→Python、Vue→Java→MySQL/Redis 以及文档索引链的最终联调。
 - 最终四维审计和架构漂移检查。
+
+### 12.1 调整后的完整顺序与周期
+
+```text
+Phase 0 → 0.5 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 9.5 → 10 → 10.5 → 11 → 12
+```
+
+当前路线没有 Phase 0.75。Vue 增量时间为：Phase 9.5 开发联调 1～2 天、学习和小修改
+1～2 天；Phase 10.5 开发联调 0.5～1 天、学习和小修改 0.5～1 天。合计快速 2～3 天、
+正常节奏 3～5 天、需要补 JavaScript 基础时 5～7 天。既有后端/AI Phase 没有冻结统一日历
+工期，因此调整后的总学习周期写作“原后端/AI 学习周期 + 上述 Vue 增量”，不伪造一个
+缺少历史依据的总天数。
 
 ## 13. 已知债务的处理建议
 
