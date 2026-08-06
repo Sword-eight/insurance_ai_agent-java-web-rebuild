@@ -20,7 +20,11 @@ from utils.logger import get_logger
 logger = get_logger("app.bootstrap")
 
 
-def init_services(rag_engine: str = "langchain") -> Dict[str, Any]:
+def init_services(
+    rag_engine: str = "langchain",
+    *,
+    build_missing_index: bool = True,
+) -> Dict[str, Any]:
     """
     初始化所有服务——按生命周期图自底向上创建。
 
@@ -36,6 +40,7 @@ def init_services(rag_engine: str = "langchain") -> Dict[str, Any]:
 
     Args:
         rag_engine: RAG 引擎选择（"langchain" | "llamaindex"）
+        build_missing_index: 索引缺失时是否自动构建；FastAPI 启动固定为 False
 
     Returns:
         包含各服务实例的字典
@@ -66,9 +71,10 @@ def init_services(rag_engine: str = "langchain") -> Dict[str, Any]:
     knowledge_service = KnowledgeService(builder=builder)
 
     # 自动加载或构建知识库
-    if not knowledge_service.get_stats().get("index_exists"):
+    knowledge_stats = knowledge_service.get_stats()
+    if not knowledge_stats.get("index_exists") and build_missing_index:
         knowledge_service.build_knowledge_base()
-    else:
+    elif knowledge_stats.get("index_exists"):
         knowledge_service.load_existing_index()
 
     # ── Step 3: RetrievalService（Retriever 注入）──────────────
@@ -97,3 +103,27 @@ def init_services(rag_engine: str = "langchain") -> Dict[str, Any]:
         "graph_builder": graph_builder,
         "state_manager": state_manager,
     }
+
+
+def init_api_runtime(rag_engine: str = "langchain"):
+    """构建 FastAPI 进程级 Runtime，不在启动时创建或重建缺失索引。"""
+
+    from application.agent_facade import DefaultAgentFacade
+    from application.knowledge_facade import DefaultKnowledgeFacade
+    from application.request_registry import RequestRegistry
+    from application.runtime import ApplicationRuntime
+
+    services = init_services(
+        rag_engine=rag_engine,
+        build_missing_index=False,
+    )
+    registry = RequestRegistry(ttl_seconds=600.0, capacity=1024)
+    return ApplicationRuntime(
+        agent_facade=DefaultAgentFacade(
+            graph_builder=services["graph_builder"],
+            registry=registry,
+        ),
+        knowledge_facade=DefaultKnowledgeFacade(
+            knowledge_service=services["knowledge_service"],
+        ),
+    )

@@ -2,11 +2,19 @@ from uuid import uuid4
 
 from fastapi.testclient import TestClient
 
-from api.main import app
+from api.main import create_app
+from application.runtime import ApplicationRuntime
 
 
 TRACE_ID = "01J4EXAMPLETRACE01"
 HEADERS = {"X-Trace-Id": TRACE_ID}
+
+
+def _failing_factory() -> ApplicationRuntime:
+    raise RuntimeError("offline skeleton runtime")
+
+
+app = create_app(runtime_factory=_failing_factory)
 
 
 def test_liveness_is_available_without_ai_resources() -> None:
@@ -77,7 +85,7 @@ def test_internal_route_requires_valid_trace_id() -> None:
     assert response.json()["error"]["code"] == "AI_VALIDATION_ERROR"
 
 
-def test_knowledge_index_accepts_multipart_shape_but_does_not_read_ai_core() -> None:
+def test_knowledge_index_is_unavailable_when_runtime_initialization_failed() -> None:
     metadata = (
         "{"
         f'"requestId":"{uuid4()}",'
@@ -95,11 +103,11 @@ def test_knowledge_index_accepts_multipart_shape_but_does_not_read_ai_core() -> 
             files={"file": ("terms.pdf", b"%PDF-1.7\n", "application/pdf")},
         )
 
-    assert response.status_code == 500
-    assert response.json()["error"]["code"] == "AI_INTERNAL_ERROR"
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "AI_LLM_UNAVAILABLE"
 
 
-def test_knowledge_index_rejects_invalid_metadata_before_facade() -> None:
+def test_knowledge_index_requires_ready_runtime_before_manual_metadata_parsing() -> None:
     with TestClient(app) as client:
         response = client.post(
             "/internal/v1/knowledge/documents/index",
@@ -108,10 +116,5 @@ def test_knowledge_index_rejects_invalid_metadata_before_facade() -> None:
             files={"file": ("terms.pdf", b"%PDF-1.7\n", "application/pdf")},
         )
 
-    assert response.status_code == 400
-    assert response.json()["error"] == {
-        "code": "AI_VALIDATION_ERROR",
-        "type": "VALIDATION",
-        "message": "metadata must match the frozen knowledge contract",
-        "retryable": False,
-    }
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "AI_LLM_UNAVAILABLE"

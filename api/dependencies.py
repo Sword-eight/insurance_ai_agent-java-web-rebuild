@@ -1,59 +1,24 @@
-"""HTTP 依赖提供器；Phase 4 才替换为 bootstrap 创建的真实 Facade。"""
+"""从 FastAPI 进程级 Runtime 获取 Facade。"""
 
-from application.facades import (
-    AgentChatCommand,
-    AgentChatResult,
-    AgentFacade,
-    KnowledgeIndexCommand,
-    KnowledgeIndexResult,
-    KnowledgeFacade,
-)
-from api.errors import ServiceUnavailableError
+from fastapi import Request
+
+from application.errors import runtime_unavailable_error
+from application.facades import AgentFacade, KnowledgeFacade
+from application.runtime import ApplicationRuntime
 
 
-class _UnavailableAgentFacade:
-    def chat(self, command: AgentChatCommand) -> AgentChatResult:
-        raise ServiceUnavailableError(
-            code="AI_LLM_UNAVAILABLE",
-            message="Phase 3 skeleton has not connected the agent facade",
-            retryable=True,
-            status_code=503,
-        )
+def get_runtime(request: Request) -> ApplicationRuntime:
+    runtime = getattr(request.app.state, "runtime", None)
+    if runtime is None or not getattr(
+        request.app.state, "ai_resources_ready", False
+    ):
+        raise runtime_unavailable_error()
+    return runtime
 
 
-class _UnavailableKnowledgeFacade:
-    def index_document(self, command: KnowledgeIndexCommand) -> KnowledgeIndexResult:
-        raise ServiceUnavailableError(
-            code="AI_INTERNAL_ERROR",
-            message="Phase 3 skeleton has not connected the knowledge facade",
-            retryable=False,
-            status_code=500,
-        )
-
-    def rebuild(self) -> None:
-        raise ServiceUnavailableError(
-            code="AI_INTERNAL_ERROR",
-            message="Phase 3 skeleton has not connected the knowledge facade",
-            retryable=False,
-            status_code=500,
-        )
-
-    def status(self) -> dict[str, object]:
-        raise ServiceUnavailableError(
-            code="AI_INTERNAL_ERROR",
-            message="Phase 3 skeleton has not connected the knowledge facade",
-            retryable=False,
-            status_code=500,
-        )
+def get_agent_facade(request: Request) -> AgentFacade:
+    return get_runtime(request).agent_facade
 
 
-_agent_facade: AgentFacade = _UnavailableAgentFacade()
-_knowledge_facade: KnowledgeFacade = _UnavailableKnowledgeFacade()
-
-
-def get_agent_facade() -> AgentFacade:
-    return _agent_facade
-
-
-def get_knowledge_facade() -> KnowledgeFacade:
-    return _knowledge_facade
+def get_knowledge_facade(request: Request) -> KnowledgeFacade:
+    return get_runtime(request).knowledge_facade

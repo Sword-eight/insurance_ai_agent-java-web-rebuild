@@ -1,8 +1,6 @@
 """Agent HTTP Skeleton；不直接访问 Graph 或 RAG。"""
 
-from typing import Annotated
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Request
 
 from api.dependencies import get_agent_facade
 from api.schemas.agent import AgentChatRequest
@@ -17,8 +15,11 @@ router = APIRouter(prefix="/internal/v1/agent", tags=["internal-agent"])
 def chat(
     request: AgentChatRequest,
     trace_id: TraceId,
-    facade: Annotated[AgentFacade, Depends(get_agent_facade)],
+    http_request: Request,
 ) -> InternalEnvelope:
+    # Resolve the runtime only after FastAPI has accepted the HTTP contract.
+    # This keeps a malformed request deterministic even during degraded startup.
+    facade: AgentFacade = get_agent_facade(http_request)
     result = facade.chat(
         AgentChatCommand(
             request_id=request.requestId,

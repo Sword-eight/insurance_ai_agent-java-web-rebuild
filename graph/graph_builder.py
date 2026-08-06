@@ -306,6 +306,9 @@ class AgentGraphBuilder:
         self,
         user_message: str,
         session_id: str = "default",
+        *,
+        history_messages: Optional[List[Any]] = None,
+        execution_id: Optional[str] = None,
     ) -> dict:
         """
         运行 Agent 处理用户消息（同步方式）。
@@ -313,14 +316,24 @@ class AgentGraphBuilder:
         Args:
             user_message: 用户输入文本
             session_id: 会话 ID（用于多轮对话记忆）
+            history_messages: 调用方提供的有限历史；默认空，保持 Streamlit 兼容
+            execution_id: 本次执行隔离 ID；提供时不复用 session checkpoint
 
         Returns:
             Agent 最终状态
         """
-        thread: dict = {"configurable": {"thread_id": session_id}}
+        thread_id = (
+            f"{session_id}:{execution_id}"
+            if execution_id is not None
+            else session_id
+        )
+        thread: dict = {"configurable": {"thread_id": thread_id}}
+
+        input_messages = list(history_messages or [])
+        input_messages.append(HumanMessage(content=user_message))
 
         initial_state: dict = {
-            "messages": [HumanMessage(content=user_message)],
+            "messages": input_messages,
             "tool_results": [],
             "retrieved_docs": [],
             "session_id": session_id,
@@ -328,11 +341,21 @@ class AgentGraphBuilder:
             "agent_monitor": [],
         }
 
-        logger.info(f"[Graph] 开始执行: session={session_id}, msg='{user_message[:50]}...'")
-        result = self._graph.invoke(initial_state, thread)
-        logger.info(f"[Graph] 执行完成: session={session_id}")
-
-        return result
+        logger.info(
+            f"[Graph] 开始执行: session={session_id}, "
+            f"message_length={len(user_message)}"
+        )
+        try:
+            result = self._graph.invoke(initial_state, thread)
+            logger.info(f"[Graph] 执行完成: session={session_id}")
+            return result
+        finally:
+            # HTTP requests bring their complete finite history, so their
+            # isolated checkpoints are execution scratch space, not memory.
+            if execution_id is not None:
+                delete_thread = getattr(self._checkpointer, "delete_thread", None)
+                if callable(delete_thread):
+                    delete_thread(thread_id)
 
     def stream(
         self,
