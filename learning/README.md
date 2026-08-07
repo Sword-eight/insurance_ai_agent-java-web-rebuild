@@ -1,7 +1,7 @@
 # Insurance AI Platform 学习路线索引
 
 > 正式交付阶段：16 个
-> 当前说明：Phase 0～4 已完成；Phase 5 实现与 Learning Kit 位于当前未提交工作树；其余为规划
+> 当前说明：Phase 0～5 已完成；Phase 6 实现与 Learning Kit 位于当前未提交工作树；其余为规划
 > 事实来源：[架构](../docs/ARCHITECTURE.md) / [迁移路线](../docs/MIGRATION_PLAN.md) /
 > [Vue 客户端规划](../docs/WEB_CLIENT_PLAN.md)
 
@@ -16,8 +16,8 @@
 | 4 | Phase 2 API / Database / Redis 契约 | 已完成 | [Learning Kit](./phase-2/README.md) |
 | 5 | Phase 3 Java 与 FastAPI Skeleton | 已完成 | [Learning Kit](./phase-3/README.md) |
 | 6 | Phase 4 Python FastAPI 最小包装 | 已完成 | [Learning Kit](./phase-4/README.md) |
-| 7 | Phase 5 Java Spring Boot 基础工程 | 当前工作树，尚未提交 | [Learning Kit](./phase-5/README.md) |
-| 8 | Phase 6 Java→Python 聊天链 | 规划 | 本阶段开始时生成 |
+| 7 | Phase 5 Java Spring Boot 基础工程 | 已完成 | [Learning Kit](./phase-5/README.md) |
+| 8 | Phase 6 Java→Python 聊天链 | 当前工作树，尚未提交 | [Learning Kit](./phase-6/README.md) |
 | 9 | Phase 7 MySQL 会话与消息 | 规划 | 本阶段开始时生成 |
 | 10 | Phase 8 Redis | 规划 | 本阶段开始时生成 |
 | 11 | Phase 9 用户、登录与 JWT | 规划 | 本阶段开始时生成 |

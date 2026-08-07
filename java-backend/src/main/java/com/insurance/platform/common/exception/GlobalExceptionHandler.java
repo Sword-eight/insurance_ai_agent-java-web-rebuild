@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -39,6 +40,7 @@ public class GlobalExceptionHandler {
             HandlerMethodValidationException.class,
             ConstraintViolationException.class,
             HttpMessageNotReadableException.class,
+            MissingRequestHeaderException.class,
             MissingServletRequestParameterException.class,
             MethodArgumentTypeMismatchException.class
     })

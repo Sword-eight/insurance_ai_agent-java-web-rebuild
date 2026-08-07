@@ -4,7 +4,7 @@ import com.insurance.platform.client.dto.AgentChatRequest;
 import com.insurance.platform.client.dto.AgentChatResponse;
 
 /**
- * Java → Python Agent 端口。Phase 6 才提供真实 HTTP 适配器。
+ * Java → Python Agent 端口。HTTP、超时与内部契约转换由 Phase 6 适配器实现。
  */
 public interface AgentClient {
 
