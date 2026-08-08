@@ -1,7 +1,7 @@
 # Insurance AI Platform 决策记录
 
-> 文档版本：v1.0
-> 状态：Phase 2 v1.0 决策已接受；自 2026-08-01 起生效
+> 文档版本：v1.1
+> 状态：Phase 2 v1.0 决策已接受；Phase 7 v1.1 增补已接受并实现
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[API.md](./API.md) / [DATABASE.md](./DATABASE.md) / [REDIS.md](./REDIS.md)
 
@@ -17,7 +17,7 @@
 - `SUPERSEDED`：被后续获批决策替代；
 - `REJECTED`：明确不采用。
 
-Phase 2 v1.0 的现行决策均已通过最终 Review，状态为 `ACCEPTED`；`P2-FUTURE-001` 仅是未来改进记录，继续保持 `FUTURE`，不属于当前能力。此次冻结没有修改 Phase 1 架构。
+Phase 2 v1.0 的现行决策均已通过最终 Review，状态为 `ACCEPTED`；`P2-FUTURE-001` 仅是未来改进记录，继续保持 `FUTURE`，不属于当前能力。Phase 7 实施前只增补用户上下文过渡、会话查询 VO 和成功幂等来源重放，不修改 Phase 1 架构。
 
 ## 2. 继承约束
 
@@ -116,6 +116,30 @@ Phase 2 v1.0 的现行决策均已通过最终 Review，状态为 `ACCEPTED`；`
 - 原因：避免持锁 60～300 秒，不需要分布式事务。
 - 放弃：在一个数据库事务中等待 Python；引入 Seata/分布式事务。
 - 代价：必须处理 FAILED/UNKNOWN 中间结果和缓存失效。
+
+### P7-AUTH-001：Phase 7 用户上下文失败关闭
+
+- 状态：`ACCEPTED`
+- 选择：Phase 7 为外键依赖创建 `iap_user` 基础表，但不实现注册、登录、密码或 JWT；生产 `CurrentUserProvider` 在 Phase 9 接入前固定返回 `AUTH_UNAUTHORIZED`，集成测试使用 test-only provider 和测试用户数据。
+- 原因：会话归属和用户级幂等不能使用固定生产用户、请求体 userId 或未冻结 Header 冒充认证。
+- 放弃：硬编码单用户；新增 `X-User-Id`；提前实现 Phase 9 JWT。
+- 代价：Phase 7 的成功公共 API 需要在隔离集成测试中验证，默认生产配置在 Phase 9 前失败关闭。
+
+### P7-API-001：会话列表与详情复用创建视图
+
+- 状态：`ACCEPTED`
+- 选择：创建、列表 item 和详情统一使用 `conversationId/title/status/createdAt` 四字段 VO；列表仍使用冻结分页 Envelope。
+- 原因：Phase 2 已冻结路径但遗漏列表/详情字段；复用已有创建视图是最小补充。
+- 放弃：为不同接口新增未冻结字段；直接返回 Entity。
+- 代价：`updatedAt` 和消息摘要暂不公开，未来增加需要单独 Review。
+
+### P7-IDEM-001：成功请求持久化公开来源
+
+- 状态：`ACCEPTED`
+- 选择：`iap_chat_request` 增加可空 `sources_json`；仅在成功事务中保存经过公共 VO 校验的来源数组，重复成功请求与消息表共同重建第一次业务结果。
+- 原因：冻结 API 要求成功幂等重放第一次结果，但原 v1.0 表结构无法在 Python 重启后恢复 `sources`。
+- 放弃：重复请求返回空来源；依赖 Python 10 分钟内存缓存；新增第六张来源表；保存整个内部 Envelope。
+- 代价：数据库保存一份有限公开来源 JSON，Service 必须控制字段、长度和反序列化失败语义。
 
 ## 5. Redis 决策
 

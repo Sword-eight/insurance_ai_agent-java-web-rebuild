@@ -663,6 +663,9 @@ Web Client
 
 - 会话、消息持久化和查询。
 - 正常与 AI 调用失败时的消息状态要有明确事务边界。
+- Phase 7 提交后、Phase 8 开始前补做真实 MySQL 8 验收：在空库执行 Flyway migration，
+  验证 JSON 字段、外键、唯一约束、会话/消息查询、持久幂等以及并发锁语义；通过后才能
+  消除 H2 MySQL 模式留下的数据库兼容性 WARNING。
 
 ### Phase 8：Redis
 
@@ -685,6 +688,8 @@ Web Client
 
 - Java 管文档元数据和上传入口，Python 管文件解析与索引。
 - 处理文件安全、重建并发和失败状态。
+- Phase 10 完成后在真实 MySQL 8 验证包含文档表在内的完整 migration：同时覆盖空库初始化
+  和已有 Phase 7 schema 的版本升级路径。
 
 ### Phase 10.5：Document Client Extension
 
@@ -705,6 +710,7 @@ Web Client
 - 前置条件：Phase 0～11（含 9.5、10.5）全部完成且不存在未解决 ERROR。
 - Java 单元/集成测试、Python pytest、内部契约测试、端到端异常测试。
 - 完成 Vue→Java→Python、Vue→Java→MySQL/Redis 以及文档索引链的最终联调。
+- 在真实 MySQL 8 与 Redis 环境完成最终端到端数据验收，不以 H2 MySQL 模式替代正式结论。
 - 最终四维审计和架构漂移检查。
 
 ### 12.1 调整后的完整顺序与周期

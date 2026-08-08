@@ -1,6 +1,13 @@
 spring:
   application:
     name: insurance-platform-backend
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 server:
   port: ${JAVA_BACKEND_PORT:8080}
@@ -13,4 +20,8 @@ insurance:
 
 springdoc:
   paths-to-match: /api/v1/**
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
 

@@ -6,6 +6,7 @@ public class AgentClientException extends RuntimeException {
     public enum Kind {
         TIMEOUT,
         UNAVAILABLE,
+        DELIVERY_UNKNOWN,
         REJECTED,
         PROTOCOL
     }

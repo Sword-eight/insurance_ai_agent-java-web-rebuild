@@ -100,7 +100,7 @@ public class HttpAgentClient implements AgentClient {
                 || hasCause(exception, TimeoutException.class)) {
             return new AgentClientException(Kind.TIMEOUT, null, exception);
         }
-        return new AgentClientException(Kind.UNAVAILABLE, null, exception);
+        return new AgentClientException(Kind.DELIVERY_UNKNOWN, null, exception);
     }
 
     private static boolean hasCause(Throwable throwable, Class<? extends Throwable> type) {
