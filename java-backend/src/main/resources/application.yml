@@ -30,6 +30,11 @@ insurance:
     rate-limit-ttl: 120s
     idempotency-ttl: 24h
     chat-rate-limit-per-minute: 20
+  security:
+    jwt:
+      issuer: ${JWT_ISSUER:insurance-ai-platform}
+      access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:30m}
+      secret-base64: ${JWT_SECRET_BASE64:}
 
 springdoc:
   paths-to-match: /api/v1/**

@@ -56,12 +56,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(username = "00000000-0000-0000-0000-000000000007")
 class Phase7PersistenceIntegrationTests {
     private static final String TRACE_ID = "01J4EXAMPLETRACE01";
 
