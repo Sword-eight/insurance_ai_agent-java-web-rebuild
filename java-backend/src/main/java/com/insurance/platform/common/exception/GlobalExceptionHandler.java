@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,6 +29,17 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger =
             LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRateLimitExceeded(
+            RateLimitExceededException exception) {
+        String traceId = TraceIdContext.currentTraceId();
+        return ResponseEntity
+                .status(exception.errorCode().httpStatus())
+                .header(HttpHeaders.RETRY_AFTER, Long.toString(exception.retryAfterSeconds()))
+                .body(ApiResponse.failure(
+                        exception.errorCode(), exception.getMessage(), traceId));
+    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(

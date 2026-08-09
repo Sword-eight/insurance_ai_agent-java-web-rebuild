@@ -13,6 +13,7 @@ import com.insurance.platform.chat.service.ChatService;
 import com.insurance.platform.chat.vo.ChatResponse;
 import com.insurance.platform.common.error.ErrorCode;
 import com.insurance.platform.common.exception.BusinessException;
+import com.insurance.platform.common.exception.RateLimitExceededException;
 import com.insurance.platform.common.trace.TraceIdContext;
 import java.util.List;
 import java.util.UUID;
@@ -113,5 +114,23 @@ class ChatControllerIntegrationTests {
                 .andExpect(jsonPath("$.code").value("AI_SERVICE_TIMEOUT"))
                 .andExpect(jsonPath("$.message").value("AI service timed out"))
                 .andExpect(jsonPath("$.traceId").value(TRACE_ID));
+    }
+
+    @Test
+    void rateLimitFailureReturnsRetryAfterHeader() throws Exception {
+        UUID key = UUID.randomUUID();
+        when(chatService.chat(any(), eq(key), eq(TRACE_ID)))
+                .thenThrow(new RateLimitExceededException(23));
+
+        mockMvc.perform(post("/api/v1/chat/messages")
+                        .header(TraceIdContext.HEADER_NAME, TRACE_ID)
+                        .header("Idempotency-Key", key)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"conversationId":"%s","message":"question"}
+                                """.formatted(UUID.randomUUID())))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(header().string("Retry-After", "23"))
+                .andExpect(jsonPath("$.code").value("RATE_LIMIT_EXCEEDED"));
     }
 }

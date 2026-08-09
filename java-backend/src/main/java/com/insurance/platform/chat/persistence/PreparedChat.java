@@ -1,8 +1,6 @@
 package com.insurance.platform.chat.persistence;
 
 import com.insurance.platform.chat.vo.ChatResponse;
-import com.insurance.platform.client.dto.HistoryMessage;
-import java.util.List;
 import java.util.UUID;
 
 public record PreparedChat(
@@ -11,7 +9,7 @@ public record PreparedChat(
         UUID conversationId,
         UUID requestId,
         UUID userMessageId,
-        List<HistoryMessage> history,
+        ChatRequestStatus status,
         ChatResponse replayResponse) {
 
     public boolean isReplay() {

@@ -17,6 +17,13 @@ public interface ChatRequestMapper extends BaseMapper<ChatRequestEntity> {
 
     @Select("""
             SELECT * FROM iap_chat_request
+            WHERE user_id = #{userId} AND request_id = #{requestId}
+            """)
+    ChatRequestEntity findByRequestId(
+            @Param("userId") long userId, @Param("requestId") String requestId);
+
+    @Select("""
+            SELECT * FROM iap_chat_request
             WHERE conversation_id = #{conversationId} AND status = 'SUCCEEDED'
               AND id <> #{excludeRequestId}
             ORDER BY completed_at DESC, id DESC

@@ -16,6 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.insurance.platform.chat.dto.ChatRequest;
 import com.insurance.platform.chat.service.ChatService;
+import com.insurance.platform.chat.cache.RecentMessageCache;
+import com.insurance.platform.chat.idempotency.ChatIdempotencyCache;
+import com.insurance.platform.chat.idempotency.IdempotencySummary;
+import com.insurance.platform.chat.ratelimit.ChatRateLimiter;
+import com.insurance.platform.chat.ratelimit.RateLimitDecision;
 import com.insurance.platform.chat.vo.ChatResponse;
 import com.insurance.platform.client.AgentClient;
 import com.insurance.platform.client.dto.AgentChatRequest;
@@ -34,6 +39,8 @@ import com.insurance.platform.security.CurrentUserProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.CountDownLatch;
@@ -65,6 +72,9 @@ class Phase7PersistenceIntegrationTests {
     @Autowired private MockMvc mockMvc;
     @MockBean private CurrentUserProvider currentUserProvider;
     @MockBean private AgentClient agentClient;
+    @MockBean private ChatRateLimiter chatRateLimiter;
+    @MockBean private ChatIdempotencyCache chatIdempotencyCache;
+    @MockBean private RecentMessageCache recentMessageCache;
 
     private UUID userId;
 
@@ -74,9 +84,13 @@ class Phase7PersistenceIntegrationTests {
         jdbc.update("DELETE FROM iap_chat_request");
         jdbc.update("DELETE FROM iap_conversation");
         jdbc.update("DELETE FROM iap_user");
-        reset(agentClient, currentUserProvider);
+        reset(agentClient, currentUserProvider, chatRateLimiter,
+                chatIdempotencyCache, recentMessageCache);
         userId = insertUser("phase7-user");
         when(currentUserProvider.requireUserId()).thenReturn(userId);
+        when(chatRateLimiter.acquire(any())).thenReturn(new RateLimitDecision(true, 0));
+        when(chatIdempotencyCache.find(any(), any())).thenReturn(Optional.empty());
+        when(recentMessageCache.find(any())).thenReturn(Optional.empty());
     }
 
     @Test
@@ -177,6 +191,31 @@ class Phase7PersistenceIntegrationTests {
                                 .isEqualTo(ErrorCode.CHAT_IDEMPOTENCY_CONFLICT));
         verify(agentClient, times(1)).chat(any(), anyString());
         verifyNoMoreInteractions(agentClient);
+    }
+
+    @Test
+    void redisIdempotencyHitIsConfirmedByMysqlBeforeReplayOrConflict() {
+        UUID conversationId = conversationService.create(
+                new CreateConversationRequest("chat")).conversationId();
+        when(agentClient.chat(any(), anyString())).thenAnswer(invocation -> {
+            AgentChatRequest request = invocation.getArgument(0);
+            return new AgentChatResponse(request.requestId(), "answer", List.of(), 1);
+        });
+        UUID key = UUID.randomUUID();
+        ChatResponse first = chatService.chat(
+                new ChatRequest(conversationId, "question"), key, TRACE_ID);
+        when(chatIdempotencyCache.find(userId, key)).thenReturn(Optional.of(
+                new IdempotencySummary(
+                        first.requestId(), "f".repeat(64), "SUCCEEDED", Instant.now())));
+
+        assertThat(chatService.chat(
+                new ChatRequest(conversationId, "question"), key, TRACE_ID)).isEqualTo(first);
+        assertThatThrownBy(() -> chatService.chat(
+                        new ChatRequest(conversationId, "different"), key, TRACE_ID))
+                .isInstanceOfSatisfying(BusinessException.class, exception ->
+                        assertThat(exception.errorCode())
+                                .isEqualTo(ErrorCode.CHAT_IDEMPOTENCY_CONFLICT));
+        verify(agentClient, times(1)).chat(any(), anyString());
     }
 
     @Test

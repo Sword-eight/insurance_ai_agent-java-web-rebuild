@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.insurance.platform.chat.vo.ChatResponse;
 import com.insurance.platform.chat.vo.ChatSource;
-import com.insurance.platform.client.dto.HistoryMessage;
+import com.insurance.platform.chat.cache.CachedMessageSummary;
 import com.insurance.platform.common.error.ErrorCode;
 import com.insurance.platform.common.exception.BusinessException;
 import com.insurance.platform.conversation.entity.ConversationEntity;
@@ -54,10 +54,11 @@ public class ChatPersistenceService {
             UUID conversationId,
             String message,
             UUID idempotencyKey,
-            String requestHash) {
+            String requestHash,
+            UUID cachedRequestId) {
         long userId = requireInternalUserId();
-        ChatRequestEntity existing = requestMapper.findByIdempotencyKey(
-                userId, idempotencyKey.toString());
+        ChatRequestEntity existing = findExistingRequest(
+                userId, idempotencyKey, cachedRequestId);
         if (existing != null) {
             return replay(existing, conversationId, requestHash);
         }
@@ -100,7 +101,7 @@ public class ChatPersistenceService {
                 conversationId,
                 UUID.fromString(request.getRequestId()),
                 UUID.fromString(userMessage.getMessageId()),
-                loadHistory(conversation.getId(), request.getId()),
+                ChatRequestStatus.PROCESSING,
                 null);
     }
 
@@ -208,20 +209,39 @@ public class ChatPersistenceService {
         return new PreparedChat(
                 existing.getId(), existing.getConversationId(), conversationId,
                 UUID.fromString(existing.getRequestId()),
-                UUID.fromString(user.getMessageId()), List.of(), response);
+                UUID.fromString(user.getMessageId()), status, response);
     }
 
-    private List<HistoryMessage> loadHistory(long conversationId, long currentRequestId) {
+    @Transactional(readOnly = true)
+    public List<CachedMessageSummary> loadRecentMessages(
+            long conversationId, long currentRequestId) {
         List<ChatRequestEntity> recent = new ArrayList<>(requestMapper.findRecentSucceeded(
                 conversationId, currentRequestId, HISTORY_PAIR_LIMIT));
         Collections.reverse(recent);
-        List<HistoryMessage> history = new ArrayList<>();
+        List<CachedMessageSummary> history = new ArrayList<>();
         for (ChatRequestEntity request : recent) {
             for (ChatMessageEntity message : messageMapper.findByRequest(request.getId())) {
-                history.add(new HistoryMessage(message.getRole().toLowerCase(), message.getContent()));
+                history.add(new CachedMessageSummary(
+                        UUID.fromString(message.getMessageId()),
+                        UUID.fromString(request.getRequestId()),
+                        message.getRole(),
+                        message.getContent(),
+                        message.getSequenceNo()));
             }
         }
         return List.copyOf(history);
+    }
+
+    private ChatRequestEntity findExistingRequest(
+            long userId, UUID idempotencyKey, UUID cachedRequestId) {
+        if (cachedRequestId != null) {
+            ChatRequestEntity cached = requestMapper.findByRequestId(
+                    userId, cachedRequestId.toString());
+            if (cached != null && idempotencyKey.toString().equals(cached.getIdempotencyKey())) {
+                return cached;
+            }
+        }
+        return requestMapper.findByIdempotencyKey(userId, idempotencyKey.toString());
     }
 
     private void rejectMissingOrForeignConversation(UUID conversationId, long userId) {

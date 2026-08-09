@@ -4,6 +4,10 @@ import com.insurance.platform.chat.dto.ChatRequest;
 import com.insurance.platform.chat.persistence.ChatPersistenceService;
 import com.insurance.platform.chat.persistence.ChatRequestStatus;
 import com.insurance.platform.chat.persistence.PreparedChat;
+import com.insurance.platform.chat.idempotency.ChatIdempotencyCache;
+import com.insurance.platform.chat.idempotency.IdempotencySummary;
+import com.insurance.platform.chat.ratelimit.ChatRateLimiter;
+import com.insurance.platform.chat.ratelimit.RateLimitDecision;
 import com.insurance.platform.chat.vo.ChatResponse;
 import com.insurance.platform.chat.vo.ChatSource;
 import com.insurance.platform.client.AgentClient;
@@ -12,9 +16,12 @@ import com.insurance.platform.client.dto.AgentChatResponse;
 import com.insurance.platform.client.exception.AgentClientException;
 import com.insurance.platform.common.error.ErrorCode;
 import com.insurance.platform.common.exception.BusinessException;
+import com.insurance.platform.common.exception.RateLimitExceededException;
+import com.insurance.platform.security.CurrentUserProvider;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Clock;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
@@ -27,34 +34,68 @@ import org.springframework.stereotype.Service;
 public class ChatService {
     private final AgentClient agentClient;
     private final ChatPersistenceService persistenceService;
+    private final ChatRateLimiter rateLimiter;
+    private final ChatIdempotencyCache idempotencyCache;
+    private final ChatHistoryService historyService;
+    private final CurrentUserProvider currentUserProvider;
+    private final Clock clock;
 
-    public ChatService(AgentClient agentClient, ChatPersistenceService persistenceService) {
+    public ChatService(
+            AgentClient agentClient,
+            ChatPersistenceService persistenceService,
+            ChatRateLimiter rateLimiter,
+            ChatIdempotencyCache idempotencyCache,
+            ChatHistoryService historyService,
+            CurrentUserProvider currentUserProvider,
+            Clock clock) {
         this.agentClient = agentClient;
         this.persistenceService = persistenceService;
+        this.rateLimiter = rateLimiter;
+        this.idempotencyCache = idempotencyCache;
+        this.historyService = historyService;
+        this.currentUserProvider = currentUserProvider;
+        this.clock = clock;
     }
 
     public ChatResponse chat(ChatRequest request, UUID idempotencyKey, String traceId) {
+        UUID userId = currentUserProvider.requireUserId();
+        RateLimitDecision decision = rateLimiter.acquire(userId);
+        if (!decision.allowed()) {
+            throw new RateLimitExceededException(decision.retryAfterSeconds());
+        }
         String requestHash = requestHash(request.conversationId(), request.message());
+        UUID cachedRequestId = idempotencyCache.find(userId, idempotencyKey)
+                .filter(summary -> requestHash.equals(summary.requestHash()))
+                .map(IdempotencySummary::requestId)
+                .orElse(null);
         PreparedChat prepared;
         try {
             prepared = persistenceService.prepare(
-                    request.conversationId(), request.message(), idempotencyKey, requestHash);
+                    request.conversationId(), request.message(), idempotencyKey,
+                    requestHash, cachedRequestId);
         } catch (DuplicateKeyException exception) {
             prepared = persistenceService.replayAfterDuplicate(
                     request.conversationId(), idempotencyKey, requestHash);
         }
+        updateIdempotency(userId, idempotencyKey, prepared, requestHash, prepared.status());
         if (prepared.isReplay()) {
             return prepared.replayResponse();
         }
+        historyService.evict(prepared.conversationId());
 
         AgentChatResponse internalResponse;
         try {
+            var history = historyService.load(
+                    userId,
+                    prepared.conversationId(),
+                    prepared.internalConversationId(),
+                    prepared.internalRequestId());
             internalResponse = agentClient.chat(
                     new AgentChatRequest(
                             prepared.requestId(),
                             prepared.conversationId(),
                             request.message(),
-                            prepared.history()),
+                            history),
                     traceId);
         } catch (AgentClientException exception) {
             BusinessException publicFailure = mapClientFailure(exception);
@@ -62,22 +103,54 @@ public class ChatService {
                     ? ChatRequestStatus.UNKNOWN : ChatRequestStatus.FAILED;
             persistenceService.completeFailure(
                     prepared, terminalStatus, publicFailure.errorCode());
+            afterTerminalCommit(
+                    userId, idempotencyKey, prepared, requestHash, terminalStatus);
             throw publicFailure;
         } catch (RuntimeException exception) {
             persistenceService.completeFailure(
                     prepared, ChatRequestStatus.FAILED, ErrorCode.INTERNAL_ERROR);
+            afterTerminalCommit(
+                    userId, idempotencyKey, prepared, requestHash, ChatRequestStatus.FAILED);
             throw new BusinessException(ErrorCode.INTERNAL_ERROR);
         }
 
         try {
             String answer = validateAnswer(internalResponse, prepared.requestId());
             List<ChatSource> sources = mapSources(internalResponse.sources());
-            return persistenceService.completeSuccess(prepared, answer, sources);
+            ChatResponse response = persistenceService.completeSuccess(prepared, answer, sources);
+            afterTerminalCommit(
+                    userId, idempotencyKey, prepared, requestHash, ChatRequestStatus.SUCCEEDED);
+            return response;
         } catch (BusinessException exception) {
             persistenceService.completeFailure(
                     prepared, ChatRequestStatus.FAILED, exception.errorCode());
+            afterTerminalCommit(
+                    userId, idempotencyKey, prepared, requestHash, ChatRequestStatus.FAILED);
             throw exception;
         }
+    }
+
+    private void afterTerminalCommit(
+            UUID userId,
+            UUID idempotencyKey,
+            PreparedChat prepared,
+            String requestHash,
+            ChatRequestStatus status) {
+        updateIdempotency(userId, idempotencyKey, prepared, requestHash, status);
+        historyService.evict(prepared.conversationId());
+    }
+
+    private void updateIdempotency(
+            UUID userId,
+            UUID idempotencyKey,
+            PreparedChat prepared,
+            String requestHash,
+            ChatRequestStatus status) {
+        idempotencyCache.put(
+                userId,
+                idempotencyKey,
+                new IdempotencySummary(
+                        prepared.requestId(), requestHash, status.name(), clock.instant()));
     }
 
     private static String validateAnswer(AgentChatResponse response, UUID requestId) {
