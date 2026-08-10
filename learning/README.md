@@ -1,7 +1,7 @@
 # Insurance AI Platform 学习路线索引
 
 > 正式交付阶段：16 个
-> 当前说明：Phase 0～7 已完成；其余为规划
+> 当前说明：Phase 0～9.5 已完成；其余为规划
 > 事实来源：[架构](../docs/ARCHITECTURE.md) / [迁移路线](../docs/MIGRATION_PLAN.md) /
 > [Vue 客户端规划](../docs/WEB_CLIENT_PLAN.md)
 
@@ -19,9 +19,9 @@
 | 7 | Phase 5 Java Spring Boot 基础工程 | 已完成 | [Learning Kit](./phase-5/README.md) |
 | 8 | Phase 6 Java→Python 聊天链 | 已完成 | [Learning Kit](./phase-6/README.md) |
 | 9 | Phase 7 MySQL 会话与消息 | 已完成 | [Learning Kit](./phase-7/README.md) |
-| 10 | Phase 8 Redis | 规划 | 本阶段开始时生成 |
-| 11 | Phase 9 用户、登录与 JWT | 规划 | 本阶段开始时生成 |
-| 12 | Phase 9.5 Vue Minimal Chat Client | 规划 | [学习计划](./phase-9.5/README.md) |
+| 10 | Phase 8 Redis | 已完成 | [Learning Kit](./phase-8/LearningKit.md) |
+| 11 | Phase 9 用户、登录与 JWT | 已完成 | [Learning Kit](./phase-9/LearningKit.md) |
+| 12 | Phase 9.5 Vue Minimal Chat Client | 已完成 | [Learning Kit](./phase-9.5/README.md) |
 | 13 | Phase 10 PDF 与知识库管理 | 规划 | 本阶段开始时生成 |
 | 14 | Phase 10.5 Document Client Extension | 规划 | [学习计划](./phase-10.5/README.md) |
 | 15 | Phase 11 可观测性与容错 | 规划 | 本阶段开始时生成 |

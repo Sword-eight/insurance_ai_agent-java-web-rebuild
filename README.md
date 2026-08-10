@@ -13,15 +13,37 @@
 Vue 3 Web Client → Java Spring Boot Backend → Python FastAPI AI Service
 ```
 
-当前已存在 Streamlit Python 入口、FastAPI 包装和 Java 基础工程，但 Vue Web Client、MySQL、
-Redis、JWT 及完整业务链尚未全部实现。Vue 客户端计划在 Phase 9.5/10.5 分两次最小落地，
-目前没有 `web-client/` 目录。
+当前已存在 Streamlit Python 调试入口、FastAPI 包装、Java Backend，以及 Phase 9.5 的 Vue
+Minimal Chat Client。MySQL 会话/消息、Redis、JWT、注册登录和同步聊天主链已经按阶段实现；
+文档业务及对应 Vue 页面仍留在 Phase 10/10.5。
 
 Streamlit 不删除，继续作为 Python Agent、Graph、Tool 和 RAG 的本地调试/旧版验证入口；
 它不经过 Java，因此不代表 JWT、ChatService、MySQL、Redis 或文档状态机的端到端能力。
 
 规划入口：[架构](docs/ARCHITECTURE.md) · [迁移路线](docs/MIGRATION_PLAN.md) ·
 [Vue 客户端规划](docs/WEB_CLIENT_PLAN.md) · [学习路线](learning/README.md)
+
+### Vue Minimal Chat Client
+
+客户端需要 Node.js 20.19+ 或 22.12+，并默认把 `/api` 请求代理到
+`http://127.0.0.1:8080` 的 Java Backend：
+
+```bash
+cd web-client
+npm ci
+npm run dev
+```
+
+类型检查、测试和生产构建：
+
+```bash
+npm run typecheck
+npm test
+npm run build
+```
+
+客户端只访问 Java `/api/v1`；JWT 保存于当前标签页的 `sessionStorage`，401 会清理登录态。
+生产部署需由同源反向代理把 `/api` 转发给 Java，不能把 Python 内部地址配置给浏览器。
 
 ## 功能
 
@@ -183,7 +205,7 @@ app.py → application/handlers → AgentGraphBuilder.invoke()
 | 向量库 | FAISS (本地) |
 | Embedding | BAAI/bge-base-zh-v1.5 (SentenceTransformer, 768维) |
 | 当前 Python 调试 UI | Streamlit |
-| 规划中的正式 Web Client | Vue 3 + TypeScript + Vite + Vue Router + Axios（尚未创建） |
+| 正式 Web Client | Vue 3 + TypeScript + Vite + Vue Router + Axios |
 | 微调 | PEFT / LoRA / Qwen2.5 |
 
 ## LoRA 微调
