@@ -151,6 +151,10 @@ async function logout(): Promise<void> {
   await router.replace({ name: 'login' })
 }
 
+async function openDocuments(): Promise<void> {
+  await router.push({ name: 'documents' })
+}
+
 onMounted(loadConversationList)
 </script>
 
@@ -174,6 +178,7 @@ onMounted(loadConversationList)
         <div class="user-menu">
           <span class="status-dot"></span>
           <span>{{ authState.user.username }}</span>
+          <button type="button" class="header-link" @click="openDocuments">知识库</button>
           <button type="button" @click="logout">退出</button>
         </div>
       </header>

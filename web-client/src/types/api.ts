@@ -57,6 +57,22 @@ export interface ChatResponse {
   sources: ChatSource[]
 }
 
+export type DocumentIndexStatus =
+  | 'UPLOADED'
+  | 'INDEXING'
+  | 'INDEXED'
+  | 'FAILED'
+  | 'UNKNOWN'
+  | 'DELETED'
+
+export interface DocumentData {
+  documentId: string
+  originalFilename: string
+  sizeBytes: number
+  indexStatus: DocumentIndexStatus
+  createdAt: string
+}
+
 export interface RegisterRequest {
   username: string
   password: string
