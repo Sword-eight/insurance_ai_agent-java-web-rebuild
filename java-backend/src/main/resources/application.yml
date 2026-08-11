@@ -1,6 +1,10 @@
 spring:
   application:
     name: insurance-platform-backend
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -24,6 +28,11 @@ insurance:
     base-url: ${PYTHON_AI_BASE_URL:http://127.0.0.1:8000}
     connect-timeout: ${PYTHON_AI_CONNECT_TIMEOUT:3s}
     read-timeout: ${PYTHON_AI_READ_TIMEOUT:60s}
+  knowledge-client:
+    read-timeout: ${PYTHON_KNOWLEDGE_READ_TIMEOUT:300s}
+  document-storage:
+    root: ${DOCUMENT_STORAGE_ROOT:./data/documents}
+    max-size: 20MB
   redis:
     environment: ${APP_ENV:dev}
     recent-messages-ttl: 30m

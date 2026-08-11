@@ -11,13 +11,19 @@ from fastapi.responses import JSONResponse
 from api.errors import ContractValidationError
 from api.routers import agent, health, knowledge
 from api.schemas.common import error_envelope
-from application.bootstrap import init_api_runtime
 from application.errors import ApplicationError
 from application.runtime import ApplicationRuntime
 from utils.logger import get_logger
 
 
 logger = get_logger("api.main")
+
+
+def _init_api_runtime() -> ApplicationRuntime:
+    """Defer the model/graph dependency tree until FastAPI lifespan starts."""
+    from application.bootstrap import init_api_runtime
+
+    return init_api_runtime()
 
 
 HTTP_STATUS_BY_ERROR_CODE = {
@@ -69,7 +75,7 @@ def _create_lifespan(
 
 
 def create_app(
-    runtime_factory: Callable[[], ApplicationRuntime] = init_api_runtime,
+    runtime_factory: Callable[[], ApplicationRuntime] = _init_api_runtime,
 ) -> FastAPI:
     app = FastAPI(
         title="Insurance AI Service",

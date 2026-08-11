@@ -1,3 +1,5 @@
+from pathlib import Path
+import hashlib
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -39,12 +41,18 @@ class StatusKnowledgeService:
             "rag_engine": "langchain",
         }
 
+    def rebuild(self):
+        return {"success": True}
 
-def _runtime(*, close_callback=lambda: None) -> ApplicationRuntime:
+
+def _runtime(
+    *, close_callback=lambda: None, knowledge_document_dir: Path | None = None
+) -> ApplicationRuntime:
     return ApplicationRuntime(
         agent_facade=SuccessfulAgentFacade(),
         knowledge_facade=DefaultKnowledgeFacade(
-            knowledge_service=StatusKnowledgeService()
+            knowledge_service=StatusKnowledgeService(),
+            document_dir=knowledge_document_dir,
         ),
         close_callbacks=(close_callback,),
     )
@@ -122,14 +130,19 @@ def test_bootstrap_failure_keeps_live_but_not_ready_or_business_available() -> N
     assert "local path" not in ready.text
 
 
-def test_knowledge_status_is_available_but_writes_remain_deferred() -> None:
-    app = create_app(runtime_factory=_runtime)
+def test_knowledge_status_rebuild_and_invalid_document_use_phase10_contract(
+    tmp_path: Path,
+) -> None:
+    app = create_app(
+        runtime_factory=lambda: _runtime(knowledge_document_dir=tmp_path)
+    )
+    content = b"%PDF-1.7\n"
     metadata = (
         "{"
         f'"requestId":"{uuid4()}",'
         f'"documentId":"{uuid4()}",'
         '"originalFilename":"terms.pdf",'
-        f'"sha256":"{"a" * 64}"'
+        f'"sha256":"{hashlib.sha256(content).hexdigest()}"'
         "}"
     )
 
@@ -140,7 +153,7 @@ def test_knowledge_status_is_available_but_writes_remain_deferred() -> None:
             "/internal/v1/knowledge/documents/index",
             headers=HEADERS,
             data={"metadata": metadata},
-            files={"file": ("terms.pdf", b"%PDF-1.7\n", "application/pdf")},
+            files={"file": ("terms.pdf", b"not-a-pdf", "application/pdf")},
         )
 
     assert status.status_code == 200
@@ -149,7 +162,7 @@ def test_knowledge_status_is_available_but_writes_remain_deferred() -> None:
         "indexExists": True,
         "ragEngine": "langchain",
     }
-    assert rebuild.status_code == 500
-    assert index.status_code == 500
-    assert rebuild.json()["error"]["code"] == "KNOWLEDGE_INDEX_FAILED"
-    assert index.json()["error"]["code"] == "KNOWLEDGE_INDEX_FAILED"
+    assert rebuild.status_code == 200
+    assert rebuild.json()["data"] == {"status": "REBUILT"}
+    assert index.status_code == 400
+    assert index.json()["error"]["code"] == "KNOWLEDGE_INVALID_DOCUMENT"
