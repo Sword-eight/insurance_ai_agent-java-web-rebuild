@@ -227,6 +227,7 @@ public class ChatService {
             case TIMEOUT -> new BusinessException(ErrorCode.AI_SERVICE_TIMEOUT);
             case UNAVAILABLE, DELIVERY_UNKNOWN ->
                     new BusinessException(ErrorCode.AI_SERVICE_UNAVAILABLE);
+            case UPSTREAM_FAILURE -> mapRejectedCode(exception.internalCode());
             case PROTOCOL -> new BusinessException(ErrorCode.AI_EXECUTION_FAILED);
             case REJECTED -> mapRejectedCode(exception.internalCode());
         };

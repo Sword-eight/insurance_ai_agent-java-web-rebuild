@@ -94,6 +94,19 @@ class HttpKnowledgeClientTests {
                                 .isEqualTo(KnowledgeClientException.Kind.PROTOCOL));
     }
 
+    @Test
+    void malformedFiveHundredResponseIsClassifiedAsUpstreamFailure() {
+        handler.set(exchange -> respond(exchange, 500, "not-json"));
+        KnowledgeIndexMetadata metadata = new KnowledgeIndexMetadata(
+                UUID.randomUUID(), UUID.randomUUID(), "terms.pdf", "a".repeat(64));
+
+        assertThatThrownBy(() -> client(Duration.ofSeconds(2)).indexDocument(
+                        metadata, new ByteArrayResource("%PDF-".getBytes()), TRACE_ID))
+                .isInstanceOfSatisfying(KnowledgeClientException.class, exception ->
+                        assertThat(exception.kind())
+                                .isEqualTo(KnowledgeClientException.Kind.UPSTREAM_FAILURE));
+    }
+
     private HttpKnowledgeClient client(Duration readTimeout) {
         URI baseUrl = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
         var restClient = new KnowledgeClientConfig().knowledgeRestClient(

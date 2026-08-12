@@ -2,6 +2,8 @@
 
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+import re
+import time
 from typing import Callable
 
 from fastapi import FastAPI, Request
@@ -14,9 +16,11 @@ from api.schemas.common import error_envelope
 from application.errors import ApplicationError
 from application.runtime import ApplicationRuntime
 from utils.logger import get_logger
+from utils.trace_context import bind_trace_id, reset_trace_id
 
 
 logger = get_logger("api.main")
+TRACE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{16,64}$")
 
 
 def _init_api_runtime() -> ApplicationRuntime:
@@ -41,7 +45,12 @@ HTTP_STATUS_BY_ERROR_CODE = {
 
 
 def _trace_id(request: Request) -> str:
-    return request.headers.get("X-Trace-Id", "INVALID_TRACE_ID")
+    trace_id = request.headers.get("X-Trace-Id", "")
+    return trace_id if TRACE_ID_PATTERN.fullmatch(trace_id) else "INVALID_TRACE_ID"
+
+
+def _mark_error(request: Request, error_code: str) -> None:
+    request.state.error_code = error_code
 
 
 def _create_lifespan(
@@ -85,14 +94,34 @@ def create_app(
 
     @app.middleware("http")
     async def trace_id_response_header(request: Request, call_next):
-        response = await call_next(request)
-        response.headers["X-Trace-Id"] = _trace_id(request)
-        return response
+        trace_id = _trace_id(request)
+        token = bind_trace_id(trace_id)
+        request.state.error_code = "NONE"
+        started = time.monotonic()
+        try:
+            response = await call_next(request)
+            response.headers["X-Trace-Id"] = trace_id
+            return response
+        finally:
+            duration_ms = max(0, int((time.monotonic() - started) * 1000))
+            completed_response = locals().get("response")
+            status_code = completed_response.status_code if completed_response else 500
+            logger.info(
+                "event=http_request service=python method=%s path=%s "
+                "status=%s durationMs=%s errorCode=%s",
+                request.method,
+                request.url.path,
+                status_code,
+                duration_ms,
+                request.state.error_code,
+            )
+            reset_trace_id(token)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error_handler(
         request: Request, exc: RequestValidationError
     ) -> JSONResponse:
+        _mark_error(request, "AI_VALIDATION_ERROR")
         envelope = error_envelope(
             code="AI_VALIDATION_ERROR",
             error_type="VALIDATION",
@@ -106,6 +135,7 @@ def create_app(
     async def contract_validation_error_handler(
         request: Request, exc: ContractValidationError
     ) -> JSONResponse:
+        _mark_error(request, "AI_VALIDATION_ERROR")
         envelope = error_envelope(
             code="AI_VALIDATION_ERROR",
             error_type="VALIDATION",
@@ -119,6 +149,7 @@ def create_app(
     async def application_error_handler(
         request: Request, exc: ApplicationError
     ) -> JSONResponse:
+        _mark_error(request, exc.code)
         envelope = error_envelope(
             code=exc.code,
             error_type=exc.error_type,
@@ -135,6 +166,7 @@ def create_app(
     async def unexpected_error_handler(
         request: Request, exc: Exception
     ) -> JSONResponse:
+        _mark_error(request, "AI_INTERNAL_ERROR")
         logger.exception("未预期的内部 API 异常")
         envelope = error_envelope(
             code="AI_INTERNAL_ERROR",

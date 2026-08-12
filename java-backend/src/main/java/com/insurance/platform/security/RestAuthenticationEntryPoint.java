@@ -28,6 +28,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
+        TraceIdContext.markErrorCode(ErrorCode.AUTH_UNAUTHORIZED.name());
         response.setStatus(ErrorCode.AUTH_UNAUTHORIZED.httpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

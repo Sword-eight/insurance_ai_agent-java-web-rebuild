@@ -8,6 +8,7 @@ export class ApiClientError extends Error {
     message: string,
     public readonly status: number | null,
     public readonly traceId: string | null,
+    public readonly retryAfterSeconds: number | null = null,
   ) {
     super(message)
     this.name = 'ApiClientError'
@@ -64,6 +65,7 @@ export function toApiClientError(error: unknown): ApiClientError {
         envelope.message || '请求失败，请稍后重试',
         error.response?.status ?? null,
         envelope.traceId || null,
+        parseRetryAfter(error.response?.headers?.['retry-after']),
       )
     }
     if (error.code === AxiosError.ERR_CANCELED) {
@@ -79,8 +81,25 @@ export function toApiClientError(error: unknown): ApiClientError {
 
 export function formatApiError(error: unknown): { message: string; traceId: string | null } {
   const problem = toApiClientError(error)
-  const message = problem.code === 'AI_SERVICE_TIMEOUT'
-    ? '结果暂时无法确认，请勿自动重发。'
-    : problem.message
+  const stableMessages: Record<string, string> = {
+    AUTH_UNAUTHORIZED: '登录状态已失效，请重新登录。',
+    AI_EXECUTION_FAILED: 'AI 服务处理失败，请稍后再试。',
+    DOCUMENT_INDEX_FAILED: '文档索引服务处理失败，请稍后再试。',
+    AI_SERVICE_UNAVAILABLE: 'AI 服务暂时不可用，请稍后再试。',
+    RATE_LIMIT_SERVICE_UNAVAILABLE: '限流服务暂时不可用，请稍后再试。',
+    AI_SERVICE_TIMEOUT: '结果暂时无法确认，请勿自动重发。',
+    CLIENT_TIMEOUT: '结果暂时无法确认，请勿自动重发。',
+  }
+  let message = stableMessages[problem.code] || problem.message
+  if (problem.code === 'RATE_LIMIT_EXCEEDED') {
+    message = problem.retryAfterSeconds === null
+      ? '请求过于频繁，请稍后再试。'
+      : `请求过于频繁，请在 ${problem.retryAfterSeconds} 秒后再试。`
+  }
   return { message, traceId: problem.traceId }
+}
+
+function parseRetryAfter(value: unknown): number | null {
+  const seconds = Number(value)
+  return Number.isInteger(seconds) && seconds >= 0 ? seconds : null
 }

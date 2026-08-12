@@ -147,6 +147,16 @@ class HttpAgentClientTests {
         assertThat(calls).hasValue(1);
     }
 
+    @Test
+    void malformedFiveHundredResponseIsClassifiedAsUpstreamFailure() {
+        handler.set(exchange -> respond(exchange, 500, "not-json"));
+
+        assertThatThrownBy(() -> client(Duration.ofSeconds(1)).chat(
+                        request(UUID.randomUUID()), TRACE_ID))
+                .isInstanceOfSatisfying(AgentClientException.class, exception ->
+                        assertThat(exception.kind()).isEqualTo(Kind.UPSTREAM_FAILURE));
+    }
+
     private HttpAgentClient client(Duration readTimeout) {
         URI baseUrl = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
         AiServiceProperties properties = new AiServiceProperties(

@@ -2,7 +2,7 @@ package com.insurance.platform.client.exception;
 
 /** Knowledge HTTP adapter failure classification; public mapping belongs to DocumentService. */
 public class KnowledgeClientException extends RuntimeException {
-    public enum Kind { TIMEOUT, UNAVAILABLE, DELIVERY_UNKNOWN, REJECTED, PROTOCOL }
+    public enum Kind { TIMEOUT, UNAVAILABLE, DELIVERY_UNKNOWN, UPSTREAM_FAILURE, REJECTED, PROTOCOL }
 
     private final Kind kind;
     private final String internalCode;

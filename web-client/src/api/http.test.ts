@@ -87,4 +87,34 @@ describe('HTTP contract handling', () => {
     expect(problem.message).toContain('结果暂时无法确认')
     expect(problem.traceId).toBe('trace-timeout')
   })
+
+  it.each([
+    ['AUTH_UNAUTHORIZED', 401, '重新登录'],
+    ['AI_EXECUTION_FAILED', 502, 'AI 服务处理失败'],
+    ['DOCUMENT_INDEX_FAILED', 502, '文档索引服务处理失败'],
+    ['AI_SERVICE_UNAVAILABLE', 503, 'AI 服务暂时不可用'],
+    ['RATE_LIMIT_SERVICE_UNAVAILABLE', 503, '限流服务暂时不可用'],
+  ])('renders a stable message for %s', (code, status, expected) => {
+    const problem = formatApiError(new ApiClientError(
+      code,
+      'raw server text',
+      status,
+      `trace-${status}`,
+    ))
+
+    expect(problem.message).toContain(expected)
+  })
+
+  it('renders Retry-After guidance for HTTP 429', () => {
+    const problem = formatApiError(new ApiClientError(
+      'RATE_LIMIT_EXCEEDED',
+      'rate limited',
+      429,
+      'trace-429',
+      17,
+    ))
+
+    expect(problem.message).toContain('17 秒后')
+    expect(problem.traceId).toBe('trace-429')
+  })
 })

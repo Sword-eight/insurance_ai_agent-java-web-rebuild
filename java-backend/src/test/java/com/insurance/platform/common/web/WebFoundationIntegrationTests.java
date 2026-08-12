@@ -3,6 +3,7 @@ package com.insurance.platform.common.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +60,13 @@ class WebFoundationIntegrationTests {
 
     @Autowired
     private FoundationTestController controller;
+
+    @Test
+    void livenessIsAnonymousAndIndependentFromPythonReadiness() throws Exception {
+        mockMvc.perform(get("/actuator/health/liveness").with(anonymous()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UP"));
+    }
 
     @BeforeEach
     void resetState() {

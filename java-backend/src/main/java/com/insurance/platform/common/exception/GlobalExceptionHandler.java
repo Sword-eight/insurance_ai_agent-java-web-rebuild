@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity<ApiResponse<Void>> handleRateLimitExceeded(
             RateLimitExceededException exception) {
+        TraceIdContext.markErrorCode(exception.errorCode().name());
         String traceId = TraceIdContext.currentTraceId();
         return ResponseEntity
                 .status(exception.errorCode().httpStatus())
@@ -76,6 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnexpectedException(
             Exception exception) {
+        TraceIdContext.markErrorCode(ErrorCode.INTERNAL_ERROR.name());
         String traceId = TraceIdContext.currentTraceId();
         logger.error(
                 "Unhandled public API exception, traceId={}, exceptionType={}",
@@ -92,6 +94,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ApiResponse<Void>> response(
             ErrorCode errorCode,
             String safeMessage) {
+        TraceIdContext.markErrorCode(errorCode.name());
         String traceId = TraceIdContext.currentTraceId();
         return ResponseEntity
                 .status(errorCode.httpStatus())

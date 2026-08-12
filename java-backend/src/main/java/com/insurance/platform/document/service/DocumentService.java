@@ -115,7 +115,7 @@ public class DocumentService {
             case TIMEOUT -> new BusinessException(ErrorCode.AI_SERVICE_TIMEOUT);
             case UNAVAILABLE, DELIVERY_UNKNOWN ->
                     new BusinessException(ErrorCode.AI_SERVICE_UNAVAILABLE);
-            case REJECTED, PROTOCOL ->
+            case REJECTED, UPSTREAM_FAILURE, PROTOCOL ->
                     new BusinessException(ErrorCode.DOCUMENT_INDEX_FAILED);
         };
     }

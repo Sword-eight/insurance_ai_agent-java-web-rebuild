@@ -68,23 +68,30 @@ public class HttpAgentClient implements AgentClient {
         try {
             envelope = objectMapper.readValue(response.getBody(), envelopeType);
         } catch (IOException exception) {
-            throw new AgentClientException(Kind.PROTOCOL, null, exception);
+            throw new AgentClientException(kindForInvalidResponse(response), null, exception);
         }
         if (envelope == null || !expectedTraceId.equals(envelope.traceId())) {
-            throw new AgentClientException(Kind.PROTOCOL, null);
+            throw new AgentClientException(kindForInvalidResponse(response), null);
         }
         if (!envelope.success()) {
             if (envelope.error() == null || envelope.error().code() == null) {
-                throw new AgentClientException(Kind.PROTOCOL, null);
+                throw new AgentClientException(kindForInvalidResponse(response), null);
             }
-            throw new AgentClientException(Kind.REJECTED, envelope.error().code());
+            Kind kind = response.getStatusCode().is5xxServerError()
+                    ? Kind.UPSTREAM_FAILURE : Kind.REJECTED;
+            throw new AgentClientException(kind, envelope.error().code());
         }
         if (!response.getStatusCode().is2xxSuccessful()
                 || envelope.data() == null
                 || envelope.error() != null) {
-            throw new AgentClientException(Kind.PROTOCOL, null);
+            throw new AgentClientException(kindForInvalidResponse(response), null);
         }
         return envelope.data();
+    }
+
+    private static Kind kindForInvalidResponse(
+            org.springframework.http.client.ClientHttpResponse response) throws IOException {
+        return response.getStatusCode().is5xxServerError() ? Kind.UPSTREAM_FAILURE : Kind.PROTOCOL;
     }
 
     private static AgentClientException classifyResourceFailure(

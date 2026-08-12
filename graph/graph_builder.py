@@ -21,11 +21,12 @@ from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import StateGraph, END
 
-from config import LLM_CONFIG, MEMORY_CONFIG
+from config import MEMORY_CONFIG
 from graph.state import AgentState
 from graph.router import route_after_agent
 from graph.nodes import safe_truncate_messages
 from prompts.system_prompt import SYSTEM_PROMPT
+from services.llm_factory import create_default_llm
 from utils.logger import get_logger
 from utils.helpers import Timer
 
@@ -38,13 +39,7 @@ logger = get_logger("graph.builder")
 
 def _create_default_llm() -> ChatOpenAI:
     """创建默认 LLM 实例（从 config.py 读取配置）。"""
-    return ChatOpenAI(
-        model=LLM_CONFIG["model"],
-        base_url=LLM_CONFIG["base_url"],
-        api_key=LLM_CONFIG["api_key"],
-        temperature=LLM_CONFIG["temperature"],
-        max_tokens=LLM_CONFIG["max_tokens"],
-    )
+    return create_default_llm()
 
 
 # ==================================================================

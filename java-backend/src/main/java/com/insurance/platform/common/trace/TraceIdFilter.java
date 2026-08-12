@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -19,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceIdFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(TraceIdFilter.class);
 
     @Override
     protected void doFilterInternal(
@@ -30,9 +33,16 @@ public class TraceIdFilter extends OncePerRequestFilter {
         request.setAttribute(TraceIdContext.REQUEST_ATTRIBUTE, traceId);
         response.setHeader(TraceIdContext.HEADER_NAME, traceId);
         MDC.put(TraceIdContext.MDC_KEY, traceId);
+        long started = System.nanoTime();
         try {
             filterChain.doFilter(request, response);
         } finally {
+            Object errorCode = request.getAttribute(TraceIdContext.ERROR_CODE_ATTRIBUTE);
+            logger.info(
+                    "event=http_request service=java method={} path={} status={} durationMs={} errorCode={}",
+                    request.getMethod(), request.getRequestURI(), response.getStatus(),
+                    Math.max(0, (System.nanoTime() - started) / 1_000_000),
+                    errorCode == null ? "NONE" : errorCode);
             MDC.remove(TraceIdContext.MDC_KEY);
         }
     }

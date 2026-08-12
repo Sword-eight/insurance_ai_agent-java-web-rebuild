@@ -7,6 +7,7 @@ public class AgentClientException extends RuntimeException {
         TIMEOUT,
         UNAVAILABLE,
         DELIVERY_UNKNOWN,
+        UPSTREAM_FAILURE,
         REJECTED,
         PROTOCOL
     }

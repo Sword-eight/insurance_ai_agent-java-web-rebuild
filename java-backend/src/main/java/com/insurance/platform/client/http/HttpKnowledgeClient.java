@@ -112,22 +112,29 @@ public class HttpKnowledgeClient implements KnowledgeClient {
         try {
             envelope = objectMapper.readValue(response.getBody(), type);
         } catch (IOException exception) {
-            throw new KnowledgeClientException(Kind.PROTOCOL, null, exception);
+            throw new KnowledgeClientException(kindForInvalidResponse(response), null, exception);
         }
         if (envelope == null || !expectedTraceId.equals(envelope.traceId())) {
-            throw new KnowledgeClientException(Kind.PROTOCOL, null);
+            throw new KnowledgeClientException(kindForInvalidResponse(response), null);
         }
         if (!envelope.success()) {
             if (envelope.error() == null || envelope.error().code() == null) {
-                throw new KnowledgeClientException(Kind.PROTOCOL, null);
+                throw new KnowledgeClientException(kindForInvalidResponse(response), null);
             }
-            throw new KnowledgeClientException(Kind.REJECTED, envelope.error().code());
+            Kind kind = response.getStatusCode().is5xxServerError()
+                    ? Kind.UPSTREAM_FAILURE : Kind.REJECTED;
+            throw new KnowledgeClientException(kind, envelope.error().code());
         }
         if (!response.getStatusCode().is2xxSuccessful()
                 || envelope.data() == null || envelope.error() != null) {
-            throw new KnowledgeClientException(Kind.PROTOCOL, null);
+            throw new KnowledgeClientException(kindForInvalidResponse(response), null);
         }
         return envelope.data();
+    }
+
+    private static Kind kindForInvalidResponse(
+            org.springframework.http.client.ClientHttpResponse response) throws IOException {
+        return response.getStatusCode().is5xxServerError() ? Kind.UPSTREAM_FAILURE : Kind.PROTOCOL;
     }
 
     private static KnowledgeClientException classifyResourceFailure(ResourceAccessException exception) {
