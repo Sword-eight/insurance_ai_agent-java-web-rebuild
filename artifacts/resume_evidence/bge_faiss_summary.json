@@ -1,0 +1,38 @@
+{
+  "validation_date": "2026-08-13",
+  "real_model_loaded": true,
+  "embedding_model": "BAAI/bge-base-zh-v1.5",
+  "embedding_dimension": 768,
+  "device": "cpu",
+  "normalized_embeddings": true,
+  "rag_engine": "langchain",
+  "index_kind": "FAISS",
+  "index_path": "data/vectorstore",
+  "index_version": "LANGCHAIN_CURRENT generation pointer",
+  "index_rebuilt_this_validation": true,
+  "controlled_source_documents": 3,
+  "source_file_types": {
+    "pdf": 2,
+    "txt": 1
+  },
+  "chunk_size": 500,
+  "chunk_overlap": 100,
+  "chunk_count": 23,
+  "vector_count": 23,
+  "top_k": 5,
+  "similarity_search": {
+    "executed": true,
+    "query_topic": "180-day waiting period",
+    "result_count": 5,
+    "retrieval_time_ms": 97.09,
+    "top_result_document": "中国人寿重大疾病保险条款.txt",
+    "top_result_page": 8,
+    "top_result_score": 0.7597,
+    "top_result_contains_expected_fact": true
+  },
+  "offline_load_and_search_seconds": 18.077,
+  "notes": [
+    "The FAISS index is ignored by Git and is not copied into Evidence artifacts.",
+    "The index builder and vector-store statistics both reported 23 generated/stored vectors."
+  ]
+}

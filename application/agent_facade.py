@@ -60,7 +60,7 @@ class DefaultAgentFacade:
             result = AgentChatResult(
                 request_id=command.request_id,
                 answer=answer,
-                sources=(),
+                sources=self._extract_sources(raw_result),
                 duration_ms=max(0, round((self._clock() - started_at) * 1000)),
             )
         except ApplicationError as error:
@@ -129,6 +129,38 @@ class DefaultAgentFacade:
                 if isinstance(message.content, str) and message.content.strip():
                     return message.content.strip()
         raise agent_execution_error()
+
+    @staticmethod
+    def _extract_sources(raw_result: Any) -> tuple[dict[str, object], ...]:
+        if not isinstance(raw_result, dict):
+            raise agent_execution_error()
+        sources: list[dict[str, object]] = []
+        seen: set[tuple[str, int | None, str]] = set()
+        for item in raw_result.get("retrieved_docs", []):
+            if not isinstance(item, dict):
+                continue
+            document_name = item.get("source_name")
+            content = item.get("content")
+            if not isinstance(document_name, str) or not document_name.strip():
+                continue
+            if not isinstance(content, str) or not content.strip():
+                continue
+            raw_page = item.get("source_page")
+            page = raw_page if isinstance(raw_page, int) and raw_page > 0 else None
+            snippet = content.strip()[:500]
+            key = (document_name.strip(), page, snippet)
+            if key in seen:
+                continue
+            seen.add(key)
+            raw_score = item.get("similarity_score")
+            score = float(raw_score) if isinstance(raw_score, (int, float)) else None
+            sources.append({
+                "documentName": document_name.strip(),
+                "page": page,
+                "snippet": snippet,
+                "score": score,
+            })
+        return tuple(sources)
 
     @staticmethod
     def _digest(command: AgentChatCommand) -> str:

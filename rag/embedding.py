@@ -9,10 +9,12 @@ Insurance AI Agent - Embedding 模块
 两者共享同一个 SentenceTransformer 模型实例（通过 EmbeddingManager 单例）。
 """
 
-from typing import List, Any
+from typing import List, TYPE_CHECKING
 
 from langchain_core.embeddings import Embeddings
-from sentence_transformers import SentenceTransformer
+
+if TYPE_CHECKING:
+    from sentence_transformers import SentenceTransformer
 
 from config import EMBEDDING_CONFIG
 from utils.logger import get_logger
@@ -34,6 +36,8 @@ class SentenceTransformerEmbeddingsWrapper(Embeddings):
         """
         logger.info(f"正在加载 Embedding 模型: {model_name} ...")
         try:
+            from sentence_transformers import SentenceTransformer
+
             self._model = SentenceTransformer(model_name, device=device)
             self._dim: int = self._model.get_sentence_embedding_dimension()
             logger.info(f"Embedding 模型加载成功: {model_name}（维度: {self._dim}）")
@@ -42,7 +46,7 @@ class SentenceTransformerEmbeddingsWrapper(Embeddings):
             raise
 
     @property
-    def model(self) -> SentenceTransformer:
+    def model(self) -> "SentenceTransformer":
         """获取 SentenceTransformer 实例。"""
         return self._model
 
@@ -144,69 +148,3 @@ class EmbeddingManager:
             向量列表的列表
         """
         return self._wrapper.embed_documents(texts)
-
-
-# ---------------------------------------------------------------------------
-# LlamaIndex Embedding 适配器
-# 将现有 SentenceTransformer 包装为 LlamaIndex BaseEmbedding 接口，
-# 确保 LlamaIndex 与 LangChain 共用同一套 Embedding 实现。
-# ---------------------------------------------------------------------------
-
-try:
-    from llama_index.core.embeddings import BaseEmbedding
-    from llama_index.core.base.embeddings.base import Embedding as LIEmbedding
-
-    class LlamaIndexEmbeddingAdapter(BaseEmbedding):
-        """
-        LlamaIndex Embedding 适配器。
-
-        将项目现有的 SentenceTransformer（通过 EmbeddingManager 单例）
-        包装为 LlamaIndex 兼容的 BaseEmbedding 接口。
-
-        注意：
-          - 不加载新的模型，直接复用 EmbeddingManager 单例。
-          - 不支持异步（CPU 推理），异步方法同步调用。
-        """
-
-        _embedding_manager: "EmbeddingManager" = None  # type: ignore[assignment]
-
-        def __init__(self, **kwargs: Any) -> None:
-            super().__init__(**kwargs)
-            if self._embedding_manager is None:
-                # 复用全局 EmbeddingManager 单例，不重复加载模型
-                LlamaIndexEmbeddingAdapter._embedding_manager = EmbeddingManager()
-
-        @classmethod
-        def class_name(cls) -> str:
-            return "SentenceTransformer_Adapter"
-
-        def _get_query_embedding(self, query: str) -> List[float]:
-            """将查询文本转换为向量。"""
-            return self._embedding_manager.embed_query(query)
-
-        def _get_text_embedding(self, text: str) -> List[float]:
-            """将单个文本转换为向量。"""
-            return self._embedding_manager.embed_query(text)
-
-        def _get_text_embeddings(self, texts: List[str]) -> List[List[float]]:
-            """批量将文本转换为向量。"""
-            return self._embedding_manager.embed_documents(texts)
-
-        async def _aget_query_embedding(self, query: str) -> List[float]:
-            """异步查询向量（本项目使用 CPU 推理，同步调用）。"""
-            return self._get_query_embedding(query)
-
-        async def _aget_text_embedding(self, text: str) -> List[float]:
-            """异步文本向量（本项目使用 CPU 推理，同步调用）。"""
-            return self._get_text_embedding(text)
-
-except ImportError:
-    # LlamaIndex 未安装时，占位类避免 import 报错
-    class LlamaIndexEmbeddingAdapter:  # type: ignore[no-redef]
-        """Stub: LlamaIndex 未安装。"""
-
-        def __init__(self, **kwargs: Any) -> None:
-            raise ImportError(
-                "LlamaIndex 未安装，无法使用 LlamaIndexEmbeddingAdapter。"
-                "请执行: pip install llama-index"
-            )

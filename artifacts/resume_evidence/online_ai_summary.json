@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-08-13T12:54:02.423698+00:00",
+  "environment": "local development evidence test",
+  "case_count": 30,
+  "request_count": 34,
+  "successful_requests": 34,
+  "request_success_rate": 1.0,
+  "tool_route_cases": 34,
+  "correct_tool_routes": 25,
+  "tool_route_accuracy": 0.7353,
+  "rag_cases": 18,
+  "rag_sources_returned": 17,
+  "rag_source_return_rate": 0.9444,
+  "rag_average_sources_per_expected_request": 5.67,
+  "rag_average_sources_per_nonempty_request": 6.0,
+  "actual_rag_requests": 19,
+  "actual_rag_sources_returned": 19,
+  "retrieval_hit_rate": 1.0,
+  "source_document_names": [
+    "insurance_terms_test.pdf",
+    "中国人寿重大疾病保险条款.txt"
+  ],
+  "source_page_records": 112,
+  "source_score_records": 112,
+  "quality_passed_turns": 31,
+  "quality_rule_pass_rate": 0.9118,
+  "multi_turn_cases": 4,
+  "multi_turn_successes": 4,
+  "latency_ms": {
+    "mean": 5360.9,
+    "p50": 5425.88,
+    "p95": 8130.51,
+    "min": 1923.17,
+    "max": 9273.94
+  },
+  "java_to_python_duration_available": true,
+  "python_agent_duration_available": false,
+  "python_http_duration_available": true,
+  "failure_count": 9,
+  "failures": [
+    {
+      "case_id": "RAG-06",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "急性心肌梗塞要满足几项条件？其中与发病90日后检查有关的条件是什么？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [
+        "missing required keyword: 至少三项"
+      ],
+      "error_code": null
+    },
+    {
+      "case_id": "RAG-07",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "酒后驾驶导致合同定义的重大疾病，保险公司是否承担给付责任？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "RAG-09",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "收到完整理赔申请材料后多久作出核定，达成赔偿协议后多久履行赔偿义务？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "PREMIUM-05",
+      "category": "premium_missing_parameter",
+      "turn": 1,
+      "question": "30岁男性买50万元重疾险，一年保费多少？",
+      "expected_route": [],
+      "actual_route": [
+        "premium_calculator",
+        "premium_calculator",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "PREMIUM-06",
+      "category": "premium_invalid_parameter",
+      "turn": 1,
+      "question": "61岁男性，50万元保额，20年期，1类职业，帮我估算保费。",
+      "expected_route": [
+        "premium_calculator"
+      ],
+      "actual_route": [
+        "premium_calculator",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "MULTI-02",
+      "category": "multi_turn",
+      "turn": 2,
+      "question": "那连续投保后的续保合同呢？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-01",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "这份重大疾病保险是否报销牙齿正畸费用？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [
+        "none of required_any matched: 无法确定, 无法确认, 当前知识库, 未提及, 没有相关"
+      ],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-02",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "这份保险是否包含生育津贴？具体每天给付多少钱？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [
+        "forbidden claim present: 每天给付"
+      ],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-04",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "按照这份条款，宠物医疗费用能不能理赔？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    }
+  ],
+  "limitations": [
+    "Small-sample local test; results do not represent a production SLA.",
+    "Python Agent duration is not exposed by the public Java API or current structured logs.",
+    "Source values are captured from the public API response without model-text parsing."
+  ],
+  "java_to_python_duration_records": 34,
+  "timing_field_notes": {
+    "end_to_end_duration_ms": "Measured by the Evidence HTTP client around the public Java API call.",
+    "java_to_python_duration_ms": "Parsed from Java python_agent_call logs by TraceId.",
+    "python_http_duration_ms": "Parsed from FastAPI request completion logs by TraceId.",
+    "python_agent_duration_ms": "Not exposed by the public Java API or current structured logs."
+  },
+  "java_to_python_latency_ms": {
+    "count": 34,
+    "mean": 5249.97,
+    "p50": 5331.5,
+    "p95": 8052,
+    "min": 1841,
+    "max": 9185
+  },
+  "python_http_latency_ms": {
+    "count": 34,
+    "mean": 5245.18,
+    "p50": 5327.5,
+    "p95": 8046,
+    "min": 1844,
+    "max": 9186
+  },
+  "supplemental_route_diagnostic": {
+    "name": "tool-set equivalence ignoring order and duplicate calls",
+    "correct": 31,
+    "total": 34,
+    "rate": 0.9118,
+    "is_primary_metric": false,
+    "note": "The primary route metric remains exact ordered-sequence equality."
+  },
+  "quality_rule_review": {
+    "raw_passed": 31,
+    "raw_total": 34,
+    "raw_rate": 0.9118,
+    "manual_rule_false_negative_case_ids": [
+      "RAG-06",
+      "UNKNOWN-02"
+    ],
+    "note": "Both stored answers satisfy the intended fact/safety behavior but fail literal matching; the raw score is preserved and is not relabeled as answer accuracy."
+  }
+}

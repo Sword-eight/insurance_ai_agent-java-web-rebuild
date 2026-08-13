@@ -1,14 +1,14 @@
-# Insurance AI Platform 迁移计划（Phase 0 草案）
+# Insurance AI Platform 迁移计划与完成记录
 
 > 项目目标名：Insurance AI Platform / 保险智能问答平台  
-> 文档状态：Phase 0 审计基线已完成；第 12 节路线于 2026-08-06 增补 Vue 客户端阶段
+> 文档状态：Phase 0 历史审计已归档；16 个正式阶段已于 2026-08-13 全部完成
 > 审查日期：2026-07-30  
 > 审查分支：`phase-0-source-audit`  
 > 基线提交：`ce591cb56188b7fd6a0b27c8f3263f0872c82f1c`
 
 第 1～11、13～14 节保留 Phase 0 审计时点的历史事实与结论；后续实现状态以源码、
-[ARCHITECTURE.md](./ARCHITECTURE.md) 和 Learning Kit 为准。第 12 节是持续维护的正式路线，
-不能用历史段落中的“当前”判断后来 Phase 是否已经实现。
+[ARCHITECTURE.md](./ARCHITECTURE.md)、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 和 Learning Kit 为准。
+第 12 节记录正式路线及完成状态，不能用历史段落中的“当前”判断后来 Phase 是否已经实现。
 
 ## 1. Phase 0 范围
 
@@ -613,8 +613,20 @@ Web Client
 
 > 路线调整（2026-08-06）：当前仓库没有正式的 Phase 0.75；分支隔离已作为 Git 工作流执行，
 > 不追补或虚构阶段。现有 14 个正式交付阶段中新增 Phase 9.5 与 Phase 10.5，调整后共
-> **16 个正式交付阶段**。Vue 尚未创建；详细规划见
+> **16 个正式交付阶段**。这些阶段现已全部完成；Vue 范围与实现记录见
 > [WEB_CLIENT_PLAN.md](./WEB_CLIENT_PLAN.md)。
+
+### 12.0 当前完成摘要
+
+| 范围 | 状态 |
+|---|---|
+| Phase 0～12（含 9.5、10.5） | 全部完成，共 16 个正式阶段 |
+| Vue→Java→Python | 已通过 HTTP 与 Chrome E2E |
+| Java→MySQL/Redis | 已使用 MySQL 8.4、Redis 7.4 验收 |
+| 最终审计 | PASS with WARNING，无未解决 ERROR |
+
+详细证据和当前限制统一见 [PROJECT_STATUS.md](./PROJECT_STATUS.md)。以下每个阶段条目保留原始
+计划措辞，用于解释迁移依赖与面试学习顺序，不表示仍待实施。
 
 ### Phase 0：源码审查与迁移计划
 
@@ -663,6 +675,9 @@ Web Client
 
 - 会话、消息持久化和查询。
 - 正常与 AI 调用失败时的消息状态要有明确事务边界。
+- Phase 7 提交后、Phase 8 开始前补做真实 MySQL 8 验收：在空库执行 Flyway migration，
+  验证 JSON 字段、外键、唯一约束、会话/消息查询、持久幂等以及并发锁语义；通过后才能
+  消除 H2 MySQL 模式留下的数据库兼容性 WARNING。
 
 ### Phase 8：Redis
 
@@ -685,6 +700,8 @@ Web Client
 
 - Java 管文档元数据和上传入口，Python 管文件解析与索引。
 - 处理文件安全、重建并发和失败状态。
+- Phase 10 完成后在真实 MySQL 8 验证包含文档表在内的完整 migration：同时覆盖空库初始化
+  和已有 Phase 7 schema 的版本升级路径。
 
 ### Phase 10.5：Document Client Extension
 
@@ -705,7 +722,12 @@ Web Client
 - 前置条件：Phase 0～11（含 9.5、10.5）全部完成且不存在未解决 ERROR。
 - Java 单元/集成测试、Python pytest、内部契约测试、端到端异常测试。
 - 完成 Vue→Java→Python、Vue→Java→MySQL/Redis 以及文档索引链的最终联调。
+- 在真实 MySQL 8 与 Redis 环境完成最终端到端数据验收，不以 H2 MySQL 模式替代正式结论。
 - 最终四维审计和架构漂移检查。
+
+完成状态（2026-08-13）：上述平台链路已使用真实 MySQL 8.4、Redis 7.4、Java/Python HTTP 与
+Chrome 完成验收，四维审计为 PASS with WARNING。确定性 AI 替身不代表真实 DeepSeek/BGE 在线
+验收；因未提供测试 Key，该项作为已披露 WARNING 保留。证据见 `learning/phase-12/`。
 
 ### 12.1 调整后的完整顺序与周期
 
@@ -720,6 +742,9 @@ Phase 0 → 0.5 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 9.5 �
 缺少历史依据的总天数。
 
 ## 13. 已知债务的处理建议
+
+> 本表是 Phase 0 路线中的历史处理建议。当前剩余项及状态以 [TECH_DEBT.md](./TECH_DEBT.md) 和
+> [PROJECT_STATUS.md](./PROJECT_STATUS.md) 为准。
 
 | 优先级 | 债务 | 建议处理阶段 |
 |---|---|---|

@@ -26,6 +26,8 @@ env/
 # ── 大文件 / 二进制 ──
 # 向量索引
 data/vectorstore/
+# Java 管理的运行时 PDF 原文件
+java-backend/data/documents/
 # 模型权重
 finetune/models/
 finetune/outputs/adapter/adapter_model.safetensors
@@ -44,6 +46,7 @@ finetune/data/insurance_test.json
 
 # ── 日志 ──
 logs/
+.phase12-runtime/
 
 # ── Streamlit ──
 .streamlit/

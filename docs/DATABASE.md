@@ -1,11 +1,12 @@
 # Insurance AI Platform 数据库设计
 
-> 文档版本：v1.0
-> 状态：Phase 2 v1.0 已冻结；自 2026-08-01 起生效
+> 文档版本：v1.1
+> 状态：Phase 2 v1.0 已冻结；Phase 7 v1.1 增补已获批并实现
 > 数据库：MySQL 8，字符集 `utf8mb4`
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[API.md](./API.md) / [REDIS.md](./REDIS.md) / [DECISIONS.md](./DECISIONS.md)
-> 范围：冻结逻辑表、字段、关系、状态、索引和事务边界；本阶段不创建 SQL、Entity 或 Mapper
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
+> 范围：冻结逻辑表、字段、关系、状态、索引和事务边界；Phase 7/10 已完成物理落地
 
 ## 1. 事实来源与所有权
 
@@ -15,7 +16,9 @@
 - Python 不访问本数据库；Java 通过内部 HTTP 把有限历史和文档内容传给 Python。
 - FAISS 由 Python 管理，只保存可重建的派生向量索引，不进入 MySQL。
 
-当前仓库没有这些表、Entity 或 Mapper；本文件描述后续目标设计。
+Phase 7 已通过 Flyway V1、Entity 和 Mapper 落地用户、会话、聊天请求与消息四张表；Phase 10
+已通过 Flyway V2 落地 `iap_knowledge_document`。Phase 12 使用真实 MySQL 8.4 验证完整 migration、
+聊天状态、幂等唯一性和文档状态；H2 MySQL mode 只保留为快速测试层，不替代最终结论。
 
 ## 2. 设计约定
 
@@ -26,7 +29,7 @@
 - 逻辑删除字段为 `deleted_at`；为空表示有效。删除语义由 Service 决定，不使用级联物理删除。
 - 密码只保存强哈希摘要，绝不保存明文或可逆密码。
 - 消息正文使用 `TEXT`，Java 在写入前执行 4000 字符业务校验。
-- 本阶段不编写建表 SQL；Phase 7/9/10 按本逻辑设计分模块落地 migration。
+- Phase 7 已落地前四张表；Phase 9 完成用户认证行为，Phase 10 再落地文档表。
 
 ## 3. 关系模型
 
@@ -95,6 +98,7 @@ erDiagram
 | `status` | VARCHAR(16) | NOT NULL | 请求状态机 |
 | `error_code` | VARCHAR(64) | NULL | 稳定错误码，不保存异常类名 |
 | `error_message` | VARCHAR(500) | NULL | 脱敏摘要，不保存堆栈 |
+| `sources_json` | JSON | NULL | 仅保存已校验的公开来源数组，用于成功幂等重放；非成功状态为空 |
 | `started_at` | DATETIME(3) | NULL | 进入 PROCESSING 的时间 |
 | `completed_at` | DATETIME(3) | NULL | 进入终态的时间 |
 | `created_at` | DATETIME(3) | NOT NULL | UTC |
@@ -127,7 +131,7 @@ erDiagram
 - `uk_chat_message_conversation_seq(conversation_id, sequence_no)`；
 - `idx_chat_message_conversation_created(conversation_id, created_at)`。
 
-仅当 Python 明确成功时写入助手消息。失败或结果未知时不写占位回答，状态保存在 `iap_chat_request`。
+仅当 Python 明确成功时写入助手消息。失败或结果未知时不写占位回答，状态保存在 `iap_chat_request`。公开来源不是消息正文；它随成功 request 保存为 `sources_json`，不得包含 Tool 参数、prompt 或完整检索上下文。
 
 ### 4.5 `iap_knowledge_document`
 
@@ -223,7 +227,7 @@ HTTP 202/已接收不能映射为 `INDEXED`。v1 是同步调用，不使用异�
 
 事务 B（短事务）：
 
-- 成功：写入唯一助手消息，把 request 更新为 `SUCCEEDED`；
+- 成功：写入唯一助手消息、保存已校验的公开 `sources_json`，把 request 更新为 `SUCCEEDED`；
 - 明确失败：更新为 `FAILED` 并写稳定错误摘要；
 - 读取超时：更新为 `UNKNOWN`，不写助手消息。
 
@@ -232,7 +236,7 @@ HTTP 202/已接收不能映射为 `INDEXED`。v1 是同步调用，不使用异�
 ### 6.2 重复聊天
 
 - 唯一约束负责最终防重，不能只依赖“先查再写”。
-- 同 Key + 同 hash：根据已有状态返回处理中、既有成功结果或既有失败/未知状态；不新建消息、不调用 Python。
+- 同 Key + 同 hash：根据已有状态返回处理中、由 request/message/sources 重建的既有成功结果，或既有失败/未知状态；不新建消息、不调用 Python。
 - 同 Key + 不同 hash：返回 `CHAT_IDEMPOTENCY_CONFLICT`。
 
 ### 6.3 文档上传与索引
@@ -258,6 +262,7 @@ HTTP 202/已接收不能映射为 `INDEXED`。v1 是同步调用，不使用异�
 - v1 不自动清理聊天记录和 chat request；它们与会话保留周期一致。
 - 逻辑删除不等于立即物理擦除；具体数据保留/隐私策略在部署前另行评审。
 - `error_message` 必须脱敏且最多 500 字符，不写异常堆栈。
+- `sources_json` 只保存公共 `documentName/page/snippet/score`，写入前执行与公共 VO 相同的字段和长度校验。
 - 不保存 JWT、DeepSeek API Key、用户密码明文、FAISS 向量或 LangChain 消息对象。
 - 日志与数据库中默认不复制完整 PDF 内容。
 

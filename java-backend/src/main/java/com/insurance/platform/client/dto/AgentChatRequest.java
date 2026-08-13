@@ -1,5 +1,6 @@
 package com.insurance.platform.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public record AgentChatRequest(
         history = history == null ? null : List.copyOf(history);
     }
 
+    @JsonIgnore
     @AssertTrue(message = "history must contain complete alternating user/assistant pairs")
     public boolean isHistoryPaired() {
         if (history == null || history.size() % 2 != 0) {
@@ -34,6 +36,7 @@ public record AgentChatRequest(
         return true;
     }
 
+    @JsonIgnore
     @AssertTrue(message = "history content must not exceed 12000 characters")
     public boolean isHistoryWithinBudget() {
         if (history == null) {

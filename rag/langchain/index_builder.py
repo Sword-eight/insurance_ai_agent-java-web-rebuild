@@ -127,7 +127,7 @@ class LangChainIndexBuilder(BaseIndexBuilder):
 
     def list_documents(self) -> List[Dict[str, Any]]:
         """列出文档目录中的所有文件。"""
-        pdf_files: List[Path] = self._loader.list_pdfs()
+        pdf_files: List[Path] = self._loader.list_documents()
         return [
             {
                 "name": f.name,

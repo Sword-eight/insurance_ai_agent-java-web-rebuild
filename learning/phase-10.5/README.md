@@ -1,24 +1,21 @@
-# Phase 10.5 学习计划：Document Client Extension
+# Phase 10.5：Document Client Extension
 
-> 状态：未来阶段，尚未实现文档客户端
-> 前置条件：Phase 9.5 客户端和 Phase 10 文档业务 API 已完成并稳定
-> 详细范围：[Vue Web Client 规划](../../docs/WEB_CLIENT_PLAN.md)
-> 总索引：[学习路线](../README.md)
+> 状态：实现、验证、提交与推送均已完成。
+> 前置条件：Phase 9.5 客户端和 Phase 10 文档业务 API 已完成。
 
-## 必需概念
+本阶段在现有 Vue 客户端上增加 PDF 选择、上传进度、文档列表和索引状态展示。客户端只调用
+Java 公共 API，不直连 Python，也不自动恢复 `UNKNOWN`。
 
-1. 浏览器文件选择与 `multipart/form-data`。
-2. Axios 上传进度或基础 loading。
-3. Java 公共 `DocumentData` 与索引状态的 TypeScript 建模。
-4. 上传失败、502/503 与 `UNKNOWN` 的只展示边界。
-5. `Vue → Java DocumentService → Python Knowledge API` 的职责分离。
+## 阅读顺序
 
-## 验收式学习目标
+1. [MiniCourse](./MiniCourse.md)
+2. [Design](./Design.md)
+3. [CallGraph](./CallGraph.md)
+4. [TestMatrix](./TestMatrix.md)
+5. [Audit](./Audit.md)
+6. [LearningKit](./LearningKit.md)
+7. [Interview](./Interview.md) / [Challenge](./Challenge.md)
+8. [ReviewChecklist](./ReviewChecklist.md)
+9. [KnowledgeSummary](./KnowledgeSummary.md)
 
-- 能说明文件如何从 `DocumentView` 进入 Java，而不是直达 Python。
-- 能修改文件选择、上传按钮或一个文档 DTO 字段。
-- 能解释文档业务状态由 Java 持久化、FAISS 索引由 Python 管理。
-- 能区分上传 loading、明确失败与结果暂时无法确认。
-
-本阶段只扩展 Phase 9.5 的现有客户端，不重新设计前端。正式开始时仍须按三道门生成
-MiniCourse、Skeleton 和最终 Learning Kit。
+冻结范围依据：[Vue Web Client 规划](../../docs/WEB_CLIENT_PLAN.md)。

@@ -1,6 +1,7 @@
 # 技术债清单
 
-> 本清单记录 Phase 0/0.5 已识别、但明确不在 Phase 0.5 实现范围内的问题。状态均为 `OPEN`；后续 Phase 仍需经过各自的计划、Skeleton Review 和实现批准。
+> 当前状态更新：2026-08-13。下面第一张表保留 Phase 0/0.5 的历史发现；当前处置以紧随其后的
+> 状态表为准。完整平台状态见 [PROJECT_STATUS.md](./PROJECT_STATUS.md)。
 
 | 技术债 | 当前风险 | 计划处理阶段 | Phase 0.5 处理方式 |
 |---|---|---|---|
@@ -24,6 +25,37 @@
 | LoRA 脚本存在本机绝对路径 | 环境不可移植且可能泄露本机结构 | 后续独立训练维护任务 | Phase 0.5 只修错误模型标记，不做脚本重构 |
 | 本机 PATH 同时暴露 Python 3.12/3.13 | 安装命令可能落入错误解释器 | 后续环境维护；当前用 `.venv` 规避 | 已记录解释器确认命令和实际测试版本 |
 | 可选训练环境存在包冲突 | `pip check` 报 LLaMA-Factory/TRL 与 Transformers、Numba 与 NumPy 不兼容 | 后续独立 LoRA 环境维护 | 不大规模升级；默认离线测试不依赖该环境 |
+
+## Phase 12 结束时状态
+
+状态含义：`RESOLVED` 表示计划范围已实现并验证；`MITIGATED` 表示平台主链已处理但旧调试链或
+信任边界仍有限制；`OPEN` 表示尚未实现，不得宣称完成。
+
+| 技术债 | 当前状态 | 证据或剩余限制 |
+|---|---|---|
+| FastAPI 内部 HTTP 包装缺失 | RESOLVED | Phase 3/4 已实现 router、facade、lifespan 与内部 Envelope |
+| Spring Boot 工程缺失 | RESOLVED | Phase 3/5 已建立 Java 17 Spring Boot 后端 |
+| 双服务目录和边界未冻结 | RESOLVED | Phase 1 架构已冻结；Phase 12 边界扫描通过 |
+| Streamlit rerun 重建 Graph/checkpointer | MITIGATED | FastAPI 使用进程级 lifespan；旧 Streamlit 入口仍按 rerun 装配并只作调试用途 |
+| `InMemorySaver` 不适合生产持久化 | MITIGATED | 正式历史由 Java/MySQL 传入；HTTP execution checkpoint 用后清理，Streamlit 仍是内存态 |
+| 上传文件校验不足 | RESOLVED | Java/Python 已验证大小、扩展名、MIME、PDF signature、SHA-256 与受控路径 |
+| 索引 rebuild/delete 与检索并发 | RESOLVED | Phase 10 使用写锁、候选 generation 和原子发布，并有异常回归测试 |
+| RAG 来源追踪条件失效 | OPEN | 当前只记录 RAG Tool 调用摘要，尚未形成真实文档级 sources 证据 |
+| LlamaIndex `total_vectors` 固定为 0 | RESOLVED | 当前实现从 FAISS `ntotal` 读取统计 |
+| LoRA Adapter 未接入在线 Agent | OPEN | 独立离线实验保持不变，正式在线 Agent 仍使用 DeepSeek |
+| Redis 缓存、限流和幂等缺失 | RESOLVED | Phase 8 实现，Phase 12 使用 Redis 7.4 验收状态与 TTL |
+| JWT 和用户系统缺失 | RESOLVED | Phase 9 实现注册、登录、JWT 和资源归属 |
+| MySQL 会话和聊天记录缺失 | RESOLVED | Phase 7 实现；Phase 12 使用 MySQL 8.4 验收 |
+| Agent 缺少显式最大工具循环限制 | OPEN | 当前 Graph 调用未显式设置项目级 recursion/tool-loop 上限 |
+| Tool 失败监控只识别“错误”前缀 | OPEN | `工具执行失败:` 仍可能被 monitor 标为成功 |
+| `StateManager.clear_session()` 名实不符 | OPEN | 旧 Streamlit helper 仍只返回成功文案，没有删除 thread |
+| FAISS 危险 pickle 反序列化 | MITIGATED | 仅允许受控本地索引；代码仍启用 dangerous deserialization，不支持未知来源索引 |
+| LoRA 脚本本机绝对路径 | OPEN | 训练脚本和既有产物仍含本机路径，未纳入平台迁移范围 |
+| Python PATH 多解释器风险 | MITIGATED | Phase 12 使用独立 D 盘 Windows CPU venv 和显式 executable |
+| 可选训练环境包冲突 | OPEN | 平台隔离 venv 的 `pip check` 已通过；LoRA 环境仍需独立维护 |
+
+另外，真实 DeepSeek/BGE 在线验收、Maven/Python 专用 CVE 扫描、生产容量/灾备/渗透测试和
+`UNKNOWN` 迟到结果对账仍属于后续独立工作，不在已完成的同步 v1 Phase 范围内。
 
 ## Phase 2 后续演进记录
 

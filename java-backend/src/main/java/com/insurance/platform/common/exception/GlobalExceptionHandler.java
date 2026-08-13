@@ -7,10 +7,12 @@ import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -28,6 +30,18 @@ public class GlobalExceptionHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRateLimitExceeded(
+            RateLimitExceededException exception) {
+        TraceIdContext.markErrorCode(exception.errorCode().name());
+        String traceId = TraceIdContext.currentTraceId();
+        return ResponseEntity
+                .status(exception.errorCode().httpStatus())
+                .header(HttpHeaders.RETRY_AFTER, Long.toString(exception.retryAfterSeconds()))
+                .body(ApiResponse.failure(
+                        exception.errorCode(), exception.getMessage(), traceId));
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(
             BusinessException exception) {
@@ -39,6 +53,7 @@ public class GlobalExceptionHandler {
             HandlerMethodValidationException.class,
             ConstraintViolationException.class,
             HttpMessageNotReadableException.class,
+            MissingRequestHeaderException.class,
             MissingServletRequestParameterException.class,
             MethodArgumentTypeMismatchException.class
     })
@@ -62,6 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnexpectedException(
             Exception exception) {
+        TraceIdContext.markErrorCode(ErrorCode.INTERNAL_ERROR.name());
         String traceId = TraceIdContext.currentTraceId();
         logger.error(
                 "Unhandled public API exception, traceId={}, exceptionType={}",
@@ -78,6 +94,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ApiResponse<Void>> response(
             ErrorCode errorCode,
             String safeMessage) {
+        TraceIdContext.markErrorCode(errorCode.name());
         String traceId = TraceIdContext.currentTraceId();
         return ResponseEntity
                 .status(errorCode.httpStatus())

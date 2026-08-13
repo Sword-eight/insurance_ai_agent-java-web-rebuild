@@ -9,9 +9,12 @@ Insurance AI Agent - LlamaIndex 索引构建器
   - Embedding 复用项目统一的 SentenceTransformer。
 """
 
+import os
 import shutil
 from pathlib import Path
+from threading import RLock
 from typing import List, Dict, Any, Optional
+from uuid import uuid4
 
 import faiss
 from llama_index.core import (
@@ -26,7 +29,7 @@ from llama_index.vector_stores.faiss import FaissVectorStore
 
 from rag.base_index_builder import BaseIndexBuilder
 from config import PDF_CONFIG, VECTOR_STORE_CONFIG
-from rag.embedding import LlamaIndexEmbeddingAdapter
+from rag.llamaindex.embedding import LlamaIndexEmbeddingAdapter
 from utils.logger import get_logger
 from utils.helpers import Timer
 
@@ -47,9 +50,13 @@ class LlamaIndexBuilder(BaseIndexBuilder):
         """初始化组件。"""
         self._index_path: Path = Path(VECTOR_STORE_CONFIG["index_path"]) / "llamaindex"
         self._index_path.mkdir(parents=True, exist_ok=True)
+        self._generation_root = self._index_path / "generations"
+        self._generation_root.mkdir(parents=True, exist_ok=True)
+        self._current_file = self._index_path / "CURRENT"
 
         self._embedding = LlamaIndexEmbeddingAdapter()
         self._index: Optional[VectorStoreIndex] = None
+        self._index_lock = RLock()
 
     # ------------------------------------------------------------------
     # 公共属性
@@ -58,12 +65,14 @@ class LlamaIndexBuilder(BaseIndexBuilder):
     @property
     def index(self) -> Optional[VectorStoreIndex]:
         """获取当前加载的索引实例。"""
-        return self._index
+        with self._index_lock:
+            return self._index
 
     @property
     def is_loaded(self) -> bool:
         """索引是否已加载到内存。"""
-        return self._index is not None
+        with self._index_lock:
+            return self._index is not None
 
     # ------------------------------------------------------------------
     # BaseIndexBuilder 接口 — build / load / delete
@@ -133,16 +142,19 @@ class LlamaIndexBuilder(BaseIndexBuilder):
             Settings.embed_model = self._embedding
             Settings.llm = None
 
-            faiss_store = FaissVectorStore.from_persist_dir(str(self._index_path))
+            active_path = self._active_index_path()
+            faiss_store = FaissVectorStore.from_persist_dir(str(active_path))
             storage_context = StorageContext.from_defaults(
                 vector_store=faiss_store,
-                persist_dir=str(self._index_path),
+                persist_dir=str(active_path),
             )
 
-            self._index = load_index_from_storage(
+            loaded = load_index_from_storage(
                 storage_context=storage_context,
                 embed_model=self._embedding,
             )
+            with self._index_lock:
+                self._index = loaded
 
             logger.info("LlamaIndex 索引加载成功")
             return True
@@ -153,12 +165,19 @@ class LlamaIndexBuilder(BaseIndexBuilder):
 
     def delete(self) -> None:
         """删除索引目录。"""
-        self._index = None
-        if self._index_path.exists():
-            shutil.rmtree(str(self._index_path))
-            logger.info(f"LlamaIndex 索引已删除: {self._index_path}")
-        else:
-            logger.info("LlamaIndex 索引目录不存在，无需删除")
+        with self._index_lock:
+            existed = self.index_exists()
+            self._index = None
+            self._current_file.unlink(missing_ok=True)
+            if self._generation_root.exists():
+                shutil.rmtree(self._generation_root)
+            self._generation_root.mkdir(parents=True, exist_ok=True)
+            for name in ("docstore.json", "index_store.json", "faiss.index"):
+                (self._index_path / name).unlink(missing_ok=True)
+        logger.info(
+            f"LlamaIndex 索引已删除: {self._index_path}"
+            if existed else "LlamaIndex 索引目录不存在，无需删除"
+        )
 
     # ------------------------------------------------------------------
     # BaseIndexBuilder 接口 — 查询
@@ -170,12 +189,18 @@ class LlamaIndexBuilder(BaseIndexBuilder):
         doc_files: list = list(pdf_dir.glob("*.*")) if pdf_dir.exists() else []
         doc_files = [f for f in doc_files if f.suffix.lower() in (".pdf", ".txt")]
 
+        loaded_index = self.index
+        vector_store = (
+            loaded_index.storage_context.vector_store
+            if loaded_index is not None else None
+        )
+        faiss_index = getattr(vector_store, "_faiss_index", None)
         return {
             "index_loaded": self.is_loaded,
             "index_exists": self.index_exists(),
             "index_path": str(self._index_path),
             "embedding_model": "BAAI/bge-base-zh-v1.5 (via SentenceTransformer)",
-            "total_vectors": 0,  # LlamaIndex 不直接暴露向量数
+            "total_vectors": int(faiss_index.ntotal) if faiss_index is not None else 0,
             "pdf_count": len(doc_files),
             "chunk_size": PDF_CONFIG["chunk_size"],
             "chunk_overlap": PDF_CONFIG["chunk_overlap"],
@@ -184,8 +209,7 @@ class LlamaIndexBuilder(BaseIndexBuilder):
 
     def index_exists(self) -> bool:
         """检查本地是否存在已保存的索引。"""
-        docstore = self._index_path / "docstore.json"
-        return docstore.exists()
+        return (self._active_index_path() / "docstore.json").is_file()
 
     def list_documents(self) -> List[Dict[str, Any]]:
         """列出文档目录中的文件。"""
@@ -233,9 +257,6 @@ class LlamaIndexBuilder(BaseIndexBuilder):
         Settings.embed_model = self._embedding
         Settings.llm = None
 
-        if self.index_exists():
-            self.delete()
-
         faiss_dim: int = len(self._embedding._get_query_embedding("dim_test"))
         faiss_index = faiss.IndexFlatL2(faiss_dim)
         faiss_store = FaissVectorStore(faiss_index=faiss_index)
@@ -252,7 +273,7 @@ class LlamaIndexBuilder(BaseIndexBuilder):
                 f"chunk_size={PDF_CONFIG['chunk_size']}, "
                 f"chunk_overlap={PDF_CONFIG['chunk_overlap']}"
             )
-            self._index = VectorStoreIndex.from_documents(
+            candidate = VectorStoreIndex.from_documents(
                 documents=documents,
                 storage_context=storage_context,
                 embed_model=self._embedding,
@@ -261,7 +282,7 @@ class LlamaIndexBuilder(BaseIndexBuilder):
             )
         elif nodes:
             logger.info(f"开始构建 LlamaIndex 索引: {len(nodes)} 个 Node")
-            self._index = VectorStoreIndex(
+            candidate = VectorStoreIndex(
                 nodes=nodes,
                 storage_context=storage_context,
                 embed_model=self._embedding,
@@ -271,20 +292,47 @@ class LlamaIndexBuilder(BaseIndexBuilder):
             logger.warning("documents 和 nodes 均为空，无法构建索引")
             return
 
-        self._save_index()
+        self._save_index(candidate)
         logger.info(f"LlamaIndex 索引构建完成，已保存到 {self._index_path}")
 
-    def _save_index(self) -> None:
+    def _save_index(self, candidate: VectorStoreIndex) -> None:
         """将索引持久化到磁盘。"""
-        if self._index is None:
-            logger.warning("索引为空，无法保存")
-            return
+        generation_name = uuid4().hex
+        generation = self._generation_root / generation_name
+        marker = self._index_path / f".CURRENT-{generation_name}.tmp"
+        try:
+            generation.mkdir(parents=False, exist_ok=False)
+            candidate.storage_context.persist(persist_dir=str(generation))
+            vector_store = candidate.storage_context.vector_store
+            if hasattr(vector_store, '_faiss_index') and vector_store._faiss_index is not None:
+                faiss.write_index(
+                    vector_store._faiss_index, str(generation / "faiss.index")
+                )
+            if not (generation / "docstore.json").is_file():
+                raise RuntimeError("candidate LlamaIndex is incomplete")
+            marker.write_text(generation_name, encoding="ascii")
+            with self._index_lock:
+                os.replace(marker, self._current_file)
+                self._index = candidate
+                for child in self._generation_root.iterdir():
+                    if child.name != generation_name and child.is_dir():
+                        shutil.rmtree(child, ignore_errors=True)
+            logger.info(f"LlamaIndex 索引已原子发布: generation={generation_name}")
+        except Exception:
+            marker.unlink(missing_ok=True)
+            if generation.exists():
+                shutil.rmtree(generation, ignore_errors=True)
+            raise
 
-        self._index.storage_context.persist(persist_dir=str(self._index_path))
-
-        vector_store = self._index.storage_context.vector_store
-        if hasattr(vector_store, '_faiss_index') and vector_store._faiss_index is not None:
-            faiss_index_path = self._index_path / "faiss.index"
-            faiss.write_index(vector_store._faiss_index, str(faiss_index_path))
-
-        logger.info(f"LlamaIndex 索引已保存到 {self._index_path}")
+    def _active_index_path(self) -> Path:
+        with self._index_lock:
+            if self._current_file.is_file():
+                try:
+                    name = self._current_file.read_text(encoding="ascii").strip()
+                    if name and name.isalnum():
+                        candidate = (self._generation_root / name).resolve()
+                        if candidate.parent == self._generation_root.resolve():
+                            return candidate
+                except OSError:
+                    pass
+            return self._index_path

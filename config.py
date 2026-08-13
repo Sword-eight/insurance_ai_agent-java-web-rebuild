@@ -17,6 +17,13 @@ PROJECT_ROOT: Path = Path(__file__).resolve().parent
 # ------------------------------------------------------------
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 
+
+def _positive_float_env(name: str, default: str) -> float:
+    value = float(os.getenv(name, default))
+    if value <= 0:
+        raise ValueError(f"{name} must be positive")
+    return value
+
 # ------------------------------------------------------------
 # LLM 配置（DeepSeek）
 # ------------------------------------------------------------
@@ -26,6 +33,13 @@ LLM_CONFIG: dict = {
     "api_key": os.getenv("DEEPSEEK_API_KEY", ""),
     "temperature": 0.0,
     "max_tokens": 4096,
+    "connect_timeout_seconds": _positive_float_env(
+        "DEEPSEEK_CONNECT_TIMEOUT_SECONDS", "3"
+    ),
+    "read_timeout_seconds": _positive_float_env(
+        "DEEPSEEK_READ_TIMEOUT_SECONDS", "50"
+    ),
+    "max_retries": 0,
 }
 
 # ------------------------------------------------------------
@@ -115,7 +129,10 @@ PREMIUM_RATE_PATH: str = str(PROJECT_ROOT / "config" / "premium_rate.json")
 LOG_CONFIG: dict = {
     "log_dir": str(PROJECT_ROOT / "logs"),
     "log_level": os.getenv("LOG_LEVEL", "INFO"),
-    "log_format": "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    "log_format": (
+        "%(asctime)s level=%(levelname)s service=python "
+        "traceId=%(trace_id)s logger=%(name)s message=%(message)s"
+    ),
     "log_date_format": "%Y-%m-%d %H:%M:%S",
 }
 

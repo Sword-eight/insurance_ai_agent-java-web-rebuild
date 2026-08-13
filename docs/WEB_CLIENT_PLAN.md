@@ -1,13 +1,14 @@
-# Vue Web Client 开发与学习规划
+# Vue Web Client 范围、实现与学习规划
 
-> 状态：已规划，尚未实现
+> 状态：Phase 9.5 / 10.5 已实现；Phase 12 Chrome E2E 已通过
 > 适用阶段：Phase 9.5 / Phase 10.5
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 公共契约依据：[API.md](./API.md)
 > 路线依据：[MIGRATION_PLAN.md](./MIGRATION_PLAN.md)
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
 
-本文件只冻结“极简但可交互”的正式平台客户端范围。本次规划调整没有创建 `web-client/`，
-没有编写 Vue 代码，也没有修改 Java/Python 业务代码。
+本文件最初冻结“极简但可交互”的正式平台客户端范围。`web-client/` 已按该范围实现：Phase 9.5
+完成登录、注册、会话和聊天，Phase 10.5 增加 PDF 文档页面；Phase 12 完成真实 Chrome 联调。
 
 ## 1. 目标与定位
 
@@ -32,7 +33,7 @@ AgentClient、Java 聊天状态机或文档业务状态管理。
 - Pinia 默认不引入；少量状态优先使用组件状态或简单组合式函数。只有跨页面共享状态已经
   明显复杂时才评审引入。
 
-未来实现可从下列目录开始，并按真实代码继续简化：
+当前实现采用以下最小目录（省略测试文件）：
 
 ```text
 web-client/
@@ -80,13 +81,13 @@ Vue 不负责：
 
 ## 4. Phase 9.5：Vue Minimal Chat Client
 
-### 前置条件
+### 前置条件（已满足）
 
 Phase 6～9 已完成并验证：Java→Python 同步聊天、MySQL 会话与消息、Redis、注册登录、JWT、
 资源归属，以及登录/会话/历史/聊天公共 API 已稳定。Phase 6 不提前制作临时无鉴权前端；
 该阶段用 Swagger、测试或 Postman 验证链路即可。
 
-### 实现范围
+### 实现范围（已完成）
 
 1. 登录页和注册页。
 2. 聊天主页面、会话列表、新建与切换会话。
@@ -106,7 +107,7 @@ ChatView → chatApi → Axios → Java ChatController → ChatService → Agent
 ChatView → conversationApi → Java ConversationController → Service → MySQL → Vue 展示历史
 ```
 
-### 验收
+### 验收（已通过）
 
 - 可以注册、登录并携带 JWT；401 会清理登录态并跳转。
 - 可以创建/切换会话、查看历史、发送消息并显示 loading 与稳定错误。
@@ -116,7 +117,7 @@ ChatView → conversationApi → Java ConversationController → Service → MyS
 
 ## 5. Phase 10.5：Document Client Extension
 
-### 前置条件与范围
+### 前置条件与范围（已完成）
 
 Phase 10 的 Java PDF 上传、文档列表、文档状态、索引状态和 Python Knowledge 调用已经完成并
 稳定。本阶段只在现有客户端上新增：文件选择、PDF 上传、上传进度或 loading、文档列表、
@@ -127,8 +128,8 @@ DocumentView → documentApi → Java DocumentController → DocumentService
              → Python Knowledge API → Java 保存文档/索引状态 → Vue 展示公共响应
 ```
 
-验收要求：可上传 PDF、查看文档和索引状态、看到明确失败提示；Vue 不直连 Python
-Knowledge API；学习者能解释链路各层职责。
+验收结果：可上传 PDF、查看文档和索引状态、看到明确失败提示；Vue 不直连 Python Knowledge
+API。Phase 12 Chrome E2E 已验证未登录路由保护、正常聊天、503、timeout/UNKNOWN 与 PDF 上传。
 
 ## 6. Envelope、DTO 与错误展示
 

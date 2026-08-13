@@ -78,6 +78,24 @@ def knowledge_operation_deferred_error() -> ApplicationError:
     )
 
 
+def knowledge_invalid_document_error() -> ApplicationError:
+    return ApplicationError(
+        code="KNOWLEDGE_INVALID_DOCUMENT",
+        error_type="VALIDATION",
+        message="document does not satisfy the knowledge upload contract",
+        retryable=False,
+    )
+
+
+def knowledge_index_error() -> ApplicationError:
+    return ApplicationError(
+        code="KNOWLEDGE_INDEX_FAILED",
+        error_type="INTERNAL",
+        message="knowledge index build failed",
+        retryable=False,
+    )
+
+
 def knowledge_status_error() -> ApplicationError:
     return ApplicationError(
         code="AI_RAG_ERROR",

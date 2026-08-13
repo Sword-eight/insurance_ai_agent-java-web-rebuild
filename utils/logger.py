@@ -10,6 +10,15 @@ from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 from config import LOG_CONFIG
+from utils.trace_context import current_trace_id
+
+
+class TraceContextFilter(logging.Filter):
+    """Inject request context without coupling services to FastAPI."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        record.trace_id = current_trace_id()
+        return True
 
 
 class LoggerManager:
@@ -46,6 +55,7 @@ class LoggerManager:
             # 控制台 handler
             console_handler = logging.StreamHandler()
             console_handler.setLevel(logging.INFO)
+            console_handler.addFilter(TraceContextFilter())
             console_fmt = logging.Formatter(
                 LOG_CONFIG["log_format"],
                 datefmt=LOG_CONFIG["log_date_format"],
@@ -63,6 +73,7 @@ class LoggerManager:
                 encoding="utf-8",
             )
             file_handler.setLevel(logging.DEBUG)
+            file_handler.addFilter(TraceContextFilter())
             file_fmt = logging.Formatter(
                 LOG_CONFIG["log_format"],
                 datefmt=LOG_CONFIG["log_date_format"],

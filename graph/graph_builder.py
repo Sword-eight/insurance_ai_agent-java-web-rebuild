@@ -21,11 +21,13 @@ from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import StateGraph, END
 
-from config import LLM_CONFIG, MEMORY_CONFIG
+from config import MEMORY_CONFIG
 from graph.state import AgentState
 from graph.router import route_after_agent
 from graph.nodes import safe_truncate_messages
 from prompts.system_prompt import SYSTEM_PROMPT
+from services.llm_factory import create_default_llm
+from tools.insurance_rag_tool import InsuranceRAGTool
 from utils.logger import get_logger
 from utils.helpers import Timer
 
@@ -38,13 +40,7 @@ logger = get_logger("graph.builder")
 
 def _create_default_llm() -> ChatOpenAI:
     """创建默认 LLM 实例（从 config.py 读取配置）。"""
-    return ChatOpenAI(
-        model=LLM_CONFIG["model"],
-        base_url=LLM_CONFIG["base_url"],
-        api_key=LLM_CONFIG["api_key"],
-        temperature=LLM_CONFIG["temperature"],
-        max_tokens=LLM_CONFIG["max_tokens"],
-    )
+    return create_default_llm()
 
 
 # ==================================================================
@@ -205,21 +201,31 @@ class AgentGraphBuilder:
                 start_time: float = time.perf_counter()
 
                 try:
-                    result = tool_instance._run(**tool_args)
+                    if isinstance(tool_instance, InsuranceRAGTool):
+                        result, retrieval_result = tool_instance.run_with_result(**tool_args)
+                        retrieved_docs.extend(
+                            {
+                                "content": document.content,
+                                "source_name": document.source_name,
+                                "source_page": document.source_page,
+                                # FAISS can return numpy.float32, which the
+                                # LangGraph checkpoint serializer cannot store.
+                                "similarity_score": float(document.similarity_score),
+                                "engine": document.engine,
+                            }
+                            for document in (
+                                retrieval_result.documents
+                                if retrieval_result is not None
+                                else []
+                            )
+                        )
+                    else:
+                        result = tool_instance._run(**tool_args)
                 except Exception as e:
                     result = f"工具执行失败: {e}"
                     logger.error(f"[Tool] {tool_name} 执行异常: {e}", exc_info=True)
 
                 elapsed: float = round(time.perf_counter() - start_time, 4)
-
-                if tool_name == "insurance_rag_search" and hasattr(
-                    tool_instance, "_retriever"
-                ):
-                    retrieved_docs.append({
-                        "tool_name": tool_name,
-                        "query": tool_args.get("query", ""),
-                        "elapsed": elapsed,
-                    })
 
                 monitor_entries.append({
                     "step": "tool",

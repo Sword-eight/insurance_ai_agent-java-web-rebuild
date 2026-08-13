@@ -5,12 +5,13 @@ Insurance AI Agent - 保险知识库检索工具
 生命周期：RetrievalService 由 init_services() 创建后注入，Tool 不直接调 Retriever。
 """
 
-from typing import Any, Dict, Type
+from typing import Any, Type
 
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 
 from services.retrieval_service import RetrievalService
+from rag.base_retriever import RetrievalResult
 from utils.logger import get_logger
 from utils.helpers import Timer
 
@@ -69,6 +70,11 @@ class InsuranceRAGTool(BaseTool):
         Returns:
             格式化后的检索结果文本（LLM 可直接使用）
         """
+        formatted, _ = self.run_with_result(query)
+        return formatted
+
+    def run_with_result(self, query: str) -> tuple[str, RetrievalResult | None]:
+        """Return LLM text and the same invocation's structured retrieval result."""
         logger.info(f"[Tool] insurance_rag_search 被调用: query='{query[:80]}...'")
 
         try:
@@ -83,9 +89,9 @@ class InsuranceRAGTool(BaseTool):
                     f"耗时 {timer.elapsed:.4f}s"
                 )
 
-            return formatted
+            return formatted, result
 
         except Exception as e:
             error_msg: str = f"知识库检索失败: {e}"
             logger.error(f"[Tool] insurance_rag_search 异常: {e}", exc_info=True)
-            return error_msg
+            return error_msg, None

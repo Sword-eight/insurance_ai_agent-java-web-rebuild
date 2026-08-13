@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class InsurancePlatformApplicationTests {
 
     @Test
-    void contextLoadsWithoutDatabaseRedisOrPython() {
-        // Spring context startup is the assertion.
+    void contextLoadsWithIsolatedTestDatabaseAndWithoutRedisOrPython() {
+        // Spring context startup plus the test Flyway migration is the assertion.
     }
 }

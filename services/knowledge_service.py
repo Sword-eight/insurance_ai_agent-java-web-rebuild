@@ -54,9 +54,8 @@ class KnowledgeService:
         return self._builder.load()
 
     def rebuild(self) -> Dict[str, Any]:
-        """重建知识库——删除旧索引后重新构建。"""
+        """构建候选知识库并由 Builder 安全发布，失败时保留旧索引。"""
         logger.info("开始重建知识库...")
-        self._builder.delete()
         return self._builder.build()
 
     def delete_knowledge_base(self) -> Dict[str, Any]:

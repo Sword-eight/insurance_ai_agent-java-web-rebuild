@@ -1,18 +1,19 @@
 # Insurance AI Platform API 契约
 
-> 文档版本：v1.0
-> 状态：Phase 2 v1.0 已冻结；自 2026-08-01 起生效
+> 文档版本：v1.1
+> 状态：Phase 2 v1.0 已冻结；Phase 7 v1.1 增补已实现；Phase 12 已完成契约联调
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[DATABASE.md](./DATABASE.md) / [REDIS.md](./REDIS.md) / [DECISIONS.md](./DECISIONS.md)
-> 范围：冻结 v1 的 HTTP 路径、字段、错误码、上下文、幂等和容错默认值；不表示接口已经实现
-> 客户端说明：Phase 9.5/10.5 规划的 Vue 只消费 Java 公共 API；本次规划调整不修改 v1 契约
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
+> 范围：冻结 v1 的 HTTP 路径、字段、错误码、上下文、幂等和容错默认值；具体实现状态以各 Phase 审计为准
+> 客户端说明：Phase 9.5/10.5 实现的 Vue 只消费 Java 公共 API；v1.1 不改变路径、服务边界或同步模型
 
 ## 1. 当前事实和约束
 
-Phase 2 冻结本契约时，在线入口仍是 Streamlit `app.py`，Java Backend、FastAPI Router、DTO、
-VO 和 HTTP Client 尚未实现。此后仓库已形成 FastAPI 与 Java 阶段性基础，但完整业务接口、
-JWT、MySQL/Redis 链路和 Vue Web Client 仍须按后续 Phase 落地。本文件不能单独用来宣称某个
-接口当前已经可调用。
+Phase 2 冻结本契约时，在线入口仍是 Streamlit `app.py`，Java/FastAPI/DTO/VO/HTTP Client 尚未
+实现；这是历史设计起点。当前公共与内部 API、JWT、MySQL、Redis、文档业务和 Vue Web Client
+均已落地，Phase 12 已验证正常、幂等、503、timeout/UNKNOWN 和 PDF 链路。冻结路径、字段、
+Envelope 和同步模型保持不变。
 
 固定调用方向：
 
@@ -70,7 +71,7 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 
 ### 4.1 能力清单
 
-| Method | Path | 用途 | 目标阶段 |
+| Method | Path | 用途 | 实现阶段 |
 |---|---|---|---|
 | `POST` | `/api/v1/auth/register` | 注册 | Phase 9 |
 | `POST` | `/api/v1/auth/login` | 登录 | Phase 9 |
@@ -83,7 +84,7 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 | `GET` | `/api/v1/documents` | 分页查询当前用户文档 | Phase 10 |
 | `GET` | `/api/v1/documents/{documentId}` | 查询文档和索引状态 | Phase 10 |
 
-本表冻结能力和路径，不要求在一个 Phase 一次实现全部 Controller。
+本表能力和路径已按“实现阶段”列逐步落地；冻结契约仍不因实现完成而自动改变。
 
 ### 4.2 创建会话
 
@@ -110,6 +111,29 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 }
 ```
 
+### 4.2.1 查询会话列表
+
+`GET /api/v1/conversations?page=1&size=20`
+
+返回统一分页 `data`。每个 `items` 元素复用创建会话的四字段视图：
+
+```json
+{
+  "conversationId": "b4765c86-21bc-4dc1-a968-d20f54280319",
+  "title": "车险咨询",
+  "status": "ACTIVE",
+  "createdAt": "2026-08-01T12:30:00Z"
+}
+```
+
+只返回当前用户且未逻辑删除的会话，按 `updated_at DESC, id DESC` 排序。
+
+### 4.2.2 查询会话详情
+
+`GET /api/v1/conversations/{conversationId}`
+
+成功响应复用创建会话的四字段视图。不存在返回 `CONVERSATION_NOT_FOUND`；存在但不属于当前用户返回 `CONVERSATION_ACCESS_DENIED`。Controller 不接受请求体或 Header 伪造 `userId`。
+
 ### 4.3 同步聊天
 
 `POST /api/v1/chat/messages`
@@ -127,7 +151,7 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 
 - `conversationId` 必填且为 UUID；Java Service 校验会话属于当前用户。
 - `message` trim 后 1～4000 个字符；保存和传递 trim 后文本。
-- 同一用户重复使用相同 `Idempotency-Key` 且请求摘要相同：处理中返回 `CHAT_REQUEST_IN_PROGRESS`；成功时返回第一次结果；失败/未知时返回已记录状态，不自动再次调用 Python。
+- 同一用户重复使用相同 `Idempotency-Key` 且请求摘要相同：处理中返回 `CHAT_REQUEST_IN_PROGRESS`；成功时由 MySQL 中的 request、用户/助手消息和已校验 `sources_json` 重建第一次业务结果；失败/未知时返回已记录状态，不自动再次调用 Python。
 - 相同 Key 的 conversation/message 摘要不同：返回 `CHAT_IDEMPOTENCY_CONFLICT`。
 
 成功：HTTP 200。
