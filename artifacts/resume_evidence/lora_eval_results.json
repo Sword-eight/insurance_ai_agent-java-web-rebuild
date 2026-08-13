@@ -1,0 +1,15 @@
+{
+  "validation_date": "2026-08-13",
+  "status": "NOT_RUN_MISSING_ARTIFACTS",
+  "base_evaluation": null,
+  "adapter_evaluation": null,
+  "comparison": null,
+  "blocking_artifacts": [
+    "finetune/outputs/adapter/adapter_model.safetensors",
+    "finetune/outputs/checkpoint-18/adapter_model.safetensors",
+    "finetune/data/insurance_train.json",
+    "finetune/data/insurance_test.json"
+  ],
+  "reason": "The Adapter weights and original train/eval data are absent, so the same independent eval set cannot be loaded and Base versus LoRA cannot be compared without retraining or inventing data.",
+  "retraining_performed": false
+}

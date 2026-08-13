@@ -1,0 +1,224 @@
+{
+  "generated_at": "2026-08-13T11:11:57.539951+00:00",
+  "environment": "local development evidence test",
+  "case_count": 30,
+  "request_count": 34,
+  "successful_requests": 34,
+  "request_success_rate": 1.0,
+  "tool_route_cases": 34,
+  "correct_tool_routes": 25,
+  "tool_route_accuracy": 0.7353,
+  "rag_cases": 18,
+  "rag_sources_returned": 0,
+  "rag_source_return_rate": 0.0,
+  "retrieval_hit_rate": null,
+  "quality_passed_turns": 32,
+  "quality_rule_pass_rate": 0.9412,
+  "multi_turn_cases": 4,
+  "multi_turn_successes": 4,
+  "latency_ms": {
+    "mean": 5831.89,
+    "p50": 5636.01,
+    "p95": 10828.93,
+    "min": 1508.1,
+    "max": 14294.8
+  },
+  "java_to_python_duration_available": true,
+  "python_agent_duration_available": false,
+  "python_http_duration_available": true,
+  "failure_count": 9,
+  "failures": [
+    {
+      "case_id": "RAG-06",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "急性心肌梗塞要满足几项条件？其中与发病90日后检查有关的条件是什么？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [
+        "missing required keyword: 至少三项"
+      ],
+      "error_code": null
+    },
+    {
+      "case_id": "RAG-07",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "酒后驾驶导致合同定义的重大疾病，保险公司是否承担给付责任？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "RAG-09",
+      "category": "rag_terms",
+      "turn": 1,
+      "question": "收到完整理赔申请材料后多久作出核定，达成赔偿协议后多久履行赔偿义务？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "PREMIUM-05",
+      "category": "premium_missing_parameter",
+      "turn": 1,
+      "question": "30岁男性买50万元重疾险，一年保费多少？",
+      "expected_route": [],
+      "actual_route": [
+        "premium_calculator",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "PREMIUM-06",
+      "category": "premium_invalid_parameter",
+      "turn": 1,
+      "question": "61岁男性，50万元保额，20年期，1类职业，帮我估算保费。",
+      "expected_route": [
+        "premium_calculator"
+      ],
+      "actual_route": [
+        "premium_calculator",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "MULTI-02",
+      "category": "multi_turn",
+      "turn": 2,
+      "question": "那连续投保后的续保合同呢？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-01",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "这份重大疾病保险是否报销牙齿正畸费用？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-02",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "这份保险是否包含生育津贴？具体每天给付多少钱？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [
+        "forbidden claim present: 每天给付"
+      ],
+      "error_code": null
+    },
+    {
+      "case_id": "UNKNOWN-04",
+      "category": "unknown_knowledge",
+      "turn": 1,
+      "question": "按照这份条款，宠物医疗费用能不能理赔？",
+      "expected_route": [
+        "insurance_rag_search"
+      ],
+      "actual_route": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "http_success": true,
+      "quality_failures": [],
+      "error_code": null
+    }
+  ],
+  "limitations": [
+    "Small-sample local test; results do not represent a production SLA.",
+    "Python Agent duration is not exposed by the public Java API or current structured logs.",
+    "Retrieval Hit Rate is not claimed because the public API returned no source documents."
+  ],
+  "java_to_python_duration_records": 34,
+  "timing_field_notes": {
+    "end_to_end_duration_ms": "Measured by the Evidence HTTP client around the public Java API call.",
+    "java_to_python_duration_ms": "Parsed from Java python_agent_call logs by TraceId.",
+    "python_http_duration_ms": "Parsed from FastAPI request completion logs by TraceId.",
+    "python_agent_duration_ms": "Not exposed by the public Java API or current structured logs."
+  },
+  "java_to_python_latency_ms": {
+    "count": 34,
+    "mean": 5744.29,
+    "p50": 5551.0,
+    "p95": 10737,
+    "min": 1434,
+    "max": 14236
+  },
+  "python_http_latency_ms": {
+    "count": 34,
+    "mean": 5730.68,
+    "p50": 5515.5,
+    "p95": 10719,
+    "min": 1436,
+    "max": 14234
+  },
+  "supplemental_route_diagnostic": {
+    "name": "tool-set equivalence ignoring order and duplicate calls",
+    "correct": 31,
+    "total": 34,
+    "rate": 0.9118,
+    "is_primary_metric": false,
+    "note": "The primary route metric remains exact ordered-sequence equality."
+  },
+  "quality_rule_review": {
+    "raw_passed": 32,
+    "raw_total": 34,
+    "raw_rate": 0.9412,
+    "manual_rule_false_negative_case_ids": [
+      "RAG-06",
+      "UNKNOWN-02"
+    ],
+    "note": "Both stored answers satisfy the intended fact/safety behavior but fail literal matching; the raw score is preserved and is not relabeled as answer accuracy."
+  }
+}

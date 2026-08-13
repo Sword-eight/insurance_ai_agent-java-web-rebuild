@@ -1,6 +1,6 @@
 # Phase 9.5 Learning Kit：Vue Minimal Chat Client
 
-> 状态：实现完成，等待用户验收
+> 状态：实现、验收、提交与推送均已完成
 > 前置条件：Phase 6～9 的聊天、持久化、Redis、登录与 JWT 已完成
 > 范围依据：[Vue Web Client 规划](../../docs/WEB_CLIENT_PLAN.md)
 

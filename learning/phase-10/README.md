@@ -1,6 +1,6 @@
 # Phase 10：PDF 与知识库管理
 
-> 状态：实现与验证完成，等待用户决定是否提交。
+> 状态：实现、验证、提交与推送均已完成。
 
 Phase 10 增加了 PDF 上传、本人文档查询、Java 原文件与 MySQL 元数据管理，以及 Java 到
 Python 的流式索引链路。Java 保存业务事实，Python 管理解析、Embedding 和 FAISS 派生索引。

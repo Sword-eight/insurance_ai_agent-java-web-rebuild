@@ -1,6 +1,6 @@
 # Phase 11：可观测性与容错
 
-状态：实现与验证完成，待提交。
+状态：实现、验证、提交与推送均已完成。
 
 - [MiniCourse](./MiniCourse.md)
 - [Design](./Design.md)

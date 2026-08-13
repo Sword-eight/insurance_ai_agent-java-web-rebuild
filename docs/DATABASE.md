@@ -5,7 +5,8 @@
 > 数据库：MySQL 8，字符集 `utf8mb4`
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[API.md](./API.md) / [REDIS.md](./REDIS.md) / [DECISIONS.md](./DECISIONS.md)
-> 范围：冻结逻辑表、字段、关系、状态、索引和事务边界；记录 Phase 7 已落地范围
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
+> 范围：冻结逻辑表、字段、关系、状态、索引和事务边界；Phase 7/10 已完成物理落地
 
 ## 1. 事实来源与所有权
 
@@ -15,8 +16,9 @@
 - Python 不访问本数据库；Java 通过内部 HTTP 把有限历史和文档内容传给 Python。
 - FAISS 由 Python 管理，只保存可重建的派生向量索引，不进入 MySQL。
 
-Phase 7 已通过 Flyway V1、Entity 和 Mapper 落地用户外键前置表、会话、聊天请求与消息四张表；
-`iap_knowledge_document` 仍留给 Phase 10。
+Phase 7 已通过 Flyway V1、Entity 和 Mapper 落地用户、会话、聊天请求与消息四张表；Phase 10
+已通过 Flyway V2 落地 `iap_knowledge_document`。Phase 12 使用真实 MySQL 8.4 验证完整 migration、
+聊天状态、幂等唯一性和文档状态；H2 MySQL mode 只保留为快速测试层，不替代最终结论。
 
 ## 2. 设计约定
 

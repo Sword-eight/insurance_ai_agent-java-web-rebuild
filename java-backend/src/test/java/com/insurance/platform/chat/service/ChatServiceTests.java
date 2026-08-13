@@ -36,6 +36,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,11 +90,19 @@ class ChatServiceTests {
     void successfulChatUsesPreparedIdsAndPersistsValidatedResponse() {
         UUID key = UUID.randomUUID();
         UUID assistantId = UUID.randomUUID();
+        Map<String, Object> internalSource = Map.of(
+                "documentName", "terms.pdf",
+                "page", 2,
+                "snippet", "waiting period is 80 days",
+                "score", 0.92);
         ChatResponse expected = new ChatResponse(
-                conversationId, requestId, userMessageId, assistantId, "answer", List.of());
+                conversationId, requestId, userMessageId, assistantId, "answer",
+                List.of(new com.insurance.platform.chat.vo.ChatSource(
+                        "terms.pdf", 2, "waiting period is 80 days", 0.92)));
         when(client.chat(any(), eq(TRACE_ID)))
-                .thenReturn(new AgentChatResponse(requestId, " answer ", List.of(), 1));
-        when(persistence.completeSuccess(any(), eq("answer"), eq(List.of())))
+                .thenReturn(new AgentChatResponse(
+                        requestId, " answer ", List.of(internalSource), 1));
+        when(persistence.completeSuccess(any(), eq("answer"), eq(expected.sources())))
                 .thenReturn(expected);
 
         ChatResponse response = service.chat(
@@ -107,6 +116,22 @@ class ChatServiceTests {
         verify(idempotencyCache, times(2)).put(eq(userId), eq(key), summaries.capture());
         assertThat(summaries.getAllValues()).extracting(IdempotencySummary::status)
                 .containsExactly("PROCESSING", "SUCCEEDED");
+    }
+
+    @Test
+    void nonRagResponseStillPersistsEmptySources() {
+        UUID assistantId = UUID.randomUUID();
+        ChatResponse expected = new ChatResponse(
+                conversationId, requestId, userMessageId, assistantId, "answer", List.of());
+        when(client.chat(any(), eq(TRACE_ID)))
+                .thenReturn(new AgentChatResponse(requestId, "answer", null, 1));
+        when(persistence.completeSuccess(any(), eq("answer"), eq(List.of())))
+                .thenReturn(expected);
+
+        ChatResponse response = service.chat(
+                new ChatRequest(conversationId, "question"), UUID.randomUUID(), TRACE_ID);
+
+        assertThat(response.sources()).isEmpty();
     }
 
     @Test

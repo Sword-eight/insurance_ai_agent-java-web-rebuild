@@ -20,15 +20,16 @@ HEADERS = {"X-Trace-Id": TRACE_ID}
 
 
 class SuccessfulAgentFacade:
-    def __init__(self) -> None:
+    def __init__(self, *, sources=()) -> None:
         self.calls: list[AgentChatCommand] = []
+        self.sources = sources
 
     def chat(self, command: AgentChatCommand) -> AgentChatResult:
         self.calls.append(command)
         return AgentChatResult(
             request_id=command.request_id,
             answer="真实测试回答",
-            sources=(),
+            sources=self.sources,
             duration_ms=12,
         )
 
@@ -46,10 +47,13 @@ class StatusKnowledgeService:
 
 
 def _runtime(
-    *, close_callback=lambda: None, knowledge_document_dir: Path | None = None
+    *,
+    close_callback=lambda: None,
+    knowledge_document_dir: Path | None = None,
+    sources=(),
 ) -> ApplicationRuntime:
     return ApplicationRuntime(
-        agent_facade=SuccessfulAgentFacade(),
+        agent_facade=SuccessfulAgentFacade(sources=sources),
         knowledge_facade=DefaultKnowledgeFacade(
             knowledge_service=StatusKnowledgeService(),
             document_dir=knowledge_document_dir,
@@ -128,6 +132,33 @@ def test_bootstrap_failure_keeps_live_but_not_ready_or_business_available() -> N
     assert chat.status_code == 503
     assert ready.json()["error"]["code"] == "AI_LLM_UNAVAILABLE"
     assert "local path" not in ready.text
+
+
+def test_http_chat_serializes_nonempty_retriever_sources() -> None:
+    source = {
+        "documentName": "terms.pdf",
+        "page": 2,
+        "snippet": "waiting period is 80 days",
+        "score": 0.92,
+    }
+    runtime = _runtime(sources=(source,))
+    app = create_app(runtime_factory=lambda: runtime)
+    payload = {
+        "requestId": str(uuid4()),
+        "sessionId": str(uuid4()),
+        "message": "waiting period?",
+        "history": [],
+    }
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/internal/v1/agent/chat",
+            headers=HEADERS,
+            json=payload,
+        )
+
+    assert response.status_code == 200
+    assert response.json()["data"]["sources"] == [source]
 
 
 def test_knowledge_status_rebuild_and_invalid_document_use_phase10_contract(

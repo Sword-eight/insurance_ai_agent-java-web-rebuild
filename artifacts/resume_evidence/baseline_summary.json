@@ -1,0 +1,48 @@
+{
+  "validation_date": "2026-08-13",
+  "environment": "local development validation host",
+  "java": {
+    "command": "mvn -Dphase12.python.executable=<python-executable> clean package",
+    "working_directory": "java-backend",
+    "tests_run": 90,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "result": "BUILD SUCCESS",
+    "maven_reported_duration": "2:20",
+    "wall_clock_seconds": 141.83,
+    "integration_dependencies": ["MySQL 8.4 Testcontainers", "Redis 7.4 Testcontainers"]
+  },
+  "python": {
+    "command": "python -m pytest -q",
+    "tests_passed": 77,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "warnings": 2,
+    "pytest_reported_seconds": 25.21,
+    "wall_clock_seconds": 29.328
+  },
+  "vue": {
+    "working_directory": "web-client",
+    "typecheck": {
+      "command": "npm run typecheck",
+      "result": "PASS",
+      "wall_clock_seconds": 2.96
+    },
+    "test": {
+      "command": "npm test -- --run",
+      "test_files": 8,
+      "tests_passed": 26,
+      "tests_failed": 0,
+      "result": "PASS",
+      "wall_clock_seconds": 10.978
+    },
+    "build": {
+      "command": "npm run build",
+      "result": "PASS",
+      "wall_clock_seconds": 8.515
+    },
+    "combined_wall_clock_seconds": 22.55,
+    "note": "The first concurrent Vue attempt had worker startup timeouts; the required isolated serial retry passed and is the reported baseline."
+  }
+}

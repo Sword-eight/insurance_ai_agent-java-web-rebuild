@@ -81,6 +81,58 @@ def test_agent_facade_reuses_cached_result() -> None:
     assert len(graph.calls) == 1
 
 
+def test_agent_facade_maps_and_deduplicates_real_retrieval_sources() -> None:
+    graph = RecordingGraphBuilder(result={
+        "messages": [AIMessage(content="answer")],
+        "retrieved_docs": [
+            {
+                "content": " waiting period clause " * 40,
+                "source_name": "terms.pdf",
+                "source_page": 3,
+                "similarity_score": 0.91,
+            },
+            {
+                "content": " waiting period clause " * 40,
+                "source_name": "terms.pdf",
+                "source_page": 3,
+                "similarity_score": 0.91,
+            },
+            {
+                "content": "premium calculation only",
+                "source_name": "",
+                "source_page": 0,
+                "similarity_score": 0.5,
+            },
+        ],
+    })
+    facade = DefaultAgentFacade(
+        graph_builder=graph,
+        registry=RequestRegistry(),
+    )
+
+    result = facade.chat(_command())
+
+    assert len(result.sources) == 1
+    assert result.sources[0]["documentName"] == "terms.pdf"
+    assert result.sources[0]["page"] == 3
+    assert result.sources[0]["score"] == 0.91
+    assert len(result.sources[0]["snippet"]) == 500
+
+
+def test_agent_facade_keeps_premium_only_result_sources_empty() -> None:
+    graph = RecordingGraphBuilder(result={
+        "messages": [AIMessage(content="premium answer")],
+        "tool_results": [{"tool_name": "premium_calculator"}],
+        "retrieved_docs": [],
+    })
+    facade = DefaultAgentFacade(
+        graph_builder=graph,
+        registry=RequestRegistry(),
+    )
+
+    assert facade.chat(_command()).sources == ()
+
+
 def test_agent_facade_rejects_conflicting_payload_for_same_request_id() -> None:
     graph = RecordingGraphBuilder()
     facade = DefaultAgentFacade(

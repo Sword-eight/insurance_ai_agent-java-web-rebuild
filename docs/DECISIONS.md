@@ -4,6 +4,8 @@
 > 状态：Phase 2 v1.0 决策已接受；Phase 7 v1.1 增补已接受并实现
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[API.md](./API.md) / [DATABASE.md](./DATABASE.md) / [REDIS.md](./REDIS.md)
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)；所有 ACCEPTED 决策保持有效，
+> `P2-FUTURE-001` 仍未批准、未实现
 
 ## 1. 决策规则
 

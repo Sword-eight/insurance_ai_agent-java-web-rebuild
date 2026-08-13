@@ -1,10 +1,11 @@
 # Insurance AI Platform Redis 设计
 
 > 文档版本：v1.0
-> 状态：Phase 2 v1.0 已冻结；自 2026-08-01 起生效
+> 状态：Phase 2 v1.0 已冻结；Phase 8 已实现；Phase 12 已使用 Redis 7.4 验收
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[API.md](./API.md) / [DATABASE.md](./DATABASE.md) / [DECISIONS.md](./DECISIONS.md)
-> 范围：冻结 v1 Key、Value、TTL、读写方、失效和降级规则；本阶段不添加 Redis 依赖或代码
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
+> 范围：冻结 v1 Key、Value、TTL、读写方、失效和降级规则；实现不得偏离本契约
 
 ## 1. 边界
 
@@ -14,7 +15,8 @@
 - Redis 丢失不能删除消息、改变文档索引业务状态或迫使 Python 恢复历史。
 - v1 不使用 Redis 保存 JWT、密码、完整 PDF、Embedding 或 FAISS 数据。
 
-当前仓库没有 Redis 实现；本文件是 Phase 8 必须遵守的目标契约。
+当前仓库已实现近期消息 cache-aside、用户级聊天限流和聊天幂等加速。MySQL 仍是长期事实源；
+Phase 12 在真实 Redis 7.4 中验证了幂等状态和 TTL，本文件继续作为实现必须遵守的冻结契约。
 
 ## 2. Key 命名
 
@@ -155,9 +157,9 @@ Redis Client 的连接超时、命令超时和连接池大小在 Phase 8 根据�
 - Key 删除只使用已解析的确定 Key，不使用广泛通配删除。
 - v1 不引入 Redis 分布式锁；数据库唯一约束承担最终防重。
 
-## 10. 可测试验收
+## 10. 已完成的可测试验收
 
-Phase 8 实现必须至少验证：
+Phase 8 已验证以下场景，Phase 12 又在真实 Redis 7.4 平台链中核对幂等状态与 TTL：
 
 - cache hit、cache miss、坏 JSON 回源；
 - MySQL 提交后删缓存，删缓存失败不丢消息；

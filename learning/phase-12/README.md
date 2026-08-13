@@ -1,6 +1,6 @@
 # Phase 12：测试、联调与最终审计
 
-状态：实现、真实联调与最终审计完成，待提交。
+状态：实现、真实联调、最终审计、提交与推送均已完成。
 
 - [MiniCourse](./MiniCourse.md)
 - [Design](./Design.md)

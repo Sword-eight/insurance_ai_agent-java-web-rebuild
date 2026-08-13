@@ -69,7 +69,9 @@ class HttpAgentClientTests {
             trace.set(exchange.getRequestHeaders().getFirst("X-Trace-Id"));
             respond(exchange, 200, """
                     {"success":true,"data":{"requestId":"%s","answer":"真实回答",\
-                    "sources":[],"durationMs":7},"error":null,"traceId":"%s"}
+                    "sources":[{"documentName":"terms.pdf","page":2,\
+                    "snippet":"waiting period is 80 days","score":0.92}],\
+                    "durationMs":7},"error":null,"traceId":"%s"}
                     """.formatted(requestId, TRACE_ID));
         });
 
@@ -77,6 +79,12 @@ class HttpAgentClientTests {
                 request(requestId), TRACE_ID);
 
         assertThat(response.requestId()).isEqualTo(requestId);
+        assertThat(response.sources()).singleElement().satisfies(source -> {
+            assertThat(source.get("documentName")).isEqualTo("terms.pdf");
+            assertThat(source.get("page")).isEqualTo(2);
+            assertThat(source.get("snippet")).isEqualTo("waiting period is 80 days");
+            assertThat(source.get("score")).isEqualTo(0.92);
+        });
         assertThat(response.answer()).isEqualTo("真实回答");
         assertThat(trace.get()).isEqualTo(TRACE_ID);
         assertThat(received.get().path("requestId").asText())
@@ -87,6 +95,19 @@ class HttpAgentClientTests {
         assertThat(fieldNames)
                 .containsExactlyInAnyOrder(
                         "requestId", "sessionId", "message", "history");
+    }
+
+    @Test
+    void missingSourcesFromLegacyInternalResponseIsCompatibleWithEmptyList() throws Exception {
+        UUID requestId = UUID.randomUUID();
+        handler.set(exchange -> respond(exchange, 200, """
+                {"success":true,"data":{"requestId":"%s","answer":"answer",\
+                "durationMs":7},"error":null,"traceId":"%s"}
+                """.formatted(requestId, TRACE_ID)));
+
+        var response = client(Duration.ofSeconds(1)).chat(request(requestId), TRACE_ID);
+
+        assertThat(response.sources()).isEmpty();
     }
 
     @Test

@@ -1,0 +1,19 @@
+{
+  "validation_date": "2026-08-13",
+  "browser": "Google Chrome with ChatGPT browser extension",
+  "url": "http://127.0.0.1:5173/chat",
+  "chain": "Vue -> Spring Boot -> FastAPI -> LangGraph -> insurance_rag_search -> BGE -> FAISS -> DeepSeek -> Java -> Vue",
+  "registration_succeeded": true,
+  "login_succeeded": true,
+  "conversation_creation_succeeded": true,
+  "question": "这份重疾险的等待期是多少天？",
+  "user_message_count": 1,
+  "assistant_message_count": 1,
+  "answer_contains_180_days": true,
+  "answer_cites_controlled_terms": true,
+  "stable_error_visible": false,
+  "notes": [
+    "This is a single local browser smoke test, not a production SLA.",
+    "The first wait assertion was limited by the browser control command budget; a subsequent DOM snapshot confirmed the already-sent request completed successfully. The message was not resent."
+  ]
+}

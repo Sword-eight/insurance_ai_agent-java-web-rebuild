@@ -1,18 +1,19 @@
 # Insurance AI Platform API 契约
 
 > 文档版本：v1.1
-> 状态：Phase 2 v1.0 已冻结；Phase 7 v1.1 增补已获批并实现
+> 状态：Phase 2 v1.0 已冻结；Phase 7 v1.1 增补已实现；Phase 12 已完成契约联调
 > 架构依据：[ARCHITECTURE.md](./ARCHITECTURE.md)
 > 关联文档：[DATABASE.md](./DATABASE.md) / [REDIS.md](./REDIS.md) / [DECISIONS.md](./DECISIONS.md)
+> 当前状态：[PROJECT_STATUS.md](./PROJECT_STATUS.md)
 > 范围：冻结 v1 的 HTTP 路径、字段、错误码、上下文、幂等和容错默认值；具体实现状态以各 Phase 审计为准
-> 客户端说明：Phase 9.5/10.5 规划的 Vue 只消费 Java 公共 API；v1.1 只补齐会话查询 VO 与持久幂等重放语义，不改变路径、服务边界或同步模型
+> 客户端说明：Phase 9.5/10.5 实现的 Vue 只消费 Java 公共 API；v1.1 不改变路径、服务边界或同步模型
 
 ## 1. 当前事实和约束
 
-Phase 2 冻结本契约时，在线入口仍是 Streamlit `app.py`，Java Backend、FastAPI Router、DTO、
-VO 和 HTTP Client 尚未实现。此后仓库已形成 FastAPI、Java HTTP 链与 Phase 7 会话/消息持久化；
-JWT、Redis、文档业务和 Vue Web Client 仍须按后续 Phase 落地。Phase 9 前生产用户上下文失败
-关闭，因此 Phase 7 受保护接口不会使用固定用户绕过认证。
+Phase 2 冻结本契约时，在线入口仍是 Streamlit `app.py`，Java/FastAPI/DTO/VO/HTTP Client 尚未
+实现；这是历史设计起点。当前公共与内部 API、JWT、MySQL、Redis、文档业务和 Vue Web Client
+均已落地，Phase 12 已验证正常、幂等、503、timeout/UNKNOWN 和 PDF 链路。冻结路径、字段、
+Envelope 和同步模型保持不变。
 
 固定调用方向：
 
@@ -70,7 +71,7 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 
 ### 4.1 能力清单
 
-| Method | Path | 用途 | 目标阶段 |
+| Method | Path | 用途 | 实现阶段 |
 |---|---|---|---|
 | `POST` | `/api/v1/auth/register` | 注册 | Phase 9 |
 | `POST` | `/api/v1/auth/login` | 登录 | Phase 9 |
@@ -83,7 +84,7 @@ Java 生成或规范化 `X-Trace-Id`，写入 MDC，并向 Python 传递相同�
 | `GET` | `/api/v1/documents` | 分页查询当前用户文档 | Phase 10 |
 | `GET` | `/api/v1/documents/{documentId}` | 查询文档和索引状态 | Phase 10 |
 
-本表冻结能力和路径，不要求在一个 Phase 一次实现全部 Controller。
+本表能力和路径已按“实现阶段”列逐步落地；冻结契约仍不因实现完成而自动改变。
 
 ### 4.2 创建会话
 

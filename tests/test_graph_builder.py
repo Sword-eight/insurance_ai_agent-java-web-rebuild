@@ -75,6 +75,24 @@ def test_graph_runs_agent_tool_agent_loop_without_external_services() -> None:
     assert result["messages"][-1].content == "最终回答"
 
 
+def test_graph_direct_answer_has_no_retrieved_sources() -> None:
+    llm = StatelessRecordingLLM()
+    builder = AgentGraphBuilder(
+        tools=[],
+        llm=llm,
+        system_prompt="system",
+        max_context_rounds=1,
+    )
+
+    result = builder.invoke(
+        user_message="direct question",
+        session_id="direct",
+        execution_id="direct-request",
+    )
+
+    assert result["retrieved_docs"] == []
+
+
 class StatelessRecordingLLM:
     model_name = "offline-stateless-llm"
 

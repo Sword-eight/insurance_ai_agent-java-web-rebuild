@@ -1,0 +1,72 @@
+{
+  "validation_date": "2026-08-13",
+  "online_agent_uses_lora": false,
+  "online_agent_model": "deepseek-chat",
+  "base_model": {
+    "name": "Qwen2.5-0.5B-Instruct",
+    "local_model_file_present": true,
+    "total_parameters": 494032768,
+    "model_file_bytes": 988097824
+  },
+  "adapter": {
+    "configuration_present": true,
+    "weights_present": false,
+    "load_succeeded": false,
+    "peft_type": "LORA",
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.1,
+    "target_modules": ["k_proj", "up_proj", "gate_proj", "down_proj", "q_proj", "v_proj", "o_proj"],
+    "configured_trainable_parameters_derived": 4399104,
+    "trainable_parameter_derivation": "r * (input_features + output_features) for the seven configured linear modules across 24 transformer layers",
+    "adapter_weight_file_size": null
+  },
+  "actual_training_script_configuration": {
+    "source": "finetune/scripts/run_train.py and persisted adapter_config.json",
+    "learning_rate": 0.00005,
+    "epochs": 3,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "max_length": 512,
+    "fp16": true,
+    "training_steps_recorded": 18,
+    "training_loss_log": [
+      {"step": 5, "loss": 3.4412},
+      {"step": 10, "loss": 2.8403},
+      {"step": 15, "loss": 2.6337}
+    ],
+    "eval_loss": null,
+    "training_duration": null
+  },
+  "configuration_drift": {
+    "present": true,
+    "details": "finetune/README.md and lora_train_config.json describe rank 16 / alpha 32 and a different batch/length setup, while the persisted Adapter config and run_train.py use rank 8 / alpha 16."
+  },
+  "dataset_evidence": {
+    "build_stats_total_qa": 70,
+    "historical_report_test_samples": 14,
+    "train_file_present": false,
+    "eval_file_present": false,
+    "train_eval_independence_verified": false
+  },
+  "historical_report": {
+    "present": true,
+    "reported_keyword_accuracy": 0.5762,
+    "reported_average_response_seconds": 24.3244,
+    "method_valid_for_resume_accuracy_claim": false,
+    "method_issue": "The script scores only numeric token overlap; semantically incorrect answers can receive a score of 1.0. Only five sample predictions are persisted for a reported 14-case run."
+  },
+  "legacy_claims": [
+    {"claim": "79.69%", "reproduced": false, "recommendation": "Do not use on the resume."},
+    {"claim": "+10.5%", "reproduced": false, "recommendation": "Do not use on the resume."},
+    {"claim": "Eval Loss 1.18", "reproduced": false, "recommendation": "Do not use on the resume."},
+    {"claim": "8.0s per response", "reproduced": false, "recommendation": "Do not use on the resume."}
+  ],
+  "gpu_observed": {
+    "name": "NVIDIA GeForce GTX 1650",
+    "memory_mib": 4096,
+    "driver_version": "591.74"
+  },
+  "recommend_retraining": true,
+  "retraining_performed": false
+}

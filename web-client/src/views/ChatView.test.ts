@@ -85,4 +85,31 @@ describe('ChatView', () => {
     expect(wrapper.text()).toContain('结果暂时无法确认')
     expect(wrapper.text()).toContain('trace-unknown-95')
   })
+
+  it('shows sources from the latest RAG response', async () => {
+    mocks.sendChatMessage.mockResolvedValue({
+      conversationId: conversation.conversationId,
+      requestId: '33333333-3333-4333-8333-333333333333',
+      userMessageId: '44444444-4444-4444-8444-444444444444',
+      assistantMessageId: '55555555-5555-4555-8555-555555555555',
+      answer: 'answer',
+      sources: [{
+        documentName: 'terms.pdf',
+        page: 2,
+        snippet: 'waiting period is 80 days',
+        score: 0.92,
+      }],
+    })
+    const wrapper = mount(ChatView)
+    await flushPromises()
+    await wrapper.get('textarea').setValue('waiting period?')
+    await wrapper.get('.chat-composer').trigger('submit')
+    await flushPromises()
+
+    const sources = wrapper.get('.answer-sources')
+    expect(sources.text()).toContain('terms.pdf')
+    expect(sources.text()).toContain('2')
+    expect(sources.text()).toContain('waiting period is 80 days')
+    expect(sources.text()).toContain('92%')
+  })
 })

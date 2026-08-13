@@ -12,10 +12,11 @@ import ConversationList from '../components/ConversationList.vue'
 import MessageList from '../components/MessageList.vue'
 import ChatInput from '../components/ChatInput.vue'
 import router from '../router'
-import type { ChatResponse, ConversationView, MessageView } from '../types/api'
+import type { ChatResponse, ChatSource, ConversationView, MessageView } from '../types/api'
 
 const conversations = ref<ConversationView[]>([])
 const messages = ref<MessageView[]>([])
+const latestSources = ref<ChatSource[]>([])
 const activeConversationId = ref<string | null>(null)
 const draft = ref('')
 const loadingConversations = ref(true)
@@ -64,6 +65,7 @@ async function loadConversationList(): Promise<void> {
 async function selectConversation(conversationId: string): Promise<void> {
   if (loadingMessages.value || conversationId === activeConversationId.value) return
   activeConversationId.value = conversationId
+  latestSources.value = []
   loadingMessages.value = true
   clearError()
   try {
@@ -85,6 +87,7 @@ async function createNewConversation(): Promise<void> {
     conversations.value = [created, ...conversations.value]
     activeConversationId.value = created.conversationId
     messages.value = []
+    latestSources.value = []
   } catch (error) {
     showError(error)
   } finally {
@@ -128,10 +131,12 @@ async function send(): Promise<void> {
   if (sending.value || !conversationId || !message) return
 
   sending.value = true
+  latestSources.value = []
   clearError()
   const idempotencyKey = crypto.randomUUID()
   try {
     const result = await sendChatMessage({ conversationId, message }, idempotencyKey)
+    if (activeConversationId.value === conversationId) latestSources.value = result.sources
     draft.value = ''
     const refreshed = await refreshMessagesAfterRequest(conversationId)
     if (!refreshed && activeConversationId.value === conversationId) {
@@ -199,6 +204,19 @@ onMounted(loadConversationList)
       />
 
       <footer class="composer-area">
+        <section v-if="latestSources.length" class="answer-sources" aria-label="回答来源">
+          <h2>回答来源</h2>
+          <ul>
+            <li v-for="(source, index) in latestSources" :key="`${source.documentName}-${source.page}-${index}`">
+              <div>
+                <strong>{{ source.documentName }}</strong>
+                <span v-if="source.page !== null">第 {{ source.page }} 页</span>
+                <span v-if="source.score !== null">相关度 {{ Math.round(source.score * 100) }}%</span>
+              </div>
+              <p>{{ source.snippet }}</p>
+            </li>
+          </ul>
+        </section>
         <ChatInput
           v-model="draft"
           :disabled="sendDisabled"
