@@ -68,8 +68,7 @@ Vue 3 Web Client
 | 依赖检查 | Python `pip check` PASS；npm audit 0 vulnerabilities |
 | 生命周期 | E2E 停止后无受管进程或容器残留 |
 
-完整证据、命令与证明边界见 [Phase 12 Test Matrix](../learning/phase-12/TestMatrix.md) 和
-[Phase 12 Final Audit](../learning/phase-12/Audit.md)。
+完整证据、命令与证明边界见 [Resume Evidence Validation](./RESUME_EVIDENCE.md)。
 
 ## 4. 当前 WARNING 与非目标
 
@@ -93,4 +92,3 @@ Vue 3 Web Client
 - [迁移路线与历史审计](./MIGRATION_PLAN.md)
 - [技术债](./TECH_DEBT.md)
 - [Python 基线](./PYTHON_BASELINE.md)
-- [阶段学习路线](../learning/README.md)

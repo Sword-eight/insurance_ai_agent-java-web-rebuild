@@ -198,7 +198,6 @@ web-client/             Vue 3 正式 Web Client
 tests/                  Python 自动化测试
 scripts/                验收、索引与辅助脚本
 docs/                   架构、契约、阶段和验收文档
-learning/               各阶段 Learning Kit
 ```
 
 ## Current Limitations
@@ -225,8 +224,6 @@ learning/               各阶段 Learning Kit
 - [Redis](docs/REDIS.md) — 缓存、限流和幂等语义
 - [Web Client Plan](docs/WEB_CLIENT_PLAN.md) — Vue 客户端范围与验收
 - [Resume Evidence](docs/RESUME_EVIDENCE.md) — 简历证据验收报告
-- [Phase 12 Test Matrix](learning/phase-12/TestMatrix.md) — 最终验证矩阵
-- [Phase 12 Audit](learning/phase-12/Audit.md) — 四维审计结论
 
 ## Upstream Attribution
 

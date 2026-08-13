@@ -7,7 +7,7 @@
 > 基线提交：`ce591cb56188b7fd6a0b27c8f3263f0872c82f1c`
 
 第 1～11、13～14 节保留 Phase 0 审计时点的历史事实与结论；后续实现状态以源码、
-[ARCHITECTURE.md](./ARCHITECTURE.md)、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 和 Learning Kit 为准。
+[ARCHITECTURE.md](./ARCHITECTURE.md)、[PROJECT_STATUS.md](./PROJECT_STATUS.md) 和 Git 历史为准。
 第 12 节记录正式路线及完成状态，不能用历史段落中的“当前”判断后来 Phase 是否已经实现。
 
 ## 1. Phase 0 范围
@@ -727,7 +727,8 @@ Web Client
 
 完成状态（2026-08-13）：上述平台链路已使用真实 MySQL 8.4、Redis 7.4、Java/Python HTTP 与
 Chrome 完成验收，四维审计为 PASS with WARNING。确定性 AI 替身不代表真实 DeepSeek/BGE 在线
-验收；因未提供测试 Key，该项作为已披露 WARNING 保留。证据见 `learning/phase-12/`。
+验收；因未提供测试 Key，该项作为已披露 WARNING 保留。后续在线复验见
+[RESUME_EVIDENCE.md](./RESUME_EVIDENCE.md)。
 
 ### 12.1 调整后的完整顺序与周期
 

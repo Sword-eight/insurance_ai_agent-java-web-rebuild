@@ -3,7 +3,7 @@
 > 状态：**Phase 0.5 已验证（含明确 WARNING）**
 > 验证日期：2026-07-30
 > 当前补充：Phase 12 已在隔离 Windows CPU venv 完成 77 项测试及 `pip check`；见
-> [PROJECT_STATUS.md](./PROJECT_STATUS.md) 和 [Phase 12 Test Matrix](../learning/phase-12/TestMatrix.md)
+> [PROJECT_STATUS.md](./PROJECT_STATUS.md)
 
 Phase 0.5 的解释器版本、22 项测试和共享环境冲突是当时的历史基线，继续保留用于追溯；当前
 最终验收不再依赖该共享环境，而使用 `requirements-windows-cpu.txt` 的独立环境。
