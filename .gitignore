@@ -46,6 +46,7 @@ finetune/data/insurance_test.json
 
 # ── 日志 ──
 logs/
+.phase12-runtime/
 
 # ── Streamlit ──
 .streamlit/

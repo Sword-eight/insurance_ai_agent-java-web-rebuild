@@ -57,3 +57,111 @@
 ## 5. Phase 0.5 的临时说明
 
 `docs/ARCHITECTURE.md` 将在 Phase 1 冻结，因此 Phase 0.5 只稳定现有 Python 基线，不定义目标双服务架构。若本阶段发现迁移边界问题，只记录到 `docs/TECH_DEBT.md` 或报告架构风险。
+
+## 面试冲刺模式
+
+当前项目可以在用户明确批准后进入面试冲刺模式。
+
+### 目标
+
+优先在约 7 天内完成可运行的核心链路：
+
+1. 目录迁移后 Python 测试保持通过
+2. FastAPI 包装现有 Agent
+3. Spring Boot 基础工程
+4. Java 调用 Python 聊天链路
+5. MySQL 会话与消息持久化
+6. 用户登录与 JWT 鉴权
+7. Redis 至少一个真实用途
+8. 参数校验、全局异常、TraceId
+9. Swagger 或最小客户端演示
+10. 可复现的 README 启动说明
+
+以下内容不得阻塞本轮：
+
+- 完整 Vue
+- 复杂管理后台
+- MQ
+- Nacos
+- Kubernetes
+- 完整 DDD
+- 在线 LoRA 推理
+- Redis 集群和哨兵
+- 高级 JVM 调优
+
+### 阶段流程
+
+每个 Phase 开始时必须：
+
+1. 读取 AGENTS.md、ARCHITECTURE.md 和相关源码
+2. 输出简短实施计划
+3. 列出修改文件、非修改文件和验收标准
+4. 生成或更新 MiniCourse
+5. 暂停等待一次批准
+
+收到 `Approve Phase Implementation` 后，可以连续完成：
+
+1. Skeleton
+2. Implementation
+3. Build
+4. Test
+5. Audit
+6. Learning Kit
+
+完成后暂停，不自动进入下一 Phase。
+
+### 必须中途暂停的情况
+
+遇到以下任一情况必须停止并申请批准：
+
+- 需要修改冻结架构
+- 发现文档与源码存在关键冲突
+- 工作区出现来源不明或用户未提交修改
+- 需要破坏性 Git 操作
+- 需要引入计划外中间件或框架
+- 可能丢失数据或破坏旧 Python 能力
+- API、数据库或 Redis 冻结设计需要变更
+- 测试出现无法解释的失败
+- 审计出现 ERROR
+
+### Learning Kit 精简规则
+
+每个 Phase 仍生成完整 Learning Kit，但不得为了篇幅阻塞开发：
+
+- MiniCourse：3～5 个本阶段新增概念
+- Design：只写关键选择、原因、代价
+- CallGraph：真实主链路和重要异常链路
+- Interview：8～10 道高频问题
+- Challenge：3～5 个有效练习
+- KnowledgeSummary：一页摘要
+- ReviewChecklist：只保留验收关键项
+
+禁止重复复制 ARCHITECTURE.md 或生成大段通用教程。
+
+### 真实验证要求
+
+每个 Phase 必须报告：
+
+- 实际执行的命令
+- 构建结果
+- 测试收集和通过数量
+- 未执行验证及原因
+- 正常链路
+- 至少一个异常链路
+- 修改文件清单
+- Git diff 摘要
+- PASS / WARNING / ERROR
+
+不得用 AST 检查代替运行测试，不得用伪测试宣布通过。
+
+### 学习交付要求
+
+实现完成后列出当天最值得学习的 3～6 个核心文件，并说明：
+
+- 它在调用链中的位置
+- 输入与输出
+- 依赖对象
+- 最可能被面试追问的点
+- 建议完成的小修改
+
+Codex 只提供教材和代码定位，不进行重复互动教学。

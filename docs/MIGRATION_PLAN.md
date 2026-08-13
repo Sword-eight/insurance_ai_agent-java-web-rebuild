@@ -713,6 +713,10 @@ Web Client
 - 在真实 MySQL 8 与 Redis 环境完成最终端到端数据验收，不以 H2 MySQL 模式替代正式结论。
 - 最终四维审计和架构漂移检查。
 
+完成状态（2026-08-13）：上述平台链路已使用真实 MySQL 8.4、Redis 7.4、Java/Python HTTP 与
+Chrome 完成验收，四维审计为 PASS with WARNING。确定性 AI 替身不代表真实 DeepSeek/BGE 在线
+验收；因未提供测试 Key，该项作为已披露 WARNING 保留。证据见 `learning/phase-12/`。
+
 ### 12.1 调整后的完整顺序与周期
 
 ```text

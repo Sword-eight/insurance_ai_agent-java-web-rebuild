@@ -13,9 +13,10 @@
 Vue 3 Web Client → Java Spring Boot Backend → Python FastAPI AI Service
 ```
 
-当前已存在 Streamlit Python 调试入口、FastAPI 包装、Java Backend，以及 Phase 9.5 的 Vue
-Minimal Chat Client。MySQL 会话/消息、Redis、JWT、注册登录和同步聊天主链已经按阶段实现；
-文档业务及对应 Vue 页面仍留在 Phase 10/10.5。
+当前已存在 Streamlit Python 调试入口、FastAPI 包装、Java Backend，以及极简 Vue Web Client。
+MySQL 会话/消息、Redis、JWT、注册登录、同步聊天、PDF 文档和对应 Vue 页面已经按阶段实现；
+Phase 12 已完成真实 MySQL/Redis、三端 HTTP 和浏览器最终验收，限制见
+[Phase 12 Audit](learning/phase-12/Audit.md)。
 
 Streamlit 不删除，继续作为 Python Agent、Graph、Tool 和 RAG 的本地调试/旧版验证入口；
 它不经过 Java，因此不代表 JWT、ChatService、MySQL、Redis 或文档状态机的端到端能力。

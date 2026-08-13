@@ -1,0 +1,7 @@
+# Windows CPU 平台的可复现开发/测试入口。
+# PyTorch CPU wheel 来自 PyTorch 官方索引；其余依赖仍从默认 PyPI 获取。
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+-r requirements-dev.txt
+
+torch==2.7.1+cpu
