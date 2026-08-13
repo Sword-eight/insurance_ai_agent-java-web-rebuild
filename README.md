@@ -232,4 +232,3 @@ learning/               各阶段 Learning Kit
 
 本仓库最初基于 Datawhale 的 [llm-cookbook](https://github.com/datawhalechina/llm-cookbook) 学习仓库开展实验，随后逐步重构并演进为当前 Insurance AI Platform。感谢 Datawhale 社区及原项目贡献者提供的学习材料与开源基础。
 
-当前仓库根目录未检测到 `LICENSE` 文件。本次工作受“仅修改 README”约束，没有新增或推测许可证；公开分发或复用前，应核对上游许可要求并补齐适用的许可证与版权声明。
