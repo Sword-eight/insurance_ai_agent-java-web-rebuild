@@ -1,0 +1,921 @@
+{
+  "schemaVersion": "1.0",
+  "frozenAt": "2026-08-15",
+  "corpus": [
+    "data/pdf/中国人寿重大疾病保险条款.txt"
+  ],
+  "notes": "Frozen before benchmark execution. Retrieval labels reference the deterministic engine-independent chunks produced by run_benchmark.py.",
+  "cases": [
+    {
+      "caseId": "BENCH-01",
+      "category": "single_fact",
+      "question": "这份保险允许的最低投保年龄是多少？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "16"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-02",
+      "category": "single_fact",
+      "question": "被保险人的最高投保年龄是多少周岁？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "60"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-03",
+      "category": "single_fact",
+      "question": "身体健康且处于什么年龄范围的人可作为被保险人？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "16",
+          "60"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-04",
+      "category": "single_fact",
+      "question": "保险合同由哪些书面文件构成？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "保险单",
+          "条款",
+          "投保单"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-05",
+      "category": "numeric_fact",
+      "question": "合同生效180日后初次确诊约定重大疾病，保险公司如何给付？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "保险金额",
+          "给付",
+          "合同终止"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-06",
+      "category": "single_fact",
+      "question": "等待期后首次确诊重大疾病并给付保险金后，合同是否继续？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "合同终止"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-07",
+      "category": "numeric_fact",
+      "question": "合同生效180日内确诊约定重大疾病会怎样处理？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "无息",
+          "退还",
+          "保险费",
+          "合同终止"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-08",
+      "category": "single_fact",
+      "question": "等待期内发生合同约定重大疾病后合同状态如何？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "合同终止"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-09",
+      "category": "numeric_fact",
+      "question": "这份重大疾病保险的等待期是多少天？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "180",
+          "等待期"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-10",
+      "category": "single_fact",
+      "question": "条款如何定义等待期？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "合同生效",
+          "承担保险责任"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-11",
+      "category": "similar_clause",
+      "question": "连续投保后的续保合同还设置等待期吗？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "续保",
+          "不设等待期"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-12",
+      "category": "single_fact",
+      "question": "条款中的恶性肿瘤是怎样定义的？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "恶性细胞",
+          "浸润",
+          "转移"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-13",
+      "category": "single_fact",
+      "question": "恶性肿瘤的诊断依据提到了哪项国际疾病分类？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "ICD-10"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-14",
+      "category": "list_fact",
+      "question": "恶性肿瘤保障范围明确排除了哪些疾病？请列出五项。",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "原位癌",
+          "慢性淋巴细胞白血病",
+          "何杰金氏病",
+          "皮肤癌",
+          "前列腺癌"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-15",
+      "category": "similar_clause",
+      "question": "原位癌是否属于本条款的恶性肿瘤保障范围？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "原位癌",
+          "不在保障范围"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-16",
+      "category": "similar_clause",
+      "question": "所有皮肤癌都被排除吗？条款写了什么例外？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "恶性黑色素瘤",
+          "转移"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-17",
+      "category": "numeric_fact",
+      "question": "哪种分期的前列腺癌不在恶性肿瘤保障范围内？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "T1N0M0"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-18",
+      "category": "similar_clause",
+      "question": "慢性淋巴细胞白血病在什么 Binet 分期会被排除？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "Binet",
+          "A期"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-19",
+      "category": "similar_clause",
+      "question": "何杰金氏病在哪个 Ann Arbor 分期不受保障？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "Ann Arbor",
+          "I期"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-20",
+      "category": "single_fact",
+      "question": "条款中急性心肌梗塞的病理原因是什么？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "冠状动脉阻塞",
+          "心肌坏死"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-21",
+      "category": "numeric_fact",
+      "question": "急性心肌梗塞须满足列举条件中的至少几项？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "至少三项"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-22",
+      "category": "single_fact",
+      "question": "急性心肌梗塞的条件中，心电图需要出现什么变化？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "心电图",
+          "急性心肌梗塞"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-23",
+      "category": "single_fact",
+      "question": "哪些血液指标变化可作为急性心肌梗塞条件？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "心肌酶",
+          "肌钙蛋白"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-24",
+      "category": "numeric_fact",
+      "question": "发病90日后左心室射血分数低于多少可满足一项心梗条件？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003",
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "90",
+          "50%"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-25",
+      "category": "single_fact",
+      "question": "投保人故意伤害被保险人导致重大疾病是否免责？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "不承担",
+          "故意伤害"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-26",
+      "category": "single_fact",
+      "question": "被保险人故意犯罪导致重大疾病是否承担给付责任？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "不承担",
+          "故意犯罪"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-27",
+      "category": "single_fact",
+      "question": "主动吸食或注射毒品导致重大疾病是否属于免责情形？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "毒品",
+          "不承担"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-28",
+      "category": "similar_clause",
+      "question": "酒后驾驶或无有效驾驶证驾驶导致重大疾病，保险公司承担责任吗？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "酒后驾驶",
+          "不承担"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-29",
+      "category": "single_fact",
+      "question": "感染艾滋病病毒导致重大疾病是否列为责任免除？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "艾滋病",
+          "不承担"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-30",
+      "category": "single_fact",
+      "question": "战争或军事冲突导致重大疾病是否免责？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "战争",
+          "不承担"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-31",
+      "category": "single_fact",
+      "question": "核爆炸、核辐射或核污染是否属于免责情形？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "核",
+          "不承担"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-32",
+      "category": "single_fact",
+      "question": "遗传性疾病和先天性畸形是否在责任免除中？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "遗传性疾病",
+          "先天性畸形",
+          "不承担"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-33",
+      "category": "single_fact",
+      "question": "这份保险采用什么交费方式？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "年交"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-34",
+      "category": "numeric_fact",
+      "question": "保险费交费宽限期是多少日？从哪一天开始算？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "60",
+          "应交费日次日"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-35",
+      "category": "single_fact",
+      "question": "给付重大疾病保险金后合同会终止吗？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "合同终止"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-36",
+      "category": "single_fact",
+      "question": "投保人解除保险合同是否属于合同终止情形？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "解除",
+          "合同终止"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-37",
+      "category": "single_fact",
+      "question": "被保险人身故后合同状态如何？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "身故",
+          "合同终止"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-38",
+      "category": "list_fact",
+      "question": "申请理赔至少需要提交哪些主要材料？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "保险单",
+          "交费凭证",
+          "身份证明",
+          "诊断证明"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-39",
+      "category": "single_fact",
+      "question": "理赔材料中的医疗证明具体包括哪些内容？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "诊断证明",
+          "病历",
+          "病理检验"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-40",
+      "category": "single_fact",
+      "question": "发生保险事故后是否需要及时通知保险公司？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "及时通知"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-41",
+      "category": "numeric_fact",
+      "question": "收到完整理赔申请材料后多少个工作日内作出核定？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "10个工作日",
+          "核定"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-42",
+      "category": "numeric_fact",
+      "question": "达成赔偿协议后多少个工作日内履行赔偿义务？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "10个工作日",
+          "赔偿义务"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-43",
+      "category": "cross_chunk",
+      "question": "比较首次投保与连续投保续保合同的等待期安排。",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "180",
+          "续保",
+          "不设等待期"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-44",
+      "category": "cross_chunk",
+      "question": "分别概括恶性肿瘤与急性心肌梗塞的认定要点。",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "病理学",
+          "至少三项"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-45",
+      "category": "cross_chunk",
+      "question": "说明交费宽限期以及合同终止的两种情形。",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "60",
+          "给付",
+          "解除"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-46",
+      "category": "cross_chunk",
+      "question": "申请理赔要交哪些材料，完整材料收到后多久核定？",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "保险单",
+          "身份证明",
+          "诊断证明",
+          "10个工作日"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-47",
+      "category": "similar_clause",
+      "question": "180日这个数字在条款中既涉及等待期又涉及确诊处理，请分别说明。",
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "180",
+          "无息退还",
+          "不设等待期"
+        ]
+      }
+    },
+    {
+      "caseId": "BENCH-48",
+      "category": "no_answer",
+      "question": "这份条款是否报销牙齿正畸费用？",
+      "expectedDocuments": [],
+      "expectedChunks": [],
+      "retrievalEvaluated": false,
+      "answerKey": {
+        "requiredAny": [
+          "无法确定",
+          "当前知识库",
+          "未提及",
+          "没有相关"
+        ],
+        "forbiddenClaims": [
+          "明确报销"
+        ]
+      },
+      "generation": true
+    },
+    {
+      "caseId": "BENCH-49",
+      "category": "no_answer",
+      "question": "这份保险是否提供生育津贴，每天给付多少钱？",
+      "expectedDocuments": [],
+      "expectedChunks": [],
+      "retrievalEvaluated": false,
+      "answerKey": {
+        "requiredAny": [
+          "无法确定",
+          "当前知识库",
+          "未提及",
+          "没有相关"
+        ],
+        "forbiddenClaims": [
+          "每天给付100",
+          "每天给付200"
+        ]
+      },
+      "generation": true,
+      "e2e": true
+    },
+    {
+      "caseId": "BENCH-50",
+      "category": "multi_turn",
+      "question": "那连续投保后的续保合同还需要等待180天吗？",
+      "retrievalQuery": "这份重大疾病保险连续投保后的续保合同还需要等待180天吗？",
+      "history": [
+        {
+          "role": "user",
+          "content": "这份重大疾病保险首次投保的等待期是多久？"
+        },
+        {
+          "role": "assistant",
+          "content": "首次投保等待期为180天。"
+        }
+      ],
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "answerKey": {
+        "requiredAll": [
+          "续保",
+          "不设等待期"
+        ]
+      },
+      "generation": true
+    }
+  ]
+}

@@ -20,7 +20,7 @@ flowchart LR
     B --> F[(FAISS Index)]
 ```
 
-核心能力包括 JWT 认证、同步多轮对话、保费估算工具、PDF 知识库、可追踪 RAG 来源、Redis 限流与幂等、故障语义、可观测性以及浏览器端端到端验收。当前回归基线为 **Java 92、Python 84、Vue 27** 项自动化测试。
+核心能力包括 JWT 认证、同步多轮对话、保费估算工具、PDF 知识库、可追踪 RAG 来源、Redis 限流与幂等、故障语义、可观测性以及浏览器端端到端验收。当前回归基线为 **Java 92、Python 102、Vue 27** 项自动化测试。
 
 ## Architecture Overview
 
@@ -42,7 +42,7 @@ flowchart LR
 - **保费计算**：模型通过受控工具调用 Python `PremiumService`，依据本地费率 JSON 配置完成估算。
 - **知识库管理**：PDF 上传、SHA-256 校验、文档状态管理与受控索引发布。
 - **RAG 来源追踪**：回答可返回 `documentName`、`page`、`snippet`、`score`，前端展示实际检索来源。
-- **双检索实现**：默认 LangChain 检索链，并保留 LlamaIndex 实现用于受控选择与对照。
+- **双检索引擎**：通过 `RAG_ENGINE=langchain|llamaindex` 在 FastAPI 启动时选择整套 Builder / Retriever 对象图；默认使用 LangChain，不支持运行时热切换。
 - **可靠性控制**：请求幂等、固定窗口限流、超时预算、独立熔断器和明确的 `UNKNOWN` 结果。
 - **可观测性**：Trace ID 贯穿边界，结构化日志以及 Actuator liveness/readiness 健康探针。
 
@@ -111,8 +111,10 @@ Knowledge query
 - 在线生成模型：**DeepSeek**，密钥仅通过 `DEEPSEEK_API_KEY` 环境变量注入。
 - Embedding：**BGE `bge-base-zh-v1.5`**，向量维度 768。
 - Vector Store：**FAISS**，索引与结构化文档元数据由 Python 侧持有。
-- 检索链：LangChain 为默认实现，LlamaIndex 为可选实现；通过配置选择，不改变 Java API。
+- 检索链：LangChain 为默认实现，LlamaIndex 为可选实现；通过 `RAG_ENGINE=langchain|llamaindex` 在 FastAPI 启动时选择，不改变 Java API，也不支持运行时或每请求切换。
+- 索引隔离：LangChain 使用 `langchain-generations` 与 `LANGCHAIN_CURRENT`，LlamaIndex 使用独立的 `llamaindex/generations` 与 `llamaindex/CURRENT`。
 - 来源契约：工具输出同时保留模型可读文本与结构化检索结果，最终响应冻结实际使用的 sources。
+- PDF 与分数契约：LlamaIndex 使用 PyMuPDF 按页提取文本，不回退到原始 PDF 字节；两种引擎对外都返回 `0..1` 相似度，原生 squared-L2 distance 仅保留在内部审计 metadata。
 - LoRA 仍是离线实验资产，**没有接入当前在线推理链路**，因此不宣称其为平台生产能力。
 
 ## Validation Evidence
@@ -122,16 +124,18 @@ Knowledge query
 | Scope | Result |
 | --- | --- |
 | Java regression | 92 passed |
-| Python regression | 84 passed |
+| Python regression | 102 passed（最新双引擎及 PDF/score 修复回归） |
 | Vue regression | 27 passed |
 | Online public API requests | 34 / 34 succeeded |
 | Actual RAG source assertions | 19 / 19 passed |
 | Expected RAG scenarios | 17 / 18 observed |
 | Strict route sequence | 25 / 34 matched |
+| Fair retrieval benchmark | 两引擎 Recall@1/3/5 = 0.5521/0.8750/1.0000，MRR = 0.8201 |
+| Fair benchmark public API E2E | LangChain 6/6；LlamaIndex 5/6，保留 1 次上游 Agent/LLM 失败 |
 
 `17 / 18` 表示其中一个多轮场景的第二轮由模型直接回答，未发生实际检索，因此不伪造 sources。`25 / 34` 是对预期工具调用序列的严格匹配结果，不等同于模型准确率或业务成功率。
 
-验收覆盖真实 MySQL、Redis、DeepSeek、BGE、FAISS、Java/Python 联调和 Chrome 浏览器流程。以上数字是特定本地环境、固定样本与单次验收窗口中的工程证据，**不是生产 SLA、容量承诺或通用模型评测结论**。详细边界与证据见 [Resume Evidence](docs/RESUME_EVIDENCE.md)。
+验收覆盖真实 MySQL、Redis、DeepSeek、BGE、FAISS、Java/Python 联调和 Chrome 浏览器流程。独立 Fair Benchmark 进一步固定同一语料、5 个 engine-independent chunks、BGE、FAISS、top_k、Prompt 和真实 DeepSeek，对 50 个 case 进行双引擎对照。该 benchmark 只有 1 份可可靠提取的受控 TXT，结果**不是生产 SLA、容量承诺或通用模型评测结论**。详细边界与原始指标见 [RAG Engine Benchmark](docs/RAG_ENGINE_BENCHMARK.md)。
 
 ## Quick Start
 
@@ -144,17 +148,64 @@ Knowledge query
 - Redis 6+
 - A valid DeepSeek API key
 
-先创建一个空的 MySQL 数据库；Java 启动时由 Flyway 创建和升级表结构。启动本机 MySQL 与 Redis 后，分别运行三个应用。
+可使用下方 PowerShell 启动器运行完整本地环境。若选择手动启动，则先创建一个空的 MySQL 数据库；Java
+启动时由 Flyway 创建和升级表结构。启动本机 MySQL 与 Redis 后，再分别运行三个应用。
+
+### PowerShell local launcher
+
+依赖已经安装且 `DEEPSEEK_API_KEY` 已配置时，可在仓库根目录一条命令启动完整本地环境：
+
+```powershell
+.\start-local.cmd
+```
+
+默认模式使用 Docker 创建隔离的临时 MySQL/Redis，并依次启动真实 Python、Java 和 Vue。首次安装依赖可使用
+`.\start-local.cmd -InstallDependencies`。如果 Python、Maven 或 NPM 不在 `PATH`，可通过
+`-PythonExecutable`、`-MavenExecutable`、`-NpmExecutable` 参数，或 `PYTHON_EXECUTABLE`、
+`MAVEN_EXECUTABLE`、`NPM_EXECUTABLE` 环境变量指定。已有 Hugging Face 模型缓存可通过
+`-HuggingFaceCache`、`-SentenceTransformersCache` 参数或 `HF_HOME`、
+`SENTENCE_TRANSFORMERS_HOME` 环境变量复用。
+
+启动器默认选择 LangChain；也可以显式选择任一引擎：
+
+```powershell
+.\start-local.cmd -RagEngine langchain
+.\start-local.cmd -RagEngine llamaindex -InstallDependencies
+```
+
+LlamaIndex 依赖保持可选，仅在选择该引擎时需要安装。非法引擎值会直接失败，不会回退到 LangChain。
+
+停止启动器拥有的进程和容器：
+
+```powershell
+.\stop-local.cmd
+```
+
+默认隔离数据库随停止命令删除，适合本地演示和联调。需要保留已有数据时，先配置 `MYSQL_URL`、
+`MYSQL_USERNAME`、`MYSQL_PASSWORD` 以及可选 Redis 环境变量，再运行
+`.\start-local.cmd -UseExistingInfrastructure`。启动器不会停止已有 MySQL/Redis。底层 PowerShell
+脚本位于 `scripts/Start-Local.ps1` 和 `scripts/Stop-Local.ps1`。
+
+以下命令保留为手动启动方式。
 
 ### 1. Start the Python AI service
 
 ```bash
 python -m pip install -r requirements-dev.txt
 export DEEPSEEK_API_KEY='<your-key>'
+export RAG_ENGINE='langchain'
 python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Windows PowerShell 使用 `$env:DEEPSEEK_API_KEY='<your-key>'` 设置当前进程环境变量。不要把真实密钥写入仓库。仅在选择 LlamaIndex 检索实现时安装 `requirements-llamaindex.txt` 中的额外依赖。
+LlamaIndex 手动启动方式：
+
+```bash
+python -m pip install -r requirements-llamaindex.txt
+export RAG_ENGINE='llamaindex'
+python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
+```
+
+Windows PowerShell 使用 `$env:NAME='value'` 设置当前进程环境变量。不要把真实密钥写入仓库。`RAG_ENGINE` 会忽略大小写和首尾空格，但只接受 `langchain` 或 `llamaindex`；选择结果在进程生命周期内固定。
 
 ### 2. Start the Java backend
 
@@ -207,11 +258,13 @@ docs/                   架构、契约、阶段和验收文档
 - 浏览器验收是受控本地小样本证据，不代表生产并发、时延或可用性。
 - `UNKNOWN` 状态会被保留且不会自动重发，完整自动对账仍是后续演进项。
 - FAISS 本地索引要求可信来源，尚未提供面向不可信索引文件的隔离加载机制。
+- RAG 引擎只能在 FastAPI 启动时选择；当前没有 Vue/Java 切换入口、运行时热切换或每请求选择能力。
+- 当前公平评测语料只有 1 个文档、5 个 chunks，生成只做每 case 1 次真实 DeepSeek 调用；尚不足以支持框架普遍优劣或统计显著性结论。
 - 自动化生产部署、灾备演练、容量测试和独立安全渗透测试不在当前交付范围内。
 
 ## Evolution and History
 
-项目按正式顺序推进至 Phase 12：Phase 9.5 完成 Vue Minimal Chat Client，Phase 10.5 完成 Document Client Extension，Phase 11 完成可观测性与容错，Phase 12 完成测试、联调与最终审计。此后另行开展了独立 Resume Evidence Validation。
+项目按正式顺序推进至 Phase 12：Phase 9.5 完成 Vue Minimal Chat Client，Phase 10.5 完成 Document Client Extension，Phase 11 完成可观测性与容错，Phase 12 完成测试、联调与最终审计。此后另行开展了 Resume Evidence Validation、RAG Sources 修复、启动级 RAG 双引擎运行时补全，以及 LangChain/LlamaIndex Fair Benchmark；这些均是独立修复或证据任务，不是新增产品 Phase。
 
 阶段名称用于保留工程决策与学习轨迹；当前功能状态以 [Project Status](docs/PROJECT_STATUS.md)、源码和实际测试结果为准。
 
@@ -224,6 +277,8 @@ docs/                   架构、契约、阶段和验收文档
 - [Redis](docs/REDIS.md) — 缓存、限流和幂等语义
 - [Web Client Plan](docs/WEB_CLIENT_PLAN.md) — Vue 客户端范围与验收
 - [Resume Evidence](docs/RESUME_EVIDENCE.md) — 简历证据验收报告
+- [RAG Engine Validation](docs/RAG_ENGINE_VALIDATION.md) — 启动级双引擎运行与检索证据
+- [RAG Engine Benchmark](docs/RAG_ENGINE_BENCHMARK.md) — 固定 chunks、真实 DeepSeek 与公共 API 的公平对照
 
 ## Upstream Attribution
 

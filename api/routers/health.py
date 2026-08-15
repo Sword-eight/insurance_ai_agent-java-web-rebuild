@@ -16,6 +16,13 @@ def live(trace_id: TraceId) -> InternalEnvelope:
 
 @router.get("/ready", response_model=InternalEnvelope)
 def ready(request: Request, trace_id: TraceId) -> InternalEnvelope:
-    if not getattr(request.app.state, "ai_resources_ready", False):
+    runtime = getattr(request.app.state, "runtime", None)
+    if (
+        runtime is None
+        or not getattr(request.app.state, "ai_resources_ready", False)
+    ):
         raise runtime_unavailable_error()
-    return success_envelope({"status": "UP"}, trace_id)
+    return success_envelope(
+        {"status": "UP", "ragEngine": runtime.rag_engine},
+        trace_id,
+    )

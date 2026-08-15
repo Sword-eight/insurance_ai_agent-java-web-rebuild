@@ -8,6 +8,8 @@
 import os
 from typing import Any, Dict
 
+from application.rag_engine import RagEngineDependencyError
+from config import normalize_rag_engine
 from services.knowledge_service import KnowledgeService
 from services.premium_service import PremiumService
 from services.retrieval_service import RetrievalService
@@ -18,6 +20,30 @@ from memory.state_manager import StateManager
 from utils.logger import get_logger
 
 logger = get_logger("app.bootstrap")
+
+
+def _rag_component_types(rag_engine: str):
+    """Resolve concrete engine types before expensive model initialization."""
+    if rag_engine == "langchain":
+        from rag.langchain.vector_store import VectorStoreManager
+        from rag.langchain.retriever import LangChainRetriever
+        from rag.langchain.index_builder import LangChainIndexBuilder
+
+        return VectorStoreManager, LangChainIndexBuilder, LangChainRetriever
+
+    try:
+        from rag.llamaindex.index_builder import LlamaIndexBuilder
+        from rag.llamaindex.retriever import LlamaIndexRetriever
+    except ModuleNotFoundError as exc:
+        if exc.name == "llama_index" or (exc.name or "").startswith("llama_index."):
+            raise RagEngineDependencyError(
+                "RAG_ENGINE=llamaindex requires optional dependencies. "
+                "Install them with: python -m pip install -r "
+                "requirements-llamaindex.txt"
+            ) from exc
+        raise
+
+    return None, LlamaIndexBuilder, LlamaIndexRetriever
 
 
 def init_services(
@@ -45,7 +71,11 @@ def init_services(
     Returns:
         包含各服务实例的字典
     """
+    rag_engine = normalize_rag_engine(rag_engine)
     os.environ["RAG_ENGINE"] = rag_engine
+    vector_store_type, builder_type, retriever_type = _rag_component_types(
+        rag_engine
+    )
 
     # ── Step 0: Embedding（进程级单例）──────────────────────────
     from rag.embedding import EmbeddingManager
@@ -53,19 +83,13 @@ def init_services(
 
     # ── Step 1: Builder + Retriever（引擎决定）─────────────────
     if rag_engine == "langchain":
-        from rag.langchain.vector_store import VectorStoreManager
-        from rag.langchain.retriever import LangChainRetriever
-        from rag.langchain.index_builder import LangChainIndexBuilder
-
-        vector_store = VectorStoreManager()
-        retriever = LangChainRetriever(vector_store_manager=vector_store)
-        builder = LangChainIndexBuilder(vector_store=vector_store)
-    else:  # llamaindex
-        from rag.llamaindex.index_builder import LlamaIndexBuilder
-        from rag.llamaindex.retriever import LlamaIndexRetriever
-
-        builder = LlamaIndexBuilder()
-        retriever = LlamaIndexRetriever(builder=builder)
+        assert vector_store_type is not None
+        vector_store = vector_store_type()
+        retriever = retriever_type(vector_store_manager=vector_store)
+        builder = builder_type(vector_store=vector_store)
+    else:
+        builder = builder_type()
+        retriever = retriever_type(builder=builder)
 
     # ── Step 2: KnowledgeService（仅 Builder 注入）──────────────
     knowledge_service = KnowledgeService(builder=builder)
@@ -98,6 +122,9 @@ def init_services(
     )
 
     return {
+        "rag_engine": rag_engine,
+        "index_builder": builder,
+        "retriever": retriever,
         "knowledge_service": knowledge_service,
         "retrieval_service": retrieval_service,
         "graph_builder": graph_builder,
@@ -119,6 +146,7 @@ def init_api_runtime(rag_engine: str = "langchain"):
     )
     registry = RequestRegistry(ttl_seconds=600.0, capacity=1024)
     return ApplicationRuntime(
+        rag_engine=services["rag_engine"],
         agent_facade=DefaultAgentFacade(
             graph_builder=services["graph_builder"],
             registry=registry,

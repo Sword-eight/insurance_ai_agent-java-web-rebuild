@@ -11,6 +11,7 @@ class LlamaIndexEmbeddingAdapter(BaseEmbedding):
     _embedding_manager: EmbeddingManager = None  # type: ignore[assignment]
 
     def __init__(self, **kwargs: Any) -> None:
+        kwargs.setdefault("embed_batch_size", 32)
         super().__init__(**kwargs)
         if self._embedding_manager is None:
             LlamaIndexEmbeddingAdapter._embedding_manager = EmbeddingManager()

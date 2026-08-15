@@ -1,0 +1,228 @@
+{
+  "generatedAt": "2026-08-15T08:46:53.494335+00:00",
+  "environment": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.6",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "packages": {
+      "langchain-core": "1.5.4",
+      "langchain-community": "0.4.2",
+      "llama-index-core": "0.14.23",
+      "llama-index-vector-stores-faiss": "0.6.0",
+      "sentence-transformers": "5.7.0",
+      "faiss-cpu": "1.15.0",
+      "torch": "2.7.1+cpu",
+      "transformers": "4.57.6"
+    }
+  },
+  "fairness": {
+    "identicalCorpus": true,
+    "identicalChunks": true,
+    "identicalEmbedding": true,
+    "identicalTopK": true,
+    "identicalPromptAndModel": true,
+    "onlyIntendedVariable": "retriever / engine implementation"
+  },
+  "corpus": {
+    "documentCount": 1,
+    "documents": [
+      "中国人寿重大疾病保险条款.txt"
+    ],
+    "chunkCount": 5,
+    "caseCount": 50,
+    "retrievalEvaluatedCases": 48,
+    "generationCases": 15
+  },
+  "build": {
+    "common": {
+      "documents": 1,
+      "chunks": 5,
+      "embeddings": 5,
+      "embeddingModel": "BAAI/bge-base-zh-v1.5",
+      "embeddingDimension": 768,
+      "device": "cpu",
+      "normalizeEmbeddings": true,
+      "chunkSize": 500,
+      "chunkOverlap": 100,
+      "topK": 5
+    },
+    "langchain": {
+      "totalBuildTimeMs": 1943.694,
+      "loadTimeMs": 3.759,
+      "indexSizeBytes": 21637,
+      "phaseTimingAvailable": false
+    },
+    "llamaindex": {
+      "totalBuildTimeMs": 2197.857,
+      "loadTimeMs": 13.58,
+      "indexSizeBytes": 46049,
+      "phaseTimingAvailable": false
+    }
+  },
+  "retrieval": {
+    "langchain": {
+      "evaluatedCases": 48,
+      "excludedCases": 2,
+      "recallAt1": 0.5521,
+      "recallAt3": 0.875,
+      "recallAt5": 1.0,
+      "mrr": 0.8201,
+      "nDCGAt5Binary": 0.8643,
+      "documentHitRateAt5": 1.0,
+      "pageHitRateAt5": 1.0,
+      "latencyMs": {
+        "count": 150,
+        "mean": 59.088,
+        "p50": 55.232,
+        "p95": 77.911,
+        "min": 44.447,
+        "max": 163.499
+      }
+    },
+    "llamaindex": {
+      "evaluatedCases": 48,
+      "excludedCases": 2,
+      "recallAt1": 0.5521,
+      "recallAt3": 0.875,
+      "recallAt5": 1.0,
+      "mrr": 0.8201,
+      "nDCGAt5Binary": 0.8643,
+      "documentHitRateAt5": 1.0,
+      "pageHitRateAt5": 1.0,
+      "latencyMs": {
+        "count": 150,
+        "mean": 56.257,
+        "p50": 53.511,
+        "p95": 73.621,
+        "min": 41.972,
+        "max": 170.278
+      }
+    }
+  },
+  "generation": {
+    "langchain": {
+      "sampleSize": 15,
+      "successful": 14,
+      "errors": 1,
+      "correct": 14,
+      "partial": 0,
+      "incorrect": 0,
+      "faithfulnessProxyRate": 0.9286,
+      "hallucinationProxyRate": 0.0,
+      "latencyMs": {
+        "count": 14,
+        "mean": 6209.009,
+        "p50": 5697.149,
+        "p95": 8379.755,
+        "min": 4536.523,
+        "max": 9713.132
+      },
+      "tokenUsage": {
+        "available": true,
+        "total": 57685,
+        "mean": 4120.36,
+        "p50": 4006.0,
+        "p95": 4619.4
+      }
+    },
+    "llamaindex": {
+      "sampleSize": 15,
+      "successful": 15,
+      "errors": 0,
+      "correct": 14,
+      "partial": 1,
+      "incorrect": 0,
+      "faithfulnessProxyRate": 0.9333,
+      "hallucinationProxyRate": 0.0,
+      "latencyMs": {
+        "count": 15,
+        "mean": 5865.138,
+        "p50": 6053.112,
+        "p95": 7522.04,
+        "min": 4238.352,
+        "max": 7955.393
+      },
+      "tokenUsage": {
+        "available": true,
+        "total": 61927,
+        "mean": 4128.47,
+        "p50": 4022,
+        "p95": 4575.6
+      }
+    }
+  },
+  "endToEnd": {
+    "methodology": "Six frozen cases per engine through Spring public API -> FastAPI -> LangGraph -> RAG Tool -> Retriever -> DeepSeek -> Java. Engines ran sequentially against isolated temporary MySQL/Redis on the same machine.",
+    "langchain": {
+      "engine": "langchain",
+      "generatedAt": "2026-08-15T10:45:52.315703+00:00",
+      "sampleSize": 6,
+      "successful": 6,
+      "successRate": 1.0,
+      "timeoutCount": 0,
+      "errorCount": 0,
+      "correct": 6,
+      "partial": 0,
+      "incorrect": 0,
+      "latencyMs": {
+        "mean": 5081.386,
+        "p50": 5058.981,
+        "p95": 5488.682,
+        "min": 4643.064,
+        "max": 5511.032
+      }
+    },
+    "llamaindex": {
+      "engine": "llamaindex",
+      "generatedAt": "2026-08-15T10:47:28.285376+00:00",
+      "sampleSize": 6,
+      "successful": 5,
+      "successRate": 0.8333,
+      "timeoutCount": 0,
+      "errorCount": 1,
+      "correct": 5,
+      "partial": 0,
+      "incorrect": 0,
+      "latencyMs": {
+        "mean": 5503.3,
+        "p50": 5022.594,
+        "p95": 6812.055,
+        "min": 4687.583,
+        "max": 7016.646
+      }
+    }
+  },
+  "limitations": [
+    "The controlled corpus has one reliably extractable tracked TXT document.",
+    "The tracked PDFs were excluded because one extracts only a garbled title and one has no extractable text.",
+    "Generation uses one real DeepSeek run per selected case and is a small-sample comparison, not a stability distribution.",
+    "Faithfulness and hallucination are deterministic answer-key proxies, not human review or LLM-as-judge.",
+    "Per-phase embedding/build timing and peak RSS are unavailable; only total build, load, and persisted size are reported.",
+    "No currency cost is calculated because current pricing is not sourced by the runtime."
+  ],
+  "failures": {
+    "langchainGeneration": [
+      {
+        "caseId": "BENCH-05",
+        "error": "APITimeoutError: Request timed out."
+      }
+    ],
+    "llamaindexGeneration": [
+      {
+        "caseId": "BENCH-41",
+        "correctness": "Partial"
+      }
+    ],
+    "langchainE2E": [],
+    "llamaindexE2E": [
+      {
+        "caseId": "BENCH-01",
+        "errorCode": "AI_EXECUTION_FAILED"
+      }
+    ]
+  },
+  "verdict": {
+    "status": "PASS_WITH_WARNING",
+    "reason": "Fair fixed-chunk retrieval and real DeepSeek generation completed. Warnings remain for the one-document corpus, one run per generation case, one LangChain generation timeout, and one LlamaIndex public-API failure."
+  }
+}

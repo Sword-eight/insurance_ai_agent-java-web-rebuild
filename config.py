@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+from application.rag_engine import RagEngineConfigurationError
+
 # ------------------------------------------------------------
 # 项目根目录
 # ------------------------------------------------------------
@@ -23,6 +25,15 @@ def _positive_float_env(name: str, default: str) -> float:
     if value <= 0:
         raise ValueError(f"{name} must be positive")
     return value
+
+
+def _runtime_path(name: str, default: Path) -> str:
+    """Resolve an optional runtime path relative to the repository root."""
+    configured = os.getenv(name)
+    path = Path(configured) if configured and configured.strip() else default
+    if not path.is_absolute():
+        path = PROJECT_ROOT / path
+    return str(path.resolve())
 
 # ------------------------------------------------------------
 # LLM 配置（DeepSeek）
@@ -55,7 +66,9 @@ EMBEDDING_CONFIG: dict = {
 # 向量数据库配置（FAISS）
 # ------------------------------------------------------------
 VECTOR_STORE_CONFIG: dict = {
-    "index_path": str(PROJECT_ROOT / "data" / "vectorstore"),
+    "index_path": _runtime_path(
+        "VECTOR_STORE_ROOT", PROJECT_ROOT / "data" / "vectorstore"
+    ),
     "top_k": 5,
 }
 
@@ -63,7 +76,9 @@ VECTOR_STORE_CONFIG: dict = {
 # PDF 文档配置
 # ------------------------------------------------------------
 PDF_CONFIG: dict = {
-    "pdf_dir": str(PROJECT_ROOT / "data" / "pdf"),
+    "pdf_dir": _runtime_path(
+        "DOCUMENT_STORAGE_ROOT", PROJECT_ROOT / "data" / "pdf"
+    ),
     "chunk_size": 500,
     "chunk_overlap": 100,
 }
@@ -78,15 +93,26 @@ MEMORY_CONFIG: dict = {
 # ------------------------------------------------------------
 # RAG 引擎选择: "langchain" | "llamaindex"
 # 可通过环境变量 RAG_ENGINE 覆盖。
-# 注意：使用 get_rag_engine() 函数动态读取以支持运行时热切换，
-#       不要直接使用模块级 RAG_ENGINE 常量（仅在启动时求值一次）。
+# 正式 FastAPI 进程只在启动时读取；不支持运行时或每请求切换。
 # ------------------------------------------------------------
-def get_rag_engine() -> str:
-    """动态获取 RAG 引擎配置（支持运行时热切换）。"""
-    engine: str = os.getenv("RAG_ENGINE", "langchain")
-    if engine not in ("langchain", "llamaindex"):
-        engine = "langchain"
+SUPPORTED_RAG_ENGINES: tuple[str, ...] = ("langchain", "llamaindex")
+
+
+def normalize_rag_engine(value: str | None) -> str:
+    """Normalize and strictly validate a startup RAG engine value."""
+    raw_value = "langchain" if value is None else value
+    engine = raw_value.strip().lower()
+    if engine not in SUPPORTED_RAG_ENGINES:
+        raise RagEngineConfigurationError(
+            f"Unsupported RAG_ENGINE: {raw_value}. "
+            "Expected langchain or llamaindex."
+        )
     return engine
+
+
+def get_rag_engine() -> str:
+    """Read the RAG engine selected for the next process startup."""
+    return normalize_rag_engine(os.getenv("RAG_ENGINE"))
 
 
 # 启动时的默认值（向后兼容旧写法，新代码请用 get_rag_engine()）

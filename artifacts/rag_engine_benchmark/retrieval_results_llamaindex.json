@@ -1,0 +1,2674 @@
+{
+  "engine": "llamaindex",
+  "warmupQueries": 1,
+  "repeatsPerQuery": 3,
+  "latencyMs": {
+    "count": 150,
+    "mean": 56.257,
+    "p50": 53.511,
+    "p95": 73.621,
+    "min": 41.972,
+    "max": 170.278
+  },
+  "cases": [
+    {
+      "caseId": "BENCH-01",
+      "query": "这份保险允许的最低投保年龄是多少？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        51.084,
+        44.396,
+        46.371
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5078
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5053
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4949
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4826
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4783
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-02",
+      "query": "被保险人的最高投保年龄是多少周岁？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        47.227,
+        49.418,
+        48.712
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5513
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5473
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5045
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4986
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4938
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-03",
+      "query": "身体健康且处于什么年龄范围的人可作为被保险人？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        58.924,
+        52.539,
+        56.539
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5844
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5724
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.552
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5258
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5252
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-04",
+      "query": "保险合同由哪些书面文件构成？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        41.972,
+        45.723,
+        45.801
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5642
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5257
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5174
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5035
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4847
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-05",
+      "query": "合同生效180日后初次确诊约定重大疾病，保险公司如何给付？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        57.186,
+        65.383,
+        96.041
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6934
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6645
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6564
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6458
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5597
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-06",
+      "query": "等待期后首次确诊重大疾病并给付保险金后，合同是否继续？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        67.447,
+        56.364,
+        59.302
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6961
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6527
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5839
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.572
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5204
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-07",
+      "query": "合同生效180日内确诊约定重大疾病会怎样处理？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        53.29,
+        54.434,
+        54.382
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6592
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6332
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6089
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.586
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5355
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-08",
+      "query": "等待期内发生合同约定重大疾病后合同状态如何？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001"
+      ],
+      "latencyMs": [
+        57.887,
+        61.36,
+        60.592
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6922
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.66
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5756
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5545
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5515
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-09",
+      "query": "这份重大疾病保险的等待期是多少天？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        61.1,
+        59.381,
+        56.154
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6977
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6817
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5557
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5513
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4978
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-10",
+      "query": "条款如何定义等待期？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        46.272,
+        47.093,
+        52.248
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5006
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4231
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3743
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3614
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.312
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-11",
+      "query": "连续投保后的续保合同还设置等待期吗？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        50.723,
+        55.634,
+        51.004
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6718
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5886
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5832
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5567
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5059
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-12",
+      "query": "条款中的恶性肿瘤是怎样定义的？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "latencyMs": [
+        50.075,
+        48.353,
+        170.278
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5857
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4279
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3897
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3403
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.328
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-13",
+      "query": "恶性肿瘤的诊断依据提到了哪项国际疾病分类？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "latencyMs": [
+        69.35,
+        53.847,
+        47.207
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5114
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.417
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.349
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.2875
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.277
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-14",
+      "query": "恶性肿瘤保障范围明确排除了哪些疾病？请列出五项。",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        60.48,
+        54.639,
+        51.084
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6914
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5975
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5539
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5315
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4827
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-15",
+      "query": "原位癌是否属于本条款的恶性肿瘤保障范围？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002"
+      ],
+      "latencyMs": [
+        53.408,
+        48.686,
+        57.169
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.636
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5057
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.464
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4527
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4224
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-16",
+      "query": "所有皮肤癌都被排除吗？条款写了什么例外？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        53.205,
+        53.401,
+        54.459
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4729
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4255
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3881
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3716
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3299
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-17",
+      "query": "哪种分期的前列腺癌不在恶性肿瘤保障范围内？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        55.453,
+        55.757,
+        54.592
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6134
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4945
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4158
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4132
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.337
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-18",
+      "query": "慢性淋巴细胞白血病在什么 Binet 分期会被排除？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        56.566,
+        52.729,
+        58.581
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4279
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3945
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3216
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3118
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.267
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-19",
+      "query": "何杰金氏病在哪个 Ann Arbor 分期不受保障？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        79.144,
+        77.116,
+        88.362
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4295
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4181
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3474
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3022
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.2509
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-20",
+      "query": "条款中急性心肌梗塞的病理原因是什么？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "latencyMs": [
+        110.253,
+        65.344,
+        50.875
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6182
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4434
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.416
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3867
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.381
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-21",
+      "query": "急性心肌梗塞须满足列举条件中的至少几项？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "latencyMs": [
+        56.101,
+        61.428,
+        55.943
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6757
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5192
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4677
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4205
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.405
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-22",
+      "query": "急性心肌梗塞的条件中，心电图需要出现什么变化？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "latencyMs": [
+        57.923,
+        58.663,
+        59.674
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5415
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3971
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3269
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3073
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.2891
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-23",
+      "query": "哪些血液指标变化可作为急性心肌梗塞条件？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003"
+      ],
+      "latencyMs": [
+        50.075,
+        53.973,
+        50.575
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5888
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3972
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3308
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3094
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.2673
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-24",
+      "query": "发病90日后左心室射血分数低于多少可满足一项心梗条件？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-003",
+        "chunk-004"
+      ],
+      "latencyMs": [
+        58.683,
+        97.417,
+        62.26
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5519
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5251
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3953
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3582
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3466
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-25",
+      "query": "投保人故意伤害被保险人导致重大疾病是否免责？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        57.333,
+        55.788,
+        59.199
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6374
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6227
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5982
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5967
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5532
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-26",
+      "query": "被保险人故意犯罪导致重大疾病是否承担给付责任？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        54.775,
+        61.406,
+        56.659
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6035
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.597
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5835
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5493
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5443
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-27",
+      "query": "主动吸食或注射毒品导致重大疾病是否属于免责情形？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        58.007,
+        59.256,
+        60.872
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4822
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.468
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4539
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.445
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3756
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-28",
+      "query": "酒后驾驶或无有效驾驶证驾驶导致重大疾病，保险公司承担责任吗？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        64.823,
+        60.446,
+        60.658
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.568
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5447
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5314
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5306
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.505
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-29",
+      "query": "感染艾滋病病毒导致重大疾病是否列为责任免除？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        52.161,
+        50.053,
+        46.985
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5426
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5218
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4884
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4347
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-30",
+      "query": "战争或军事冲突导致重大疾病是否免责？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        49.841,
+        52.277,
+        50.972
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4431
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4365
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4342
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3895
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3362
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-31",
+      "query": "核爆炸、核辐射或核污染是否属于免责情形？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        52.559,
+        52.901,
+        80.077
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4206
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3691
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3606
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3245
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.318
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-32",
+      "query": "遗传性疾病和先天性畸形是否在责任免除中？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        61.832,
+        66.91,
+        52.16
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4443
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4418
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4217
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4096
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3726
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-33",
+      "query": "这份保险采用什么交费方式？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        47.09,
+        43.466,
+        46.922
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5633
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5391
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5206
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5067
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5037
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-34",
+      "query": "保险费交费宽限期是多少日？从哪一天开始算？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004"
+      ],
+      "latencyMs": [
+        46.254,
+        52.605,
+        57.943
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5781
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5642
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5456
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5258
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4744
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-35",
+      "query": "给付重大疾病保险金后合同会终止吗？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "latencyMs": [
+        54.222,
+        59.759,
+        54.582
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6645
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6323
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6232
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5899
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.52
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-36",
+      "query": "投保人解除保险合同是否属于合同终止情形？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "latencyMs": [
+        51.454,
+        50.236,
+        51.812
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6631
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6103
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5898
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5479
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5385
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-37",
+      "query": "被保险人身故后合同状态如何？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "latencyMs": [
+        51.482,
+        55.201,
+        48.828
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6823
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6302
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6246
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5927
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5898
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-38",
+      "query": "申请理赔至少需要提交哪些主要材料？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        49.287,
+        45.398,
+        44.629
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6079
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5458
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.491
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4878
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4647
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-39",
+      "query": "理赔材料中的医疗证明具体包括哪些内容？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        46.688,
+        47.054,
+        48.145
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6111
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5795
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5565
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5132
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.492
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-40",
+      "query": "发生保险事故后是否需要及时通知保险公司？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        47.698,
+        48.184,
+        49.155
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6225
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5351
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5093
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5005
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4993
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-41",
+      "query": "收到完整理赔申请材料后多少个工作日内作出核定？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        52.306,
+        50.343,
+        51.224
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6239
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5211
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4794
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.473
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4059
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-42",
+      "query": "达成赔偿协议后多少个工作日内履行赔偿义务？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        50.844,
+        53.803,
+        59.506
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5817
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4454
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4386
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4322
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3519
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-43",
+      "query": "比较首次投保与连续投保续保合同的等待期安排。",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        50.026,
+        61.685,
+        62.392
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6164
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5577
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.534
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5271
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5012
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-44",
+      "query": "分别概括恶性肿瘤与急性心肌梗塞的认定要点。",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-002",
+        "chunk-003"
+      ],
+      "latencyMs": [
+        57.623,
+        61.234,
+        58.274
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6296
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5322
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4454
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.445
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3815
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-45",
+      "query": "说明交费宽限期以及合同终止的两种情形。",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-004",
+        "chunk-005"
+      ],
+      "latencyMs": [
+        52.548,
+        50.958,
+        49.34
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5586
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5542
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5206
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5059
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4826
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-46",
+      "query": "申请理赔要交哪些材料，完整材料收到后多久核定？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-005"
+      ],
+      "latencyMs": [
+        51.429,
+        52.252,
+        53.142
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6272
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5339
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4803
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4768
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4377
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-47",
+      "query": "180日这个数字在条款中既涉及等待期又涉及确诊处理，请分别说明。",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        57.982,
+        55.59,
+        51.937
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5884
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5664
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5044
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4984
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4955
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-48",
+      "query": "这份条款是否报销牙齿正畸费用？",
+      "retrievalEvaluated": false,
+      "expectedDocuments": [],
+      "expectedChunks": [],
+      "latencyMs": [
+        50.259,
+        48.206,
+        48.638
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4323
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4257
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4015
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.399
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3907
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-49",
+      "query": "这份保险是否提供生育津贴，每天给付多少钱？",
+      "retrievalEvaluated": false,
+      "expectedDocuments": [],
+      "expectedChunks": [],
+      "latencyMs": [
+        56.011,
+        44.624,
+        47.996
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4479
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4186
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.4158
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3915
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.3858
+        }
+      ]
+    },
+    {
+      "caseId": "BENCH-50",
+      "query": "这份重大疾病保险连续投保后的续保合同还需要等待180天吗？",
+      "retrievalEvaluated": true,
+      "expectedDocuments": [
+        "中国人寿重大疾病保险条款.txt"
+      ],
+      "expectedChunks": [
+        "chunk-001",
+        "chunk-002"
+      ],
+      "latencyMs": [
+        53.614,
+        53.062,
+        50.613
+      ],
+      "results": [
+        {
+          "rank": 1,
+          "chunkId": "chunk-002",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6909
+        },
+        {
+          "rank": 2,
+          "chunkId": "chunk-001",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.6767
+        },
+        {
+          "rank": 3,
+          "chunkId": "chunk-005",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.595
+        },
+        {
+          "rank": 4,
+          "chunkId": "chunk-004",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5895
+        },
+        {
+          "rank": 5,
+          "chunkId": "chunk-003",
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "score": 0.5052
+        }
+      ]
+    }
+  ]
+}

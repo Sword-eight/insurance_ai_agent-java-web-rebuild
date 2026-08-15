@@ -17,11 +17,11 @@ from typing import List, Dict, Any, Optional
 from uuid import uuid4
 
 import faiss
+import pymupdf
 from llama_index.core import (
     VectorStoreIndex,
     StorageContext,
     Settings,
-    SimpleDirectoryReader,
     Document,
 )
 from llama_index.core.node_parser import SentenceSplitter
@@ -95,7 +95,7 @@ class LlamaIndexBuilder(BaseIndexBuilder):
 
         try:
             pdf_dir: Path = Path(PDF_CONFIG["pdf_dir"])
-            doc_files: list = list(pdf_dir.glob("*.*"))
+            doc_files: list = sorted(pdf_dir.glob("*.*"))
             doc_files = [f for f in doc_files if f.suffix.lower() in (".pdf", ".txt")]
             result["pdf_count"] = len(doc_files)
 
@@ -105,10 +105,7 @@ class LlamaIndexBuilder(BaseIndexBuilder):
                 return result
 
             with Timer("LlamaIndex 文档加载"):
-                documents = SimpleDirectoryReader(
-                    input_dir=str(pdf_dir),
-                    recursive=False,
-                ).load_data()
+                documents = self._load_documents(doc_files)
 
             if not documents:
                 result["message"] = "文档加载失败或文档内容为空"
@@ -129,6 +126,52 @@ class LlamaIndexBuilder(BaseIndexBuilder):
             logger.error(result["message"], exc_info=True)
 
         return result
+
+    @staticmethod
+    def _load_documents(doc_files: List[Path]) -> List[Document]:
+        """Load controlled PDF/TXT files without falling back to raw bytes."""
+        documents: List[Document] = []
+        for doc_path in doc_files:
+            before = len(documents)
+            if doc_path.suffix.lower() == ".pdf":
+                with pymupdf.open(doc_path) as pdf:
+                    total_pages = pdf.page_count
+                    for page_index in range(total_pages):
+                        text = pdf.load_page(page_index).get_text("text").strip()
+                        if not text:
+                            continue
+                        metadata = {
+                            "file_name": doc_path.name,
+                            "file_path": str(doc_path),
+                            "page": page_index + 1,
+                            "total_pages": total_pages,
+                        }
+                        documents.append(Document(
+                            text=text,
+                            metadata=metadata,
+                            excluded_embed_metadata_keys=list(metadata),
+                            excluded_llm_metadata_keys=list(metadata),
+                        ))
+            elif doc_path.suffix.lower() == ".txt":
+                text = doc_path.read_text(encoding="utf-8").strip()
+                if text:
+                    metadata = {
+                        "file_name": doc_path.name,
+                        "file_path": str(doc_path),
+                        "page": 1,
+                        "total_pages": 1,
+                    }
+                    documents.append(Document(
+                        text=text,
+                        metadata=metadata,
+                        excluded_embed_metadata_keys=list(metadata),
+                        excluded_llm_metadata_keys=list(metadata),
+                    ))
+            if len(documents) == before:
+                raise ValueError(
+                    f"Document contains no extractable text: {doc_path.name}"
+                )
+        return documents
 
     def load(self) -> bool:
         """从磁盘加载索引。"""

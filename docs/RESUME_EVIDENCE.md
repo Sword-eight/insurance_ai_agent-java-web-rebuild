@@ -256,3 +256,29 @@ Retriever/Tool 执行数据”的约束。因此结果如实记录为 17/18，�
 Vue **8 files / 27 tests**、typecheck、production build 均通过。最终判定：**PASS with WARNING**——
 真实来源已稳定通过正式链路返回，架构和工程基线无回归；但 expected-RAG 口径为 17/18，且原有 Router
 重复/额外调用问题仍按任务边界保留。
+
+## 9. LangChain vs LlamaIndex Fair Benchmark（2026-08-15）
+
+这是 Resume Evidence、RAG Sources 修复之后的独立公平评测，不改变本报告对 LoRA 证据链的原始
+ERROR 判定，也不是新的产品 Phase。完整报告和原始结果见
+[RAG_ENGINE_BENCHMARK.md](./RAG_ENGINE_BENCHMARK.md) 与
+`artifacts/rag_engine_benchmark/`。
+
+公平性控制固定为：同一受控 TXT、同一份 5 个 engine-independent chunks、
+`BAAI/bge-base-zh-v1.5`、CPU、normalize=true、768 维、FAISS、top_k=5、产品
+`SYSTEM_PROMPT`、`deepseek-chat`、temperature=0 和相同 history。没有修改 Router、Prompt、
+Retriever 算法，也没有按结果删题或重跑挑选最好一轮。
+
+| 指标 | LangChain | LlamaIndex |
+|---|---:|---:|
+| Recall@1 / @3 / @5 | 0.5521 / 0.8750 / 1.0000 | 0.5521 / 0.8750 / 1.0000 |
+| MRR | 0.8201 | 0.8201 |
+| Retrieval P50 / P95 | 55.232 / 77.911 ms | 53.511 / 73.621 ms |
+| Generation | 14 Correct，1 timeout | 14 Correct，1 Partial |
+| Faithfulness rule proxy | 0.9286 | 0.9333 |
+| Hallucination rule proxy | 0 | 0 |
+| Public API E2E | 6/6 | 5/6 |
+
+简历可安全写“完成固定 chunks、ground truth、真实 DeepSeek 的 50-case 双引擎公平评测”；必须同时
+把结论限制在当前本地保险语料和固定参数。不能写“LlamaIndex 全面优于 LangChain”、生产 SLA、
+统计显著性或人工准确率。本轮只有 1 个可可靠提取的文档、5 chunks，且生成每 case 只运行 1 次。

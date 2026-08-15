@@ -1,0 +1,930 @@
+{
+  "engine": "llamaindex",
+  "model": "deepseek-chat",
+  "temperature": 0.0,
+  "sampleSize": 15,
+  "runsPerCase": 1,
+  "cases": [
+    {
+      "caseId": "BENCH-01",
+      "question": "这份保险允许的最低投保年龄是多少？",
+      "latencyMs": 7336.317,
+      "answer": "根据保险知识库的查询结果，我可以为您解答这个问题。\n\n## 最低投保年龄\n\n根据《中国人寿重大疾病保险条款》**第二条 投保范围**的规定：\n\n> **凡十六周岁以上、六十周岁以下**，身体健康者均可作为被保险人，由本人或对其具有保险利益的人作为投保人向本公司投保本保险。\n\n因此，这份保险的**最低投保年龄为16周岁**（最高投保年龄为60周岁）。\n\n---\n\n**补充说明：**\n- 投保年龄范围为 **16周岁至60周岁**\n- 投保人需为身体健康者\n- 可由本人投保，或由对其具有保险利益的人作为投保人投保\n\n📄 **来源**：《中国人寿重大疾病保险条款》第一章 总则，第二条 投保范围\n\n如果您还有其他关于这份保险的疑问（如等待期、保险责任、保费等），欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5911
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5719
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5479
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.533
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5219
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "16"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [
+          "16"
+        ],
+        "faithfulnessProxy": false,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3661,
+        "completionTokens": 244,
+        "totalTokens": 3905
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-05",
+      "question": "合同生效180日后初次确诊约定重大疾病，保险公司如何给付？",
+      "latencyMs": 5439.032,
+      "answer": "根据知识库中《中国人寿重大疾病保险条款》的相关内容，我为您详细解答如下：\n\n## 合同生效180日后初次确诊重大疾病的给付规则\n\n### 📌 给付方式\n根据条款**第三条（重大疾病保险金）**的规定：\n\n> 被保险人在本保险合同生效之日起**180日后**，经本公司认可或指定的医疗机构确诊**初次罹患**本保险合同所定义的重大疾病（无论一种或多种），本公司**按保险金额给付重大疾病保险金**，本保险合同终止。\n\n### 📌 关键要点\n\n| 项目 | 说明 |\n|------|------|\n| **给付金额** | 按**保险金额**（即保额）全额给付 |\n| **确诊机构** | 须为保险公司**认可或指定的医疗机构** |\n| **疾病范围** | 须为合同约定的重大疾病（无论一种或多种） |\n| **给付后合同状态** | 给付后**保险合同终止** |\n\n### 📌 与180日内确诊的区别\n为便于您理解，这里对比一下等待期前后的不同处理：\n\n- **180日后确诊**：按**保险金额**给付重大疾病保险金，合同终止；\n- **180日内（含180日）确诊**：仅**无息退还已交保险费**，合同终止。\n\n### 📌 补充说明\n1. **等待期**：本合同的等待期为180天，即自合同生效之日起至保险公司开始承担保险责任的期间。\n2. **续保**：投保人连续投保本保险的，**续保合同不设等待期**。\n3. **免责情形**：若重大疾病是因免责条款所列情形（如故意自伤、犯罪、吸毒、酒驾、艾滋病、战争、核辐射、遗传性疾病等）导致的，保险公司不承担给付责任。\n\n---\n\n**来源**：《中国人寿重大疾病保险条款》第三条、第四条、第七条\n\n如果您还想了解具体的理赔申请流程或需要估算保费，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.7064
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.6652
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.637
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.628
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5876
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "保险金额",
+          "给付",
+          "合同终止"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3678,
+        "completionTokens": 477,
+        "totalTokens": 4155
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-07",
+      "question": "合同生效180日内确诊约定重大疾病会怎样处理？",
+      "latencyMs": 6427.695,
+      "answer": "根据知识库中的保险条款，我为您整理了关于合同生效180日内确诊重大疾病的处理规定：\n\n---\n\n## 📋 等待期内确诊重大疾病的处理方式\n\n根据《中国人寿重大疾病保险条款》第二章第三条及第四条的规定：\n\n### 处理结果\n被保险人在**本保险合同生效之日起180日内（含180日）**，经本公司认可或指定的医疗机构确诊罹患本保险合同所定义的重大疾病：\n\n> **本公司无息退还已交保险费，本保险合同终止。**\n\n### 对比说明\n\n| 确诊时间 | 处理方式 |\n|---------|---------|\n| **生效后180日内（含180日）** | 无息退还已交保费，合同终止（**不赔付**保险金） |\n| **生效后180日后** | 按保险金额给付重大疾病保险金，合同终止 |\n\n### 等待期说明\n- 本保险合同的**等待期为180天**，即自合同生效之日起至保险公司开始承担保险责任的期间。\n- **续保合同不设等待期**（投保人连续投保本保险的情况下）。\n\n---\n\n### 💡 温馨提示\n等待期是保险公司防范逆选择风险的重要机制。在等待期内确诊重大疾病，保险公司仅退还保费而不承担赔付责任，因此建议您在投保时如实进行健康告知，并了解清楚等待期的相关规定。\n\n如果您还有其他关于保险条款或保费计算的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.6955
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.6553
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.6273
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.6184
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5794
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "无息",
+          "退还",
+          "保险费",
+          "合同终止"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3674,
+        "completionTokens": 355,
+        "totalTokens": 4029
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-09",
+      "question": "这份重大疾病保险的等待期是多少天？",
+      "latencyMs": 4299.812,
+      "answer": "根据保险知识库的查询结果，我为您整理了关于**重大疾病保险等待期**的信息：\n\n## 等待期说明\n\n根据《中国人寿重大疾病保险条款》第四条（等待期）的规定：\n\n> **本保险合同的等待期为 180 天。**\n\n### 具体含义\n- **等待期定义**：指自保险合同生效之日起，至保险公司开始承担保险责任的期间。\n- **等待期内出险**：被保险人在合同生效之日起 **180日内（含180日）** 确诊罹患合同约定的重大疾病，保险公司将**无息退还已交保险费**，保险合同终止。\n- **等待期后出险**：被保险人在合同生效之日起 **180日后** 确诊罹患重大疾病，保险公司按保险金额给付重大疾病保险金，保险合同终止。\n\n### 重要补充\n- ✅ **续保无等待期**：投保人**连续投保**本保险的，续保合同**不设等待期**。\n\n---\n\n**来源**：《中国人寿重大疾病保险条款》第四条（等待期）\n\n如果您还想了解该保险的其他条款（如重大疾病定义、免责条款、理赔流程等），或需要估算保费，欢迎继续提问！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.7601
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.7391
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.622
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.6126
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5623
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "180",
+          "等待期"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3665,
+        "completionTokens": 309,
+        "totalTokens": 3974
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-11",
+      "question": "连续投保后的续保合同还设置等待期吗？",
+      "latencyMs": 6617.358,
+      "answer": "根据保险知识库的检索结果，我来为您解答这个问题。\n\n## 关于续保合同是否设置等待期\n\n**结论：连续投保的续保合同不设置等待期。**\n\n根据《中国人寿重大疾病保险条款》第四条\"等待期\"的规定：\n\n> **\"本保险合同的等待期为180天。等待期指自本保险合同生效之日起至本公司开始承担保险责任的期间。投保人连续投保本保险的，续保合同不设等待期。\"**\n\n### 具体说明\n\n| 项目 | 首次投保 | 连续续保 |\n|------|---------|---------|\n| **等待期** | 180天 | **不设等待期** |\n| **保险责任开始** | 合同生效180日后 | 续保合同生效即承担保险责任 |\n\n### 补充说明\n\n- **首次投保**：等待期为180天，在此期间内确诊重大疾病，保险公司仅无息退还已交保险费，合同终止。\n- **连续续保**：续保合同**不设等待期**，即续保生效后保险公司立即开始承担保险责任，无需再等待180天。\n\n这一规定对投保人非常有利，意味着只要您持续连续投保，保障就不会因等待期而出现\"空窗期\"。\n\n---\n\n📌 **来源**：《中国人寿重大疾病保险条款》第四条\"等待期\"（第1页）\n\n如果您还有其他关于保险条款、理赔或保费方面的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.6797
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5931
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5781
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5405
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5313
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "续保",
+          "不设等待期"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3673,
+        "completionTokens": 366,
+        "totalTokens": 4039
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-14",
+      "question": "恶性肿瘤保障范围明确排除了哪些疾病？请列出五项。",
+      "latencyMs": 6053.112,
+      "answer": "根据知识库中《中国人寿重大疾病保险条款》的检索结果，以下是关于恶性肿瘤保障范围排除疾病的详细信息：\n\n## 恶性肿瘤保障范围排除的疾病\n\n根据条款第五条\"恶性肿瘤\"的定义，**以下5类疾病不在恶性肿瘤保障范围内**：\n\n| 序号 | 排除疾病 |\n|------|----------|\n| 1 | **原位癌** |\n| 2 | **相当于Binet分期方案A期程度的慢性淋巴细胞白血病** |\n| 3 | **相当于Ann Arbor分期方案I期程度的何杰金氏病** |\n| 4 | **皮肤癌**（不包括恶性黑色素瘤及已发生转移的皮肤癌） |\n| 5 | **TNM分期为T1N0M0期或更轻分期的前列腺癌** |\n\n---\n\n### 补充说明\n\n- **保障范围定义**：恶性肿瘤指恶性细胞不受控制的进行性增长和扩散，浸润和破坏周围正常组织，可以经血管、淋巴管和体腔扩散转移到身体其他部位的疾病。需经病理学检查结果明确诊断，且临床诊断属于世界卫生组织《疾病和有关健康问题的国际统计分类》(ICD-10)的恶性肿瘤范畴。\n- **排除原因**：上述5类疾病通常属于**早期、低度恶性或未发生浸润转移**的病变，其严重程度和治疗费用相对较低，因此被排除在重大疾病保障范围之外。\n\n📚 **来源**：《中国人寿重大疾病保险条款》第五条\"恶性肿瘤\"定义部分。\n\n如果您还想了解其他重大疾病的定义或保障范围，欢迎继续提问！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.7202
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.6001
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5699
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5539
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.4898
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "原位癌",
+          "慢性淋巴细胞白血病",
+          "何杰金氏病",
+          "皮肤癌",
+          "前列腺癌"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3674,
+        "completionTokens": 388,
+        "totalTokens": 4062
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-21",
+      "question": "急性心肌梗塞须满足列举条件中的至少几项？",
+      "latencyMs": 5133.198,
+      "answer": "根据保险知识库的检索结果，我来为您解答：\n\n## 急性心肌梗塞的理赔条件\n\n根据**中国人寿重大疾病保险条款**（第六条）的规定：\n\n**急性心肌梗塞**指因冠状动脉阻塞导致的相应区域供血不足造成部分心肌坏死，**须满足下列至少三项条件**：\n\n1. **典型临床表现**，例如急性胸痛等；\n2. **新近的心电图改变**提示急性心肌梗塞；\n3. **心肌酶或肌钙蛋白**有诊断意义的升高，或呈符合急性心肌梗塞的动态性变化；\n4. **发病90日后**，经检查证实左心室功能降低，如左心室射血分数低于50%。\n\n---\n\n### 总结\n\n> 📌 **急性心肌梗塞须满足上述列举条件中的至少 3 项**，方可符合该重大疾病的理赔标准。\n\n---\n\n**补充说明：**\n- 该条款还涉及**等待期**规定：本保险合同等待期为**180天**，等待期内确诊重大疾病仅退还已交保费。\n- 理赔时需提交指定医疗机构出具的诊断证明、病历、病理检验及其他检查报告等材料。\n\n> 📖 来源：中国人寿重大疾病保险条款，第三章第六条。\n\n如果您还有其他保险条款或保费方面的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.72
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.63
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5649
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5331
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.4616
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "至少三项"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3673,
+        "completionTokens": 329,
+        "totalTokens": 4002
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-24",
+      "question": "发病90日后左心室射血分数低于多少可满足一项心梗条件？",
+      "latencyMs": 4928.511,
+      "answer": "根据知识库的检索结果，我为您解答如下：\n\n## 急性心肌梗塞理赔条件中的左心室射血分数\n\n根据《中国人寿重大疾病保险条款》中**第六条 急性心肌梗塞**的定义：\n\n> 指因冠状动脉阻塞导致的相应区域供血不足造成部分心肌坏死。须满足下列**至少三项**条件：\n> 1. 典型临床表现，例如急性胸痛等；\n> 2. 新近的心电图改变提示急性心肌梗塞；\n> 3. 心肌酶或肌钙蛋白有诊断意义的升高，或呈符合急性心肌梗塞的动态性变化；\n> 4. **发病90日后，经检查证实左心室功能降低，如左心室射血分数低于50%。**\n\n### 关键信息总结\n\n| 项目 | 内容 |\n|------|------|\n| **射血分数标准** | 低于 **50%** |\n| **检查时间** | 发病 **90日后** |\n| **条件性质** | 属于急性心肌梗塞需满足的**至少三项条件之一**（非唯一条件） |\n\n### 补充说明\n- 该条件仅是急性心肌梗塞理赔的**四项条件之一**，需满足**至少三项**才能达到理赔标准。\n- 也就是说，即使左心室射血分数低于50%，仍需同时满足其他条件（如典型胸痛、心电图改变、心肌酶升高等）中的至少两项。\n\n📖 **来源**：《中国人寿重大疾病保险条款》第三章 重大疾病定义，第六条 急性心肌梗塞。",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.6472
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.619
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5166
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.4803
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.434
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "90",
+          "50%"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3700,
+        "completionTokens": 401,
+        "totalTokens": 4101
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-28",
+      "question": "酒后驾驶或无有效驾驶证驾驶导致重大疾病，保险公司承担责任吗？",
+      "latencyMs": 6619.479,
+      "answer": "根据保险知识库的检索结果，我来为您详细解答这个问题。\n\n---\n\n## 关于酒后驾驶或无有效驾驶证驾驶导致重大疾病的责任问题\n\n### 结论：**保险公司不承担给付保险金的责任**\n\n根据《中国人寿重大疾病保险条款》第四章\"免责条款\"第七条\"责任免除\"的规定，因下列情形之一导致被保险人发生本保险合同定义的重大疾病的，保险公司**不承担给付保险金的责任**：\n\n> **第4条明确列明：**\n> **被保险人酒后驾驶、无合法有效驾驶证驾驶或驾驶无有效行驶证的机动车。**\n\n### 具体说明\n\n| 免责情形 | 是否承担责任 |\n|---------|------------|\n| 酒后驾驶导致重大疾病 | ❌ 不承担 |\n| 无合法有效驾驶证驾驶导致重大疾病 | ❌ 不承担 |\n| 驾驶无有效行驶证的机动车导致重大疾病 | ❌ 不承担 |\n\n### 补充说明\n\n1. **免责条款范围**：该条款属于保险合同中的**责任免除**条款，即保险公司明确不承担保险责任的情形。除酒后驾驶外，还包括投保人故意伤害、故意犯罪、吸毒、感染艾滋病、战争、核辐射等情形。\n\n2. **理赔影响**：如果被保险人因上述免责情形导致重大疾病，保险公司将**拒绝给付重大疾病保险金**。\n\n3. **建议**：在投保和理赔时，请务必仔细阅读保险合同中的免责条款，了解哪些情形不在保障范围内，避免因对条款理解不清而产生纠纷。\n\n---\n\n📌 **来源**：《中国人寿重大疾病保险条款》第四章 免责条款 第七条 责任免除（第4项）\n\n如果您还有其他关于保险条款或保费计算的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.4908
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.4752
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.4617
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.4203
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.3916
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "酒后驾驶",
+          "不承担"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3685,
+        "completionTokens": 424,
+        "totalTokens": 4109
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-34",
+      "question": "保险费交费宽限期是多少日？从哪一天开始算？",
+      "latencyMs": 4238.352,
+      "answer": "根据保险知识库的检索结果，我为您整理了关于**保险费交费宽限期**的相关规定：\n\n---\n\n### 📋 交费宽限期规定\n\n根据《中国人寿重大疾病保险条款》**第五章 保险费 · 第八条 保险费缴纳**的规定：\n\n> **保险费的交费宽限期为自应交费日次日起60日。**\n\n---\n\n### 具体说明\n\n| 项目 | 内容 |\n|------|------|\n| **宽限期时长** | **60日** |\n| **起算时间** | **自应交费日的次日起**开始计算 |\n\n---\n\n### 补充说明\n\n- 投保人应按投保单所载明的**交费日期**按期交纳各期保险费。\n- 在宽限期内，即使未及时缴纳保费，保险合同通常仍然有效（具体以条款约定为准）。\n- 若超过宽限期仍未缴纳保险费，可能导致保险合同效力中止或终止。\n\n---\n\n📌 **来源**：《中国人寿重大疾病保险条款》第五章 第八条（来源PDF第1页）\n\n如果您还想了解宽限期后未缴费的后果、合同效力中止与复效规则，或其他保险条款问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.5883
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5812
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5641
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5496
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.5037
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "60",
+          "应交费日次日"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3683,
+        "completionTokens": 314,
+        "totalTokens": 3997
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-38",
+      "question": "申请理赔至少需要提交哪些主要材料？",
+      "latencyMs": 6108.298,
+      "answer": "根据保险知识库中的《中国人寿重大疾病保险条款》第七章\"理赔程序\"第十条，我为您整理了申请理赔需要提交的主要材料：\n\n## 📋 理赔申请所需主要材料\n\n根据条款规定，被保险人发生保险事故后，投保人或被保险人应及时通知保险公司，并提交以下材料：\n\n1. **保险单及交费凭证** — 证明保险合同关系及保费缴纳情况\n2. **被保险人身份证明** — 用于核实被保险人身份\n3. **医疗机构出具的诊断证明** — 包括：\n   - 诊断证明书\n   - 病历\n   - 病理检验报告\n   - 其他检查报告\n   （须由本公司**指定或认可**的医疗机构出具）\n4. **本公司要求的其他证明材料** — 根据具体理赔情况可能需要的补充材料\n\n---\n\n### ⏱️ 理赔时效说明\n\n- 保险公司在收到**完整的理赔申请材料**后，将在 **10个工作日内** 作出核定\n- 对属于保险责任的，在与被保险人或受益人达成赔偿协议后 **10个工作日内** 履行赔偿义务\n\n---\n\n**温馨提示：** 以上材料为条款中列明的基本要求，实际理赔时可能因具体保险事故类型（如重大疾病、身故等）需要额外补充相应证明材料，建议在申请理赔前先与保险公司客服确认所需的具体材料清单。\n\n> 📖 来源：《中国人寿重大疾病保险条款》第七章 理赔程序 第十条",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.652
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5963
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.532
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5269
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.4889
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "保险单",
+          "交费凭证",
+          "身份证明",
+          "诊断证明"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3660,
+        "completionTokens": 362,
+        "totalTokens": 4022
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-41",
+      "question": "收到完整理赔申请材料后多少个工作日内作出核定？",
+      "latencyMs": 4676.433,
+      "answer": "根据保险知识库的检索结果，我为您解答如下：\n\n## 理赔核定时限\n\n根据《中国人寿重大疾病保险条款》**第七章 理赔程序 · 第十一条 理赔时效**的规定：\n\n> **本公司在收到完整的理赔申请材料后，将在 10 个工作日内作出核定。**\n\n### 具体说明\n\n| 环节 | 时限 |\n|------|------|\n| **作出核定** | 收到完整理赔申请材料后 **10 个工作日内** |\n| **履行赔偿义务** | 对属于保险责任的，在与被保险人或受益人达成赔偿协议后 **10 个工作日内** |\n\n### 补充说明\n\n- 上述时限以**收到完整的理赔申请材料**为起算点，因此请务必确保提交的材料齐全（包括保险单及交费凭证、被保险人身份证明、医疗机构出具的诊断证明/病历/病理检验报告等）。\n- 若材料不完整，保险公司可能会要求补充材料，核定时限将从补齐材料后重新起算。\n\n---\n\n📌 **来源**：《中国人寿重大疾病保险条款》第七章 第十一条（理赔时效）\n\n如果您还有其他关于理赔流程或保险条款的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.664
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.562
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.5151
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.491
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.4455
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Partial",
+        "matchedRequiredAll": [
+          "核定"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3677,
+        "completionTokens": 314,
+        "totalTokens": 3991
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-48",
+      "question": "这份条款是否报销牙齿正畸费用？",
+      "latencyMs": 7955.393,
+      "answer": "根据我对保险知识库的检索结果，我来为您分析这份条款是否报销牙齿正畸费用。\n\n## 分析结论\n\n**这份条款不报销牙齿正畸费用。**\n\n### 具体分析\n\n根据知识库检索到的《中国人寿重大疾病保险条款》，这是一份**重大疾病保险**合同，其保障范围与牙齿正畸费用完全无关，原因如下：\n\n**1. 保险责任范围不涵盖牙科正畸**\n\n该条款的保险责任（第三条）仅针对**重大疾病**，即被保险人确诊罹患合同所定义的重大疾病（如恶性肿瘤、急性心肌梗塞等）时，才给付重大疾病保险金。牙齿正畸属于**美容/矫正类牙科治疗**，不属于重大疾病范畴。\n\n**2. 免责条款中明确排除相关情形**\n\n该条款第七条\"责任免除\"中列明了不承担保险责任的情形，其中第8项明确包含：\n> **\"遗传性疾病、先天性畸形、变形或染色体异常\"**\n\n牙齿正畸（如牙齿排列不齐、错颌畸形等）通常属于先天性或发育性畸形范畴，即使涉及相关疾病，也属于免责范围。\n\n**3. 保障性质不匹配**\n\n重大疾病保险是**给付型**保险，仅在确诊重大疾病时一次性给付保险金，并不承担日常医疗费用（包括牙科治疗）的报销责任。牙齿正畸费用属于**医疗费用报销**范畴，应由医疗险或专门的齿科保险来覆盖。\n\n---\n\n### 温馨提示\n\n如果您需要报销牙齿正畸费用，建议关注以下类型的保险产品：\n- **齿科专项保险**（专门覆盖正畸、种植、洗牙等牙科项目）\n- **高端医疗险**（部分含牙科责任）\n- **综合医疗险**（需确认是否含牙科治疗责任）\n\n⚠️ 需要说明的是，以上分析基于当前知识库中检索到的重大疾病保险条款。如果您手头的是其他类型的保险合同，建议提供具体险种名称，我可以进一步为您核实。",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.4609
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.4597
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.4596
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.4186
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.4168
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.4896
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.4509
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.4365
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.4292
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.402
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search",
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [],
+        "matchedRequiredAny": [
+          "当前知识库"
+        ],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 5032,
+        "completionTokens": 525,
+        "totalTokens": 5557
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-49",
+      "question": "这份保险是否提供生育津贴，每天给付多少钱？",
+      "latencyMs": 5100.818,
+      "answer": "根据知识库的检索结果，我需要向您说明以下情况：\n\n## 查询结果\n\n根据当前保险知识库的检索结果，**未找到关于\"生育津贴\"的相关条款**。\n\n### 原因分析\n\n您查询的这份保险是**中国人寿重大疾病保险**，其保障内容主要围绕**重大疾病**展开，具体包括：\n\n- **保险责任**：确诊重大疾病后按保险金额给付重大疾病保险金\n- **保障范围**：恶性肿瘤、急性心肌梗塞等重大疾病\n- **等待期**：180天\n\n### 关于生育津贴\n\n**重大疾病保险通常不包含生育津贴责任**。生育津贴一般属于以下保险类型的保障范围：\n- 生育保险（社保）\n- 母婴保险 / 孕产险\n- 部分医疗险的附加责任\n\n### 建议\n\n如果您需要了解生育津贴相关的保障，建议您：\n1. 确认您所持有的具体保单类型是否为重大疾病保险\n2. 如需生育保障，可咨询**社保生育保险**或专门的**母婴/孕产类保险产品**\n\n---\n\n⚠️ **说明**：根据当前知识库，无法确认该保险是否提供生育津贴及每日给付金额。如果您能提供更具体的保单名称或产品信息，我可以进一步为您查询。",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.4421
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.4167
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.4016
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.3848
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.3779
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [],
+        "matchedRequiredAny": [
+          "当前知识库"
+        ],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3667,
+        "completionTokens": 328,
+        "totalTokens": 3995
+      },
+      "error": null
+    },
+    {
+      "caseId": "BENCH-50",
+      "question": "那连续投保后的续保合同还需要等待180天吗？",
+      "latencyMs": 7043.256,
+      "answer": "根据知识库中的保险条款，我可以为您明确回答：\n\n**不需要。** 连续投保的续保合同**不设等待期**。\n\n根据《中国人寿重大疾病保险条款》第四条\"等待期\"的规定：\n\n> \"本保险合同的等待期为180天。等待期指自本保险合同生效之日起至本公司开始承担保险责任的期间。**投保人连续投保本保险的，续保合同不设等待期。**\"\n\n**补充说明：**\n- **首次投保**：等待期为 **180天**，即合同生效后180日内确诊重大疾病，保险公司仅无息退还已交保险费，合同终止。\n- **连续续保**：续保合同**不设等待期**，保障责任在续保合同生效后即可开始承担。\n\n📌 **来源**：《中国人寿重大疾病保险条款》第四条\"等待期\"\n\n如果您还有其他关于保险条款或保费方面的问题，欢迎继续咨询！",
+      "sources": [
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-002",
+          "score": 0.6993
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-001",
+          "score": 0.6338
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-004",
+          "score": 0.5977
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-005",
+          "score": 0.5905
+        },
+        {
+          "documentName": "中国人寿重大疾病保险条款.txt",
+          "page": 1,
+          "chunkId": "chunk-003",
+          "score": 0.549
+        }
+      ],
+      "toolRoute": [
+        "insurance_rag_search"
+      ],
+      "quality": {
+        "correctness": "Correct",
+        "matchedRequiredAll": [
+          "续保",
+          "不设等待期"
+        ],
+        "matchedRequiredAny": [],
+        "forbiddenHits": [],
+        "unsupportedMatchedFacts": [],
+        "faithfulnessProxy": true,
+        "hallucinationProxy": false
+      },
+      "tokenUsage": {
+        "promptTokens": 3726,
+        "completionTokens": 263,
+        "totalTokens": 3989
+      },
+      "error": null
+    }
+  ]
+}

@@ -47,6 +47,10 @@ finetune/data/insurance_test.json
 # ── 日志 ──
 logs/
 .phase12-runtime/
+.local-runtime/
+artifacts/rag_engine_benchmark/indexes/
+artifacts/rag_engine_benchmark/e2e-runtime/
+artifacts/rag_engine_benchmark/corpus/
 
 # ── Streamlit ──
 .streamlit/

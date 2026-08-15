@@ -647,7 +647,7 @@ Web Client
 
 ### 8.2 Python bootstrap 生命周期
 
-未来 FastAPI lifespan 在进程启动时调用一次 bootstrap，构建并保存对象图。bootstrap
+当前 FastAPI lifespan 在进程启动时调用一次 bootstrap，按 `RAG_ENGINE` 构建并保存单一引擎对象图。bootstrap
 只负责依赖装配和资源生命周期，不处理 HTTP DTO、Header、状态码或请求级业务：
 
 ```text
@@ -663,8 +663,8 @@ FastAPI Router 只处理 HTTP；Facade 负责协议转换并调用现有 Graph/S
 bootstrap 已初始化的资源，不重新加载模型或索引。关闭阶段由 lifespan 释放可关闭的 HTTP
 连接、文件或线程资源。
 
-当前 Streamlit 每次 rerun 都可能调用 `init_services()`；这是当前入口生命周期，不是目标
-FastAPI 生命周期。服务化时通过 lifespan 解决，不在 Phase 1 修改代码。
+Streamlit 每次 rerun 仍可能调用 `init_services()`，仅作为 Python 调试入口；正式 FastAPI
+入口已经通过 lifespan 管理进程级对象图和资源生命周期。
 
 ### 8.3 必须复用的对象
 

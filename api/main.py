@@ -14,6 +14,10 @@ from api.errors import ContractValidationError
 from api.routers import agent, health, knowledge
 from api.schemas.common import error_envelope
 from application.errors import ApplicationError
+from application.rag_engine import (
+    RagEngineConfigurationError,
+    RagEngineDependencyError,
+)
 from application.runtime import ApplicationRuntime
 from utils.logger import get_logger
 from utils.trace_context import bind_trace_id, reset_trace_id
@@ -26,8 +30,9 @@ TRACE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{16,64}$")
 def _init_api_runtime() -> ApplicationRuntime:
     """Defer the model/graph dependency tree until FastAPI lifespan starts."""
     from application.bootstrap import init_api_runtime
+    from config import get_rag_engine
 
-    return init_api_runtime()
+    return init_api_runtime(rag_engine=get_rag_engine())
 
 
 HTTP_STATUS_BY_ERROR_CODE = {
@@ -66,6 +71,9 @@ def _create_lifespan(
             app.state.runtime = runtime
             app.state.ai_resources_ready = True
             logger.info("AI Runtime 初始化完成")
+        except (RagEngineConfigurationError, RagEngineDependencyError):
+            logger.exception("RAG engine startup configuration failed")
+            raise
         except Exception:
             logger.exception("AI Runtime 初始化失败")
 

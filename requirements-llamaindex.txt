@@ -1,4 +1,4 @@
-# 可选 LlamaIndex RAG 引擎
+# Optional LlamaIndex RAG engine
 -r requirements.txt
 
 llama-index-core>=0.14.0,<0.15.0

@@ -6,6 +6,7 @@ Insurance AI Agent - LlamaIndex 检索器
 不调用 LLM，不生成回答。
 """
 
+import math
 from typing import List, Dict, Any
 
 from rag.base_retriever import (
@@ -18,6 +19,14 @@ from utils.logger import get_logger
 from utils.helpers import Timer
 
 logger = get_logger("rag.llamaindex.retriever")
+
+
+def _similarity_from_squared_l2(distance: float) -> float:
+    """Convert unit-normalized squared-L2 distance to 0..1 cosine similarity."""
+    if not math.isfinite(distance):
+        return 0.0
+    bounded_distance = max(0.0, distance)
+    return round(max(0.0, min(1.0, 1.0 - bounded_distance / 2.0)), 4)
 
 
 def _extract_chunk_order(node: Any) -> int:
@@ -96,16 +105,21 @@ class LlamaIndexRetriever(BaseRetriever):
         documents: List[RetrievalDocument] = []
         for node in nodes:
             raw_score: float = node.score or 0.0
-            similarity: float = round(max(0.0, min(1.0, raw_score)), 4)
+            native_distance = round(float(raw_score), 4)
+            similarity_score = _similarity_from_squared_l2(float(raw_score))
 
-            if similarity < score_threshold:
+            if similarity_score < score_threshold:
                 continue
 
             metadata: Dict[str, Any] = dict(node.metadata) if node.metadata else {}
 
             # 归一化字段映射
             source_name: str = metadata.get("file_name", "未知来源")
-            source_page: int = 0  # LlamaIndex 默认无页码
+            raw_page = metadata.get("page", metadata.get("page_label", 0))
+            try:
+                source_page = max(0, int(raw_page))
+            except (TypeError, ValueError):
+                source_page = 0
             chunk_order: int = _extract_chunk_order(
                 node.node if hasattr(node, 'node') else node
             )
@@ -114,12 +128,17 @@ class LlamaIndexRetriever(BaseRetriever):
                 content=node.text or node.get_content(),
                 source_name=source_name,
                 source_page=source_page,
-                similarity_score=similarity,
+                similarity_score=similarity_score,
                 engine="llamaindex",
                 raw_metadata={
                     **metadata,
                     "node_id": node.node_id,
                     "chunk_order": chunk_order,
+                    "native_score": native_distance,
+                    "native_score_semantics": "squared_l2_distance",
+                    "score_semantics": (
+                        "cosine_similarity_from_normalized_squared_l2"
+                    ),
                 },
             ))
 

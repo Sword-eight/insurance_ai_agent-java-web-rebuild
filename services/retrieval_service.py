@@ -111,11 +111,12 @@ class RetrievalService:
 
             # 页码信息（如有）
             page_info: str = f"第 {doc.source_page} 页, " if doc.source_page > 0 else ""
+            score_info = f"相似度: {doc.similarity_score:.2%}"
 
             formatted_parts.append(
                 f"【来源 {i}】{engine_tag}\n"
                 f"  文档: {doc.source_name}\n"
-                f"  {page_info}相似度: {doc.similarity_score:.2%}\n"
+                f"  {page_info}{score_info}\n"
                 f"  内容: {doc.content}\n"
             )
 

@@ -1,11 +1,11 @@
-# Insurance AI Agent - 默认运行依赖
-# Streamlit + LangGraph + LangChain RAG（LlamaIndex 和训练依赖见独立清单）
+# Insurance AI Agent - default runtime dependencies
+# Streamlit + LangGraph + LangChain RAG (see separate lists for LlamaIndex and training)
 
-# --- LangGraph 核心 ---
+# --- LangGraph core ---
 langgraph>=1.0.0,<2.0.0
 langgraph-checkpoint>=4.0.0,<5.0.0
 
-# --- LangChain 生态 ---
+# --- LangChain ecosystem ---
 langchain-core>=1.0.0,<2.0.0
 langchain-openai>=1.0.0,<2.0.0
 langchain-community>=0.4.0,<0.5.0
@@ -13,26 +13,26 @@ langchain-text-splitters>=1.0.0,<2.0.0
 
 # --- Embedding ---
 sentence-transformers>=3.0.0,<6.0.0
-# sentence-transformers 的传递依赖需要显式运行时边界，避免自动漂移到
-# 尚未通过本项目 Windows 验收的 Transformers 5 / Torch 2.8+。
+# Keep explicit transitive runtime bounds for sentence-transformers.
+# Transformers 5 and Torch 2.8+ have not passed this project's Windows validation.
 transformers>=4.41.0,<5.0.0
 torch>=2.4.0,<2.8.0
 
-# --- 向量数据库 ---
+# --- Vector database ---
 faiss-cpu>=1.8.0,<2.0.0
 
-# --- PDF 处理 ---
+# --- PDF processing ---
 PyMuPDF>=1.24.0,<2.0.0
 
-# --- Web 界面 ---
+# --- Web interfaces ---
 streamlit>=1.35.0,<2.0.0
 fastapi>=0.115.0,<1.0.0
 uvicorn>=0.30.0,<1.0.0
 httpx>=0.27.0,<1.0.0
 python-multipart>=0.0.9,<1.0.0
 
-# --- 环境变量 ---
+# --- Environment variables ---
 python-dotenv>=1.0.0,<2.0.0
 
-# --- 数据模型 ---
+# --- Data models ---
 pydantic>=2.0.0,<3.0.0

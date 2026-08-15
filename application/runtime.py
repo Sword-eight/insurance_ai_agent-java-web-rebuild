@@ -14,6 +14,7 @@ CloseCallback = Callable[[], object | Awaitable[object]]
 class ApplicationRuntime:
     agent_facade: AgentFacade
     knowledge_facade: KnowledgeFacade
+    rag_engine: str = "langchain"
     close_callbacks: tuple[CloseCallback, ...] = field(default_factory=tuple)
 
     async def close(self) -> None:
