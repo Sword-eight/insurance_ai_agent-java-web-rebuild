@@ -5,7 +5,7 @@ Vue 3 + Spring Boot + FastAPI + LangGraph + RAG
 
 ## Product Case Study｜产品作品集
 
-📄 [View Product Case Study / 查看作品集](./docs/Insurance_AI_Platform_Product_Case_Study.pdf)
+📄 [View Product Case Study / 查看作品集](./docs/Insurance-AI-Product-Case-Study.pdf)
 
 Covers:
 - Product Overview / 产品背景
