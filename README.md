@@ -1,9 +1,19 @@
 # Insurance AI Platform
 
-**面向保险咨询场景的全栈 AI 平台：Vue Web Client + Spring Boot 业务后端 + FastAPI / LangGraph 智能服务。**
+AI-powered insurance consultation and knowledge service platform built with
+Vue 3 + Spring Boot + FastAPI + LangGraph + RAG.
 
-本项目已从早期课程实验演进为一套可运行、可测试、可追踪来源的工程化系统。Java 负责身份、会话、消息、文档元数据、限流与幂等；Python 负责 Agent 编排、工具调用、保费估算、RAG 与模型访问；Vue 提供登录、聊天、会话管理和知识库操作界面。
+## Product Case Study
 
+📄 [View Product Case Study](./docs/Insurance_AI_Platform_Product_Case_Study.pdf)
+
+The case study covers:
+- Product overview and user scenarios
+- User flow and business process
+- System architecture
+- Request / state design
+- Cross-service interaction
+- Product screenshots and validation
 ```mermaid
 flowchart LR
     U[User] --> V[Vue Web Client]
