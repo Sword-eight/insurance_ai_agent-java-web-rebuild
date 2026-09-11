@@ -1,19 +1,19 @@
 # Insurance AI Platform
 
-AI-powered insurance consultation and knowledge service platform built with
-Vue 3 + Spring Boot + FastAPI + LangGraph + RAG.
+AI 保险咨询与知识服务平台  
+Vue 3 + Spring Boot + FastAPI + LangGraph + RAG
 
-## Product Case Study
+## Product Case Study｜产品作品集
 
-📄 [View Product Case Study](./docs/Insurance_AI_Platform_Product_Case_Study.pdf)
+📄 [View Product Case Study / 查看作品集](./docs/Insurance_AI_Platform_Product_Case_Study.pdf)
 
-The case study covers:
-- Product overview and user scenarios
-- User flow and business process
-- System architecture
-- Request / state design
-- Cross-service interaction
-- Product screenshots and validation
+Covers:
+- Product Overview / 产品背景
+- User Flow / 用户流程
+- System Architecture / 系统架构
+- State Design / 状态设计
+- Cross-service Interaction / 跨服务交互
+- Product Screenshots / 产品页面
 ```mermaid
 flowchart LR
     U[User] --> V[Vue Web Client]
